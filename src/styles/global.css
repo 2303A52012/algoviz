@@ -1,0 +1,89 @@
+/* ===== ALGOVIZ V2 — GLOBAL STYLES ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Backgrounds */
+  --bg-base:     #080c14;
+  --bg-panel:    #0c1220;
+  --bg-surface:  #111827;
+  --bg-elevated: #1a2540;
+  --bg-hover:    #1e2d4a;
+
+  /* Borders */
+  --border-dim:    #1e3050;
+  --border-mid:    #2a4070;
+  --border-bright: #3b6fd4;
+
+  /* Text */
+  --text-primary:   #e8edf5;
+  --text-secondary: #8fa3c0;
+  --text-muted:     #4a6080;
+  --text-dim:       #2a3a50;
+
+  /* Accent colors */
+  --blue:   #3b82f6;
+  --blue-light: #93c5fd;
+  --green:  #22c55e;
+  --green-light: #86efac;
+  --red:    #ef4444;
+  --red-light: #fca5a5;
+  --amber:  #f59e0b;
+  --amber-light: #fcd34d;
+  --purple: #a855f7;
+  --purple-light: #d8b4fe;
+  --teal:   #14b8a6;
+  --teal-light: #5eead4;
+
+  /* Difficulty colors */
+  --diff-beginner:     #22c55e;
+  --diff-intermediate: #f59e0b;
+  --diff-advanced:     #ef4444;
+
+  /* Category colors */
+  --cat-sort:   #3b82f6;
+  --cat-search: #22c55e;
+  --cat-graph:  #a855f7;
+  --cat-tree:   #f59e0b;
+  --cat-dp:     #14b8a6;
+
+  /* Typography */
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+  --font-display: 'Syne', sans-serif;
+
+  /* Spacing */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Transitions */
+  --t-fast: 0.12s ease;
+  --t-mid:  0.2s ease;
+}
+
+html, body, #root {
+  height: 100%;
+  min-height: 100vh;
+}
+
+body {
+  font-family: var(--font-mono);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, select, input, textarea {
+  font-family: var(--font-mono);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-dim); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-mid); }
+
+/* Utility classes */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
