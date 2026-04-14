@@ -1,3 +1,25 @@
+/* ---- Category pills + Search bar row ---- */
+.category-pills-search-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.algo-search-bar {
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--border-mid);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--t-fast);
+  min-width: 220px;
+  max-width: 320px;
+}
+.algo-search-bar:focus {
+  border-color: var(--blue-light);
+}
 /* ---- Feedback Section ---- */
 .feedback-section {
   margin: 48px auto 0 auto;

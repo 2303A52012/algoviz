@@ -271,6 +271,19 @@ function AlgoCard({ algo, categoryColor, onSelect }) {
 
 export default function HomePage({ onSelect }) {
   const [activeCategory, setActiveCategory] = useState(null);
+  const [search, setSearch] = useState("");
+
+  // Import all algorithms
+  const { REGISTRY } = require('../registry');
+
+  // Filtered algorithms by search
+  const filteredRegistry = search.trim()
+    ? REGISTRY.filter(algo =>
+        algo.label.toLowerCase().includes(search.toLowerCase()) ||
+        (algo.id && algo.id.toLowerCase().includes(search.toLowerCase())) ||
+        (algo.description && algo.description.toLowerCase().includes(search.toLowerCase()))
+      )
+    : null;
 
   const visibleCategories = activeCategory
     ? CATEGORIES.filter(c => c.id === activeCategory)
@@ -303,52 +316,88 @@ export default function HomePage({ onSelect }) {
           </div>
         </section>
 
-        {/* Category filter pills */}
-        <div className="category-pills">
-          <button
-            className={`pill ${!activeCategory ? 'pill-active' : ''}`}
-            onClick={() => setActiveCategory(null)}
-          >
-            All
-          </button>
-          {CATEGORIES.map(cat => (
+
+        {/* Category filter pills + Search bar */}
+        <div className="category-pills-search-row">
+          <div className="category-pills">
             <button
-              key={cat.id}
-              className={`pill ${activeCategory === cat.id ? 'pill-active' : ''}`}
-              style={{ '--pill-color': cat.color }}
-              onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
+              className={`pill ${!activeCategory ? 'pill-active' : ''}`}
+              onClick={() => setActiveCategory(null)}
             >
-              {cat.icon} {cat.label}
+              All
             </button>
-          ))}
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat.id}
+                className={`pill ${activeCategory === cat.id ? 'pill-active' : ''}`}
+                style={{ '--pill-color': cat.color }}
+                onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
+              >
+                {cat.icon} {cat.label}
+              </button>
+            ))}
+          </div>
+          <input
+            className="algo-search-bar"
+            type="text"
+            placeholder="Search algorithms..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            aria-label="Search algorithms"
+          />
         </div>
 
-        {/* Algorithm sections */}
-        {visibleCategories.map(cat => (
-          <section key={cat.id} className="category-section">
-            <div className="category-header" style={{ '--cat-color': cat.color }}>
+        {/* Algorithm sections or search results */}
+        {search.trim() ? (
+          <section className="category-section">
+            <div className="category-header" style={{ '--cat-color': 'var(--blue-light)' }}>
               <div className="category-title-row">
-                <span className="cat-icon-big">{cat.icon}</span>
+                <span className="cat-icon-big">🔍</span>
                 <div>
-                  <h2 className="category-title" style={{ color: cat.color }}>{cat.label} Algorithms</h2>
-                  <p className="category-desc">{cat.desc}</p>
+                  <h2 className="category-title" style={{ color: 'var(--blue-light)' }}>Search Results</h2>
+                  <p className="category-desc">{filteredRegistry.length} found</p>
                 </div>
               </div>
-              <span className="category-count">{getByCategory(cat.id).length} algorithms</span>
             </div>
-
             <div className="algo-grid">
-              {getByCategory(cat.id).map(algo => (
+              {filteredRegistry.length === 0 && <div style={{padding:24, color:'var(--text-muted)'}}>No algorithms found.</div>}
+              {filteredRegistry.map(algo => (
                 <AlgoCard
                   key={algo.id}
                   algo={algo}
-                  categoryColor={cat.color}
+                  categoryColor={CATEGORIES.find(c => c.id === algo.category)?.color || 'var(--blue-light)'}
                   onSelect={onSelect}
                 />
               ))}
             </div>
           </section>
-        ))}
+        ) : (
+          visibleCategories.map(cat => (
+            <section key={cat.id} className="category-section">
+              <div className="category-header" style={{ '--cat-color': cat.color }}>
+                <div className="category-title-row">
+                  <span className="cat-icon-big">{cat.icon}</span>
+                  <div>
+                    <h2 className="category-title" style={{ color: cat.color }}>{cat.label} Algorithms</h2>
+                    <p className="category-desc">{cat.desc}</p>
+                  </div>
+                </div>
+                <span className="category-count">{getByCategory(cat.id).length} algorithms</span>
+              </div>
+
+              <div className="algo-grid">
+                {getByCategory(cat.id).map(algo => (
+                  <AlgoCard
+                    key={algo.id}
+                    algo={algo}
+                    categoryColor={cat.color}
+                    onSelect={onSelect}
+                  />
+                ))}
+              </div>
+            </section>
+          ))
+        )}
       </div>
       {/* Feedback & Suggestions Form */}
       <section className="feedback-section">
