@@ -1,18 +1,28 @@
 import React, { useState } from 'react';
 import HomePage from './components/HomePage';
 import AlgoPage from './components/AlgoPage';
-import { getById, CATEGORIES } from './registry';
+import DSPage   from './components/DSPage';
+import { getById, getDSById, CATEGORIES, DS_CATEGORY } from './registry';
 import './styles/global.css';
 import './styles/App.css';
 
 export default function App() {
-  const [currentAlgo, setCurrentAlgo] = useState(null); // null = homepage
+  // route: null = home | { type:'algo', id } | { type:'ds', id }
+  const [route, setRoute] = useState(null);
 
-  const goHome  = () => setCurrentAlgo(null);
-  const goTo    = (algoId) => setCurrentAlgo(algoId);
+  const goHome    = () => setRoute(null);
+  const goToAlgo  = (id) => setRoute({ type: 'algo', id });
+  const goToDS    = (id) => setRoute({ type: 'ds',   id });
 
-  const meta = currentAlgo ? getById(currentAlgo) : null;
-  const cat  = meta ? CATEGORIES.find(c => c.id === meta.category) : null;
+  const meta = route?.type === 'algo' ? getById(route.id)
+             : route?.type === 'ds'   ? getDSById(route.id)
+             : null;
+
+  const cat = meta
+    ? (route.type === 'ds'
+        ? DS_CATEGORY
+        : CATEGORIES.find(c => c.id === meta.category))
+    : null;
 
   return (
     <div className="app">
@@ -25,39 +35,44 @@ export default function App() {
 
         <nav className="header-nav">
           {CATEGORIES.map(c => (
-            <button key={c.id} className="nav-item" style={{ '--c': c.color }} onClick={() => {
-              goHome();
-              // scroll to category after navigation
-              setTimeout(() => {
-                const el = document.getElementById(`cat-${c.id}`);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }, 50);
-            }}>
+            <button key={c.id} className="nav-item" style={{ '--c': c.color }}
+              onClick={goHome}>
               {c.icon} {c.label}
             </button>
           ))}
+          <button className="nav-item nav-item-ds" style={{ '--c': DS_CATEGORY.color }}
+            onClick={goHome}>
+            {DS_CATEGORY.icon} {DS_CATEGORY.label}
+          </button>
         </nav>
       </header>
 
       {/* BREADCRUMB */}
-      {currentAlgo && (
+      {route && (
         <div className="breadcrumb">
           <button className="bc-btn" onClick={goHome}>Home</button>
           <span className="bc-sep">/</span>
-          {cat && <>
-            <span className="bc-cat" style={{ color: cat.color }}>{cat.label}</span>
-            <span className="bc-sep">/</span>
-          </>}
+          {cat && (
+            <>
+              <span className="bc-cat" style={{ color: cat.color }}>{cat.label}</span>
+              <span className="bc-sep">/</span>
+            </>
+          )}
           <span className="bc-current">{meta?.label}</span>
         </div>
       )}
 
       {/* MAIN */}
       <main className="app-main">
-        {!currentAlgo
-          ? <HomePage onSelect={goTo} />
-          : <AlgoPage algoId={currentAlgo} onBack={goHome} />
-        }
+        {!route && (
+          <HomePage onSelectAlgo={goToAlgo} onSelectDS={goToDS} />
+        )}
+        {route?.type === 'algo' && (
+          <AlgoPage algoId={route.id} onBack={goHome} />
+        )}
+        {route?.type === 'ds' && (
+          <DSPage dsId={route.id} onBack={goHome} />
+        )}
       </main>
 
       <footer className="app-footer">

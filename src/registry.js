@@ -1,9 +1,6 @@
 // ===== ALGOVIZ REGISTRY =====
-// To add a new algorithm:
-//   1. Create folder: src/algos/{category}/{algoId}/
-//   2. Create: steps.js, Visualizer.jsx, meta.js inside it
-//   3. Import meta here and add to REGISTRY array
-//   That's it. Nothing else needs to change.
+// Add algo: create src/algos/{category}/{id}/ with steps.js + Visualizer.jsx + meta.js, import here
+// Add DS:   create src/ds/{id}/ with Visualizer.jsx + meta.js, import here
 
 // ---- SORTING ----
 import bubbleMeta    from './algos/sorting/bubble/meta';
@@ -23,13 +20,17 @@ import jumpMeta          from './algos/searching/jump/meta';
 import interpolationMeta from './algos/searching/interpolation/meta';
 import ternaryMeta       from './algos/searching/ternary/meta';
 
-// ---- GRAPH ----
+// ---- GRAPH ALGOS ----
 import bfsMeta      from './algos/graph/bfs/meta';
 import dfsMeta      from './algos/graph/dfs/meta';
 import dijkstraMeta from './algos/graph/dijkstra/meta';
 import astarMeta    from './algos/graph/astar/meta';
 
-// ===== FULL REGISTRY =====
+// ---- DATA STRUCTURES ----
+// import arrayDSMeta    from './ds/array/meta';
+// Add more DS meta imports as you create them
+
+// ===== ALGO REGISTRY =====
 export const REGISTRY = [
   bubbleMeta, selectionMeta, insertionMeta, mergeMeta, quickMeta,
   heapMeta, shellMeta, countingMeta, radixMeta,
@@ -37,36 +38,30 @@ export const REGISTRY = [
   bfsMeta, dfsMeta, dijkstraMeta, astarMeta,
 ];
 
-// ===== CATEGORY DEFINITIONS =====
+// ===== DS REGISTRY =====
+export const DS_REGISTRY = [];
+
+// ===== ALGO CATEGORIES =====
 export const CATEGORIES = [
-  {
-    id:    'sorting',
-    label: 'Sorting',
-    icon:  '▦',
-    color: 'var(--cat-sort)',
-    desc:  'Algorithms that arrange elements in order',
-  },
-  {
-    id:    'searching',
-    label: 'Searching',
-    icon:  '◎',
-    color: 'var(--cat-search)',
-    desc:  'Algorithms that locate elements in data',
-  },
-  {
-    id:    'graph',
-    label: 'Graph',
-    icon:  '⬡',
-    color: 'var(--cat-graph)',
-    desc:  'Algorithms that traverse nodes and edges',
-  },
+  { id: 'sorting',   label: 'Sorting',   icon: '▦', color: 'var(--cat-sort)',   desc: 'Arrange elements in order' },
+  { id: 'searching', label: 'Searching', icon: '◎', color: 'var(--cat-search)', desc: 'Locate elements in data'   },
+  { id: 'graph',     label: 'Graph',     icon: '⬡', color: 'var(--cat-graph)',  desc: 'Traverse nodes and edges'  },
 ];
+
+// ===== DS CATEGORY =====
+export const DS_CATEGORY = {
+  id: 'ds', label: 'Data Structures', icon: '⬛',
+  color: 'var(--cat-tree)',
+  desc: 'Interactive visualizations — add, delete, search, traverse',
+};
 
 // ===== HELPERS =====
 export function getByCategory(categoryId) {
   return REGISTRY.filter(a => a.category === categoryId);
 }
-
 export function getById(algoId) {
   return REGISTRY.find(a => a.id === algoId) || null;
+}
+export function getDSById(dsId) {
+  return DS_REGISTRY.find(d => d.id === dsId) || null;
 }

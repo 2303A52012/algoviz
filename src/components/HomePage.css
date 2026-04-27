@@ -84,7 +84,7 @@
   transition: background var(--t-fast);
 }
 .feedback-submit:hover {
-  background: var(--blue-dark);
+  background: var(--blue);
 }
 /* ===== HOME PAGE ===== */
 .home-root { display: flex; flex-direction: column; gap: 52px; padding-bottom: 60px; }
