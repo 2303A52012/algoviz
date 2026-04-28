@@ -67,7 +67,7 @@ export default function DSPage({ dsId, onBack }) {
           <p className="ds-panel-body">{meta.description}</p>
         </div>
 
-        <div className="ds-info-panel ds-info-accent">
+        <div className="ds-info-panel ds-info-accent" style={{ "--accent": "var(--teal)" }}>
           <div className="ds-panel-title">Key insight</div>
           <p className="ds-panel-body">{meta.keyInsight}</p>
         </div>

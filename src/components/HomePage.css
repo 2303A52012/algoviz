@@ -277,3 +277,25 @@
   .algo-grid { grid-template-columns: 1fr; }
   .category-header { flex-direction: column; }
 }
+
+/* ---- Search bar + pills row ---- */
+.category-pills-search-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.algo-search-bar {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 7px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--border-mid);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--t-fast);
+  min-width: 200px;
+  max-width: 300px;
+}
+.algo-search-bar:focus { border-color: var(--blue-light); }

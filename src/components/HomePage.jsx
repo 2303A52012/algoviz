@@ -302,7 +302,7 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
         </p>
 
         <div className="hero-stats">
-          {[['18', 'Algorithms'], ['5', 'Vis. Styles'], ['3', 'Categories'], ['∞', 'Free']].map(([v, l]) => (
+          {[[REGISTRY.length, 'Algorithms'], [DS_REGISTRY.length, 'Data Structures'], [CATEGORIES.length, 'Categories'], ['5', 'Vis. Styles']].map(([v, l]) => (
             <div key={l} className="hero-stat">
               <span className="hero-stat-val">{v}</span>
               <span className="hero-stat-label">{l}</span>
@@ -311,7 +311,8 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
         </div>
       </section>
 
-      {/* Category filter pills */}
+      {/* Category filter pills + Search */}
+      <div className="category-pills-search-row">
       <div className="category-pills">
         <button
           className={`pill ${!activeCategory ? 'pill-active' : ''}`}
@@ -330,9 +331,48 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
           </button>
         ))}
       </div>
+        <input
+          className="algo-search-bar"
+          type="text"
+          placeholder="Search algorithms..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          aria-label="Search algorithms"
+        />
+      </div>
+
+      {/* Search results */}
+      {search.trim() && (
+        <section className="category-section">
+          <div className="category-header" style={{ '--cat-color': 'var(--blue-light)' }}>
+            <div className="category-title-row">
+              <span className="cat-icon-big">🔍</span>
+              <div>
+                <h2 className="category-title" style={{ color: 'var(--blue-light)' }}>Search Results</h2>
+                <p className="category-desc">{filteredRegistry.length} algorithm{filteredRegistry.length !== 1 ? 's' : ''} found</p>
+              </div>
+            </div>
+          </div>
+          <div className="algo-grid">
+            {filteredRegistry.length === 0 && (
+              <div style={{ padding: '24px', color: 'var(--text-muted)', fontSize: '12px' }}>
+                No algorithms found for "{search}".
+              </div>
+            )}
+            {filteredRegistry.map(algo => (
+              <AlgoCard
+                key={algo.id}
+                algo={algo}
+                categoryColor={CATEGORIES.find(c => c.id === algo.category)?.color || 'var(--blue-light)'}
+                onSelect={onSelectAlgo}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Algorithm sections */}
-      {visibleCategories.map(cat => (
+      {!search.trim() && visibleCategories.map(cat => (
         <section key={cat.id} className="category-section">
           <div className="category-header" style={{ '--cat-color': cat.color }}>
             <div className="category-title-row">

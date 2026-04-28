@@ -111,3 +111,7 @@
   .breadcrumb { padding: 7px 14px; }
   .brand-sub { display: none; }
 }
+
+.nav-item-ds {
+  font-weight: 500;
+}

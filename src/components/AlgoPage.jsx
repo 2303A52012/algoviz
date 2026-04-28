@@ -160,9 +160,9 @@ export default function AlgoPage({ algoId, onBack }) {
               <span className="tag" style={{ color: DIFF_COLOR[meta.difficulty], borderColor: DIFF_COLOR[meta.difficulty] + '55' }}>
                 {meta.difficulty}
               </span>
-              <span className="tag tag-complexity">{meta.timeComplexity.average}</span>
-              <span className="tag">space {meta.spaceComplexity}</span>
-              {meta.stable !== null && (
+              <span className="tag tag-complexity">{meta.timeComplexity?.average || "—"}</span>
+              <span className="tag">space {meta.spaceComplexity || "—"}</span>
+              {meta?.stable != null && (
                 <span className="tag">{meta.stable ? '✓ stable' : '✗ unstable'}</span>
               )}
             </div>
@@ -257,9 +257,9 @@ export default function AlgoPage({ algoId, onBack }) {
         <div className="panel-title">Complexity</div>
         <div className="complexity-grid">
           {[
-            ['Best',    meta.timeComplexity.best   ],
-            ['Average', meta.timeComplexity.average],
-            ['Worst',   meta.timeComplexity.worst  ],
+            ['Best',    meta.timeComplexity?.best    || '—'],
+            ['Average', meta.timeComplexity?.average || '—'],
+            ['Worst',   meta.timeComplexity?.worst  || '—'],
             ['Space',   meta.spaceComplexity       ],
           ].map(([label, val]) => (
             <div key={label} className="complexity-cell">
@@ -270,7 +270,7 @@ export default function AlgoPage({ algoId, onBack }) {
               }`}>{val}</span>
             </div>
           ))}
-          {meta.stable !== null && (
+          {meta?.stable != null && (
             <div className="complexity-cell">
               <span className="complexity-label">Stable</span>
               <span className={`complexity-val ${meta.stable ? 'good' : 'bad'}`}>
