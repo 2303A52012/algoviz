@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'jump', category: 'searching', label: 'Jump Search',
   emoji: '🦘',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'jump-blocks',
   keyInsight: 'Optimal block size is √n — balances the number of jumps and the linear scan within each block.',
   useCases: ['Sorted arrays', 'When backward traversal is costly', 'Disk/tape storage'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;

@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'radix', category: 'sorting', label: 'Radix Sort',
   emoji: '🔡',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'digit-buckets',
   keyInsight: 'k is the number of digits. For 3-digit numbers, needs only 3 passes — each O(n).',
   useCases: ['Fixed-length integers', 'Strings of same length', 'When O(nk) < O(n log n)'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;

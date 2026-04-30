@@ -1,8 +1,12 @@
 export const CODE_SNIPPETS = {
-  javascript: `function bubbleSort(arr) {
+  javascript: `// ===== BUBBLE SORT: Repeatedly swap adjacent elements if in wrong order =====
+function bubbleSort(arr) {
   const n = arr.length;
+  // Outer loop: after i passes, largest i elements are in place
   for (let i = 0; i < n - 1; i++) {
+    // Inner loop: compare adjacent pairs and bubble larger one right
     for (let j = 0; j < n - i - 1; j++) {
+      // If left > right, swap them (bubble larger rightward)
       if (arr[j] > arr[j + 1]) {
         [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
       }
@@ -11,27 +15,35 @@ export const CODE_SNIPPETS = {
   return arr;
 }
 
-// Example usage:
+// ===== EXAMPLE USAGE =====
 const numbers = [64, 34, 25, 12, 22, 11, 90];
 console.log(bubbleSort(numbers));`,
 
-  python: `def bubble_sort(arr):
+  python: `# ===== BUBBLE SORT: Repeatedly swap adjacent elements if in wrong order =====
+def bubble_sort(arr):
     n = len(arr)
+    # Outer loop: after i passes, largest i elements are in place
     for i in range(n - 1):
+        # Inner loop: compare adjacent pairs and bubble larger one right
         for j in range(n - i - 1):
+            # If left > right, swap them (bubble larger rightward)
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
     return arr
 
-# Example usage:
+# ===== EXAMPLE USAGE =====
 numbers = [64, 34, 25, 12, 22, 11, 90]
 print(bubble_sort(numbers))`,
 
-  java: `public class BubbleSort {
+  java: `// ===== BUBBLE SORT: Repeatedly swap adjacent elements if in wrong order =====
+public class BubbleSort {
     public static void bubbleSort(int[] arr) {
         int n = arr.length;
+        // Outer loop: after i passes, largest i elements are in place
         for (int i = 0; i < n - 1; i++) {
+            // Inner loop: compare adjacent pairs and bubble larger one right
             for (int j = 0; j < n - i - 1; j++) {
+                // If left > right, swap them (bubble larger rightward)
                 if (arr[j] > arr[j + 1]) {
                     int temp = arr[j];
                     arr[j] = arr[j + 1];
@@ -41,6 +53,7 @@ print(bubble_sort(numbers))`,
         }
     }
 
+    // ===== EXAMPLE USAGE =====
     public static void main(String[] args) {
         int[] numbers = {64, 34, 25, 12, 22, 11, 90};
         bubbleSort(numbers);
@@ -54,10 +67,14 @@ print(bubble_sort(numbers))`,
 #include <vector>
 using namespace std;
 
+// ===== BUBBLE SORT: Repeatedly swap adjacent elements if in wrong order =====
 void bubbleSort(vector<int>& arr) {
     int n = arr.size();
+    // Outer loop: after i passes, largest i elements are in place
     for (int i = 0; i < n - 1; i++) {
+        // Inner loop: compare adjacent pairs and bubble larger one right
         for (int j = 0; j < n - i - 1; j++) {
+            // If left > right, swap them (bubble larger rightward)
             if (arr[j] > arr[j + 1]) {
                 swap(arr[j], arr[j + 1]);
             }
@@ -65,6 +82,7 @@ void bubbleSort(vector<int>& arr) {
     }
 }
 
+// ===== EXAMPLE USAGE =====
 int main() {
     vector<int> numbers = {64, 34, 25, 12, 22, 11, 90};
     bubbleSort(numbers);
@@ -76,9 +94,13 @@ int main() {
 
   c: `#include <stdio.h>
 
+// ===== BUBBLE SORT: Repeatedly swap adjacent elements if in wrong order =====
 void bubbleSort(int arr[], int n) {
+    // Outer loop: after i passes, largest i elements are in place
     for (int i = 0; i < n - 1; i++) {
+        // Inner loop: compare adjacent pairs and bubble larger one right
         for (int j = 0; j < n - i - 1; j++) {
+            // If left > right, swap them (bubble larger rightward)
             if (arr[j] > arr[j + 1]) {
                 int temp = arr[j];
                 arr[j] = arr[j + 1];
@@ -88,6 +110,7 @@ void bubbleSort(int arr[], int n) {
     }
 }
 
+// ===== EXAMPLE USAGE =====
 int main() {
     int numbers[] = {64, 34, 25, 12, 22, 11, 90};
     int n = sizeof(numbers) / sizeof(numbers[0]);
@@ -100,11 +123,15 @@ int main() {
 
   csharp: `using System;
 
+// ===== BUBBLE SORT: Repeatedly swap adjacent elements if in wrong order =====
 public class BubbleSort {
     public static void Sort(int[] arr) {
         int n = arr.Length;
+        // Outer loop: after i passes, largest i elements are in place
         for (int i = 0; i < n - 1; i++) {
+            // Inner loop: compare adjacent pairs and bubble larger one right
             for (int j = 0; j < n - i - 1; j++) {
+                // If left > right, swap them (bubble larger rightward)
                 if (arr[j] > arr[j + 1]) {
                     int temp = arr[j];
                     arr[j] = arr[j + 1];
@@ -114,6 +141,7 @@ public class BubbleSort {
         }
     }
 
+    // ===== EXAMPLE USAGE =====
     static void Main() {
         int[] numbers = {64, 34, 25, 12, 22, 11, 90};
         Sort(numbers);
@@ -127,10 +155,14 @@ public class BubbleSort {
 
 import "fmt"
 
+// ===== BUBBLE SORT: Repeatedly swap adjacent elements if in wrong order =====
 func bubbleSort(arr []int) {
     n := len(arr)
+    // Outer loop: after i passes, largest i elements are in place
     for i := 0; i < n-1; i++ {
+        // Inner loop: compare adjacent pairs and bubble larger one right
         for j := 0; j < n-i-1; j++ {
+            // If left > right, swap them (bubble larger rightward)
             if arr[j] > arr[j+1] {
                 arr[j], arr[j+1] = arr[j+1], arr[j]
             }
@@ -138,16 +170,21 @@ func bubbleSort(arr []int) {
     }
 }
 
+// ===== EXAMPLE USAGE =====
 func main() {
     numbers := []int{64, 34, 25, 12, 22, 11, 90}
     bubbleSort(numbers)
     fmt.Println(numbers)
 }`,
 
-  rust: `fn bubble_sort(arr: &mut Vec<i32>) {
+  rust: `// ===== BUBBLE SORT: Repeatedly swap adjacent elements if in wrong order =====
+fn bubble_sort(arr: &mut Vec<i32>) {
     let n = arr.len();
+    // Outer loop: after i passes, largest i elements are in place
     for i in 0..n - 1 {
+        // Inner loop: compare adjacent pairs and bubble larger one right
         for j in 0..n - i - 1 {
+            // If left > right, swap them (bubble larger rightward)
             if arr[j] > arr[j + 1] {
                 arr.swap(j, j + 1);
             }
@@ -155,6 +192,7 @@ func main() {
     }
 }
 
+// ===== EXAMPLE USAGE =====
 fn main() {
     let mut numbers = vec![64, 34, 25, 12, 22, 11, 90];
     bubble_sort(&mut numbers);

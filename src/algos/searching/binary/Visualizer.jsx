@@ -2,25 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
 import './Visualizer.css';
 
-// ---- Number line range visualizer ----
+// ===== RANGE LINE COMPONENT =====
+// Visualizes the search range with lo, mid, hi markers
 function RangeLine({ arr, lo, hi, mid, eliminated, foundIdx, target }) {
   const n = arr.length;
   if (n === 0) return null;
 
+  // ===== GET CELL STATE =====
+  // Determine visual state for each element
   const getState = (i) => {
-    if (i === foundIdx)          return 'found';
-    if (eliminated.includes(i))  return 'eliminated';
-    if (i === mid && mid >= 0)   return 'mid';
-    if (i >= lo && i <= hi)      return 'active';
-    return 'eliminated';
+    if (i === foundIdx)          return 'found';  // Found target
+    if (eliminated.includes(i))  return 'eliminated';  // Already ruled out
+    if (i === mid && mid >= 0)   return 'mid';  // Current midpoint
+    if (i >= lo && i <= hi)      return 'active';  // Still in search range
+    return 'eliminated';  // Outside range
   };
 
   return (
     <div className="bs-range-wrap">
-
-      {/* Bracket labels: lo, mid, hi */}
+      {/* ===== BRACKET ROW: Shows lo, mid, hi labels above cells ===== */}
       <div className="bs-bracket-row" style={{ '--n': n }}>
         {arr.map((_, i) => {
+          // Check if this position should have bracket labels
           const isLo  = i === lo  && foundIdx < 0;
           const isHi  = i === hi  && foundIdx < 0;
           const isMid = i === mid && mid >= 0 && foundIdx < 0;
@@ -36,13 +39,15 @@ function RangeLine({ arr, lo, hi, mid, eliminated, foundIdx, target }) {
         })}
       </div>
 
-      {/* Arrow row pointing down to mid */}
+      {/* ===== ARROW ROW: Points to mid element being checked ===== */}
       <div className="bs-arrow-row" style={{ '--n': n }}>
         {arr.map((_, i) => (
           <div key={i} className="bs-arrow-cell">
+            {/* Downward arrow for current mid element */}
             {i === mid && mid >= 0 && foundIdx < 0 && (
               <span className="bs-mid-arrow">▼</span>
             )}
+            {/* Star marker for found element */}
             {i === foundIdx && (
               <span className="bs-found-arrow">★</span>
             )}
@@ -50,7 +55,7 @@ function RangeLine({ arr, lo, hi, mid, eliminated, foundIdx, target }) {
         ))}
       </div>
 
-      {/* Cells */}
+      {/* ===== CELLS: Display array values and their states ===== */}
       <div className="bs-cells" style={{ '--n': n }}>
         {arr.map((val, i) => {
           const state = getState(i);
@@ -63,7 +68,7 @@ function RangeLine({ arr, lo, hi, mid, eliminated, foundIdx, target }) {
         })}
       </div>
 
-      {/* Active range bracket underline */}
+      {/* ===== ACTIVE RANGE UNDERLINE: Shows current search boundaries ===== */}
       {lo <= hi && foundIdx < 0 && (
         <div className="bs-range-underline-wrap" style={{ '--n': n }}>
           <div
@@ -79,9 +84,10 @@ function RangeLine({ arr, lo, hi, mid, eliminated, foundIdx, target }) {
   );
 }
 
-// ---- Step-by-step halving visualizer ----
+// ===== HALVING DIAGRAM COMPONENT =====
+// Shows search history with each step's mid-check and direction
 function HalvingDiagram({ steps, currentStepIdx }) {
-  // Show the sequence of lo/hi/mid across all steps so far
+  // Filter to show only mid-check steps (eliminations)
   const midSteps = steps
     .slice(0, currentStepIdx + 1)
     .filter(s => s.type === 'mid-check' || s.type === 'found');
@@ -106,7 +112,8 @@ function HalvingDiagram({ steps, currentStepIdx }) {
   );
 }
 
-// ---- Comparison counter ----
+// ===== COMPARISON PANEL COMPONENT =====
+// Shows comparison count and progress visualization
 function ComparisonPanel({ comparisons, maxComparisons, target, foundIdx, notFound }) {
   return (
     <div className="bs-cmp-panel">
@@ -115,6 +122,7 @@ function ComparisonPanel({ comparisons, maxComparisons, target, foundIdx, notFou
         <span className="bs-cmp-val">{comparisons}</span>
         <span className="bs-cmp-max">of {maxComparisons} max</span>
       </div>
+      {/* Visual progress dots */}
       <div className="bs-cmp-dots">
         {Array.from({ length: maxComparisons }, (_, i) => (
           <div
@@ -125,6 +133,7 @@ function ComparisonPanel({ comparisons, maxComparisons, target, foundIdx, notFou
           />
         ))}
       </div>
+      {/* Status indicator */}
       <div className="bs-cmp-right">
         {foundIdx >= 0 && <span className="bs-cmp-result bs-result-found">Found ✓</span>}
         {notFound     && <span className="bs-cmp-result bs-result-notfound">Not found ✗</span>}
@@ -136,29 +145,37 @@ function ComparisonPanel({ comparisons, maxComparisons, target, foundIdx, notFou
 }
 
 export default function Visualizer({ isRunning, isPaused, currentStep, onRunSteps, onReset }) {
+  // ===== DEFAULT VALUES =====
   const defaultArr    = generateDefaultInput();
   const defaultTarget = 63;
 
-  const [arr, setArr]               = useState(defaultArr);
-  const [target, setTarget]         = useState(defaultTarget);
-  const [targetInput, setTargetInput] = useState(String(defaultTarget));
-  const [inputOpen, setInputOpen]   = useState(false);
-  const [customArr, setCustomArr]   = useState('');
-  const [customErr, setCustomErr]   = useState('');
-  const [allSteps, setAllSteps]     = useState([]);
-  const [currentStepIdx, setCurrentStepIdx] = useState(-1);
+  // ===== STATE: Array and search parameters =====
+  const [arr, setArr]               = useState(defaultArr);  // Current array
+  const [target, setTarget]         = useState(defaultTarget);  // Target value
+  const [targetInput, setTargetInput] = useState(String(defaultTarget));  // User input field
+  const [inputOpen, setInputOpen]   = useState(false);  // Custom input panel open/closed
+  const [customArr, setCustomArr]   = useState('');  // Custom array input string
+  const [customErr, setCustomErr]   = useState('');  // Error message
 
+  // ===== STATE: Step tracking =====
+  const [allSteps, setAllSteps]     = useState([]);  // All generated steps
+  const [currentStepIdx, setCurrentStepIdx] = useState(-1);  // Current step number
+
+  // ===== STATE: Visualization state synced with animation =====
   const [vizState, setVizState] = useState({
     arr: defaultArr,
-    lo: 0, hi: defaultArr.length - 1, mid: -1,
-    eliminated: [],
-    foundIdx: -1,
+    lo: 0, hi: defaultArr.length - 1, mid: -1,  // Search boundaries and midpoint
+    eliminated: [],  // Indices eliminated from search
+    foundIdx: -1,  // Index of found element
     target: defaultTarget,
     comparisons: 0,
   });
 
+  // ===== EFFECT: Sync visualization with animation step =====
+  // When currentStep changes, update visualization state
   useEffect(() => {
     if (!currentStep) {
+      // No step - reset to initial state
       setVizState({
         arr, lo: 0, hi: arr.length - 1, mid: -1,
         eliminated: [], foundIdx: -1, target, comparisons: 0,
@@ -166,6 +183,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       setCurrentStepIdx(-1);
       return;
     }
+    // Update visualization from current step
     setVizState({
       arr:         currentStep.arr         || arr,
       lo:          currentStep.lo          ?? 0,
@@ -176,20 +194,23 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       target:      currentStep.target      ?? target,
       comparisons: currentStep.comparisons ?? 0,
     });
-    setCurrentStepIdx(prev => prev + 1);
+    setCurrentStepIdx(prev => prev + 1);  // Increment step counter
   }, [currentStep]); // eslint-disable-line
 
+  // ===== HANDLE RUN: Start search animation =====
   const handleRun = () => {
     const t = parseInt(targetInput);
     if (isNaN(t)) { setCustomErr('Enter a valid target number.'); return; }
     setTarget(t);
     setCustomErr('');
+    // Generate steps and trigger animation
     const steps = generateSteps(arr, t);
     setAllSteps(steps);
     setCurrentStepIdx(-1);
     onRunSteps(steps);
   };
 
+  // ===== HANDLE RESET: Clear visualization =====
   const handleReset = () => {
     onReset();
     setAllSteps([]);
@@ -200,12 +221,17 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     });
   };
 
+  // ===== HANDLE NEW ARRAY: Generate random sorted array and target =====
   const handleNewArray = () => {
+    // Random array size 10-17 elements
     const size = 10 + Math.floor(Math.random() * 8);
+    // Create set to avoid duplicates
     const set = new Set();
     while (set.size < size) set.add(Math.floor(Math.random() * 140) + 5);
+    // Convert set to sorted array
     const a = [...set].sort((x, y) => x - y);
     setArr(a);
+    // 60% chance target exists in array, 40% it's random
     const t = Math.random() > 0.4 ? a[Math.floor(Math.random() * a.length)] : Math.floor(Math.random() * 140) + 5;
     setTargetInput(String(t));
     setTarget(t);
@@ -215,35 +241,42 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     setVizState({ arr: a, lo: 0, hi: a.length - 1, mid: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0 });
   };
 
+  // ===== HANDLE LOAD CUSTOM: Load user-provided array and target =====
   const handleLoadCustom = () => {
     setCustomErr('');
     try {
+      // Parse and validate input (auto-sorts)
       const parsed = parseCustomInput(customArr);
       const t = parseInt(targetInput);
       if (isNaN(t)) { setCustomErr('Enter a valid target.'); return; }
+      // Update array and target
       setArr(parsed);
       setTarget(t);
       onReset();
       setAllSteps([]);
       setCurrentStepIdx(-1);
       setVizState({ arr: parsed, lo: 0, hi: parsed.length - 1, mid: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0 });
-      setInputOpen(false);
+      setInputOpen(false);  // Close input panel
       setCustomArr('');
     } catch (e) { setCustomErr(e.message); }
   };
 
+  // ===== CALCULATE MAX COMPARISONS =====
+  // Binary search worst case: O(log n) comparisons
   const maxComparisons = Math.ceil(Math.log2(arr.length));
   const notFound = currentStep?.type === 'not-found';
 
   return (
     <div className="bs-root">
-      {/* Top bar */}
+      {/* ===== TOP BAR: Controls and target input ===== */}
       <div className="bs-topbar">
+        {/* Custom input toggle button */}
         <button className={`bs-custom-toggle ${inputOpen ? 'open' : ''}`}
           onClick={() => setInputOpen(o => !o)} disabled={isRunning}>
           ✏ Custom Input {inputOpen ? '▲' : '▼'}
         </button>
 
+        {/* Target value input */}
         <div className="bs-target-wrap">
           <span className="bs-target-label">Target:</span>
           <input type="number" className="bs-target-input"
@@ -252,8 +285,10 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
             disabled={isRunning} placeholder="value" />
         </div>
 
+        {/* Note about auto-sorting */}
         <div className="bs-note">Array auto-sorts ↑</div>
 
+        {/* Action buttons */}
         <div className="bs-topbar-right">
           <button className="bs-btn bs-btn-secondary" onClick={handleNewArray} disabled={isRunning}>⚡ Random</button>
           <button className="bs-btn bs-btn-run" onClick={handleRun} disabled={isRunning || isPaused}>▶ Search</button>
@@ -261,6 +296,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
         </div>
       </div>
 
+      {/* ===== CUSTOM INPUT PANEL ===== */}
       {inputOpen && (
         <div className="bs-custom-panel">
           <div className="bs-custom-row">
@@ -275,7 +311,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
         </div>
       )}
 
-      {/* Comparison tracker */}
+      {/* ===== COMPARISON TRACKER: Shows comparison count ===== */}
       <ComparisonPanel
         comparisons={vizState.comparisons}
         maxComparisons={maxComparisons}
@@ -284,7 +320,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
         notFound={notFound}
       />
 
-      {/* Main range visualizer */}
+      {/* ===== RANGE VISUALIZER: Main visualization with lo/hi/mid ===== */}
       <RangeLine
         arr={vizState.arr}
         lo={vizState.lo}
@@ -295,10 +331,10 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
         target={vizState.target}
       />
 
-      {/* Search history */}
+      {/* ===== SEARCH HISTORY: Shows halving progression ===== */}
       <HalvingDiagram steps={allSteps} currentStepIdx={currentStepIdx} />
 
-      {/* Legend */}
+      {/* ===== LEGEND: Explain colors and symbols ===== */}
       <div className="bs-legend">
         {[
           { cls: 'bs-cell-active',      label: 'Active range' },

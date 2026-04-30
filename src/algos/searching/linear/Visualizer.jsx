@@ -2,32 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
 import './Visualizer.css';
 
+// ===== COLOR SCHEME =====
+// Define colors for different cell states during visualization
 const COLORS = {
-  default:  { bg: '#1e293b', border: '#334155', text: '#64748b' },
-  scanning: { bg: '#1e3a5f', border: '#3b82f6', text: '#93c5fd' },
-  missed:   { bg: '#0f172a', border: '#1e293b', text: '#334155' },
-  found:    { bg: '#14532d', border: '#22c55e', text: '#86efac' },
-  target:   { bg: '#2d1b6e', border: '#7c3aed', text: '#d8b4fe' },
+  default:  { bg: '#1e293b', border: '#334155', text: '#64748b' },  // Default cell
+  scanning: { bg: '#1e3a5f', border: '#3b82f6', text: '#93c5fd' },  // Currently checking
+  missed:   { bg: '#0f172a', border: '#1e293b', text: '#334155' },  // Already checked - no match
+  found:    { bg: '#14532d', border: '#22c55e', text: '#86efac' },  // Found target
+  target:   { bg: '#2d1b6e', border: '#7c3aed', text: '#d8b4fe' },  // Target color
 };
 
-// The scanner — shows a moving "lens" over the array
+// ===== ARRAY SCANNER COMPONENT =====
+// Displays array with animated "lens" showing scanning process
 function ArrayScanner({ arr, currentIdx, scannedIdx, foundIdx, target }) {
   const n = arr.length;
 
+  // ===== GET CELL STATE =====
+  // Determine visual state for each cell based on search progress
   const getCellState = (i) => {
-    if (i === foundIdx)          return 'found';
-    if (i === currentIdx)        return 'scanning';
-    if (scannedIdx.includes(i))  return 'missed';
-    return 'default';
+    if (i === foundIdx)          return 'found';  // Target found here
+    if (i === currentIdx)        return 'scanning';  // Currently checking this
+    if (scannedIdx.includes(i))  return 'missed';  // Already checked, not a match
+    return 'default';  // Not yet checked
   };
 
   return (
     <div className="ls-scanner-wrap">
-
-      {/* Scanner cursor above cells */}
+      {/* ===== CURSOR ROW: Shows visual indicator above cells ===== */}
       <div className="ls-cursor-row" style={{ '--n': n }}>
         {arr.map((_, i) => (
           <div key={i} className="ls-cursor-cell">
+            {/* Moving lens for current element being scanned */}
             {i === currentIdx && foundIdx < 0 && (
               <div className="ls-cursor">
                 <div className="ls-cursor-glass">
@@ -36,6 +41,7 @@ function ArrayScanner({ arr, currentIdx, scannedIdx, foundIdx, target }) {
                 <div className="ls-cursor-handle" />
               </div>
             )}
+            {/* Star marker showing where target was found */}
             {i === foundIdx && (
               <div className="ls-found-marker">
                 <span className="ls-found-star">★</span>
@@ -45,12 +51,11 @@ function ArrayScanner({ arr, currentIdx, scannedIdx, foundIdx, target }) {
         ))}
       </div>
 
-      {/* Main cells */}
+      {/* ===== MAIN CELLS: Each cell shows array element and its state ===== */}
       <div className="ls-cells" style={{ '--n': n }}>
         {arr.map((val, i) => {
-          const state = getCellState(i);
-          const c = COLORS[state];
-          const isTarget = val === target && i !== currentIdx && !scannedIdx.includes(i) && i !== foundIdx;
+          const state = getCellState(i);  // Get visual state
+          const c = COLORS[state];  // Get colors for this state
 
           return (
             <div
@@ -59,14 +64,17 @@ function ArrayScanner({ arr, currentIdx, scannedIdx, foundIdx, target }) {
               style={{
                 background: c.bg,
                 border: `1px solid ${c.border}`,
+                // Glow effect for scanning and found states
                 boxShadow: state === 'scanning' ? `0 0 14px ${c.border}55` :
                            state === 'found'    ? `0 0 16px ${c.border}77` : 'none',
               }}
             >
+              {/* Display value */}
               <span className="ls-cell-val" style={{ color: c.text }}>{val}</span>
+              {/* Display index */}
               <span className="ls-cell-idx">{i}</span>
 
-              {/* Compare indicator — shown while scanning */}
+              {/* ===== COMPARE BUBBLE: Shows comparison during scanning ===== */}
               {state === 'scanning' && (
                 <div className="ls-compare-bubble">
                   <span>{val} {val === target ? '=' : '≠'} {target}</span>
@@ -77,14 +85,16 @@ function ArrayScanner({ arr, currentIdx, scannedIdx, foundIdx, target }) {
         })}
       </div>
 
-      {/* Progress bar */}
+      {/* ===== PROGRESS BAR: Shows how many elements have been scanned ===== */}
       <div className="ls-progress-wrap">
         <div className="ls-progress-bar">
           <div
             className={`ls-progress-fill ${foundIdx >= 0 ? 'ls-progress-found' : ''}`}
+            // Width shows percentage of array scanned
             style={{ width: `${(Math.max(scannedIdx.length, currentIdx >= 0 ? currentIdx + 1 : 0) / n) * 100}%` }}
           />
         </div>
+        {/* Progress label: show scan count or found message */}
         <span className="ls-progress-label">
           {foundIdx >= 0
             ? `Found at index ${foundIdx}`
@@ -99,8 +109,10 @@ function ArrayScanner({ arr, currentIdx, scannedIdx, foundIdx, target }) {
   );
 }
 
-// Target display panel
+// ===== TARGET PANEL COMPONENT =====
+// Shows target value and search status
 function TargetPanel({ target, foundIdx, currentIdx, arr }) {
+  // Determine status: found, not found, or still searching
   const status = foundIdx >= 0 ? 'found'
     : currentIdx < 0 && foundIdx < 0 ? 'not-found'
     : 'searching';
@@ -111,6 +123,7 @@ function TargetPanel({ target, foundIdx, currentIdx, arr }) {
         <span className="ls-target-label">Target</span>
         <span className="ls-target-val">{target}</span>
       </div>
+      {/* Display current search status */}
       <div className="ls-target-status">
         {status === 'searching'  && <span className="ls-status-text ls-status-searching">🔍 Searching...</span>}
         {status === 'found'      && <span className="ls-status-text ls-status-found">✓ Found at index {foundIdx}</span>}
@@ -120,41 +133,52 @@ function TargetPanel({ target, foundIdx, currentIdx, arr }) {
   );
 }
 
-// Complexity callout
+// ===== COMPLEXITY NOTE COMPONENT =====
+// Shows time complexity analysis
 function ComplexityNote({ scannedCount, total, found }) {
   return (
     <div className="ls-complexity-note">
       <span className="ls-cn-title">Complexity</span>
       <span className="ls-cn-item"><b>Best:</b> O(1) — target at index 0</span>
       <span className="ls-cn-item"><b>Worst:</b> O(n) — target at end or not found</span>
-      <span className="ls-cn-item"><b>This run:</b> {scannedCount} comparisons {found ? '(found early!)' : total > 0 ? `(${((scannedCount/total)*100).toFixed(0)}% of array scanned)` : ''}</span>
+      <span className="ls-cn-item">
+        <b>This run:</b> {scannedCount} comparisons {found ? '(found early!)' : total > 0 ? `(${((scannedCount/total)*100).toFixed(0)}% of array scanned)` : ''}
+      </span>
     </div>
   );
 }
 
 export default function Visualizer({ isRunning, isPaused, currentStep, onRunSteps, onReset }) {
+  // ===== DEFAULT VALUES =====
   const defaultArr = generateDefaultInput();
   const defaultTarget = 47;
 
-  const [arr, setArr]           = useState(defaultArr);
-  const [target, setTarget]     = useState(defaultTarget);
-  const [targetInput, setTargetInput] = useState(String(defaultTarget));
-  const [inputOpen, setInputOpen] = useState(false);
-  const [customArr, setCustomArr] = useState('');
-  const [customErr, setCustomErr] = useState('');
+  // ===== STATE: Array and search parameters =====
+  const [arr, setArr]           = useState(defaultArr);  // Current array
+  const [target, setTarget]     = useState(defaultTarget);  // Target value
+  const [targetInput, setTargetInput] = useState(String(defaultTarget));  // User input field
+  const [inputOpen, setInputOpen] = useState(false);  // Custom input panel open/closed
+  const [customArr, setCustomArr] = useState('');  // Custom array input string
+  const [customErr, setCustomErr] = useState('');  // Error message for custom input
+
+  // ===== STATE: Visualization state synced with animation =====
   const [vizState, setVizState] = useState({
     arr: defaultArr,
-    currentIdx: -1,
-    scannedIdx: [],
-    foundIdx: -1,
+    currentIdx: -1,  // Index currently being checked
+    scannedIdx: [],  // Indices already checked
+    foundIdx: -1,  // Index where target was found (-1 if not found)
     target: defaultTarget,
   });
 
+  // ===== EFFECT: Sync visualization with animation step =====
+  // When currentStep changes, update visualization state
   useEffect(() => {
     if (!currentStep) {
+      // No step - reset to initial state
       setVizState({ arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target });
       return;
     }
+    // Update visualization from current step
     setVizState({
       arr:        currentStep.arr        || arr,
       currentIdx: currentStep.currentIdx ?? -1,
@@ -164,24 +188,30 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     });
   }, [currentStep]); // eslint-disable-line
 
+  // ===== HANDLE RUN: Start search animation =====
   const handleRun = () => {
     const t = parseInt(targetInput);
     if (isNaN(t)) { setCustomErr('Enter a valid target number.'); return; }
     setTarget(t);
     setCustomErr('');
+    // Generate steps and trigger animation
     onRunSteps(generateSteps(arr, t));
   };
 
+  // ===== HANDLE RESET: Clear visualization =====
   const handleReset = () => {
     onReset();
     setVizState({ arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target });
   };
 
+  // ===== HANDLE NEW ARRAY: Generate random array and target =====
   const handleNewArray = () => {
+    // Random array size 10-17 elements
     const size = 10 + Math.floor(Math.random() * 8);
+    // Random values 5-95
     const a = Array.from({ length: size }, () => Math.floor(Math.random() * 90) + 5);
     setArr(a);
-    // Pick a target that exists half the time
+    // 60% chance target exists in array, 40% chance it's a random value
     const t = Math.random() > 0.4 ? a[Math.floor(Math.random() * a.length)] : Math.floor(Math.random() * 90) + 5;
     setTargetInput(String(t));
     setTarget(t);
@@ -189,32 +219,39 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     setVizState({ arr: a, currentIdx: -1, scannedIdx: [], foundIdx: -1, target: t });
   };
 
+  // ===== HANDLE LOAD CUSTOM: Load user-provided array and target =====
   const handleLoadCustom = () => {
     setCustomErr('');
     try {
+      // Parse and validate input
       const parsed = parseCustomInput(customArr);
       const t = parseInt(targetInput);
       if (isNaN(t)) { setCustomErr('Enter a valid target number.'); return; }
+      // Update array and target
       setArr(parsed);
       setTarget(t);
       onReset();
       setVizState({ arr: parsed, currentIdx: -1, scannedIdx: [], foundIdx: -1, target: t });
-      setInputOpen(false);
+      setInputOpen(false);  // Close input panel
       setCustomArr('');
     } catch (e) { setCustomErr(e.message); }
   };
 
+  // ===== CALCULATE SCAN COUNT =====
+  // Total elements scanned so far
   const scannedCount = vizState.scannedIdx.length + (vizState.currentIdx >= 0 ? 1 : 0);
 
   return (
     <div className="ls-root">
-      {/* Top bar */}
+      {/* ===== TOP BAR: Controls and target input ===== */}
       <div className="ls-topbar">
+        {/* Custom input toggle button */}
         <button className={`ls-custom-toggle ${inputOpen ? 'open' : ''}`}
           onClick={() => setInputOpen(o => !o)} disabled={isRunning}>
           ✏ Custom Input {inputOpen ? '▲' : '▼'}
         </button>
 
+        {/* Target value input */}
         <div className="ls-target-input-wrap">
           <span className="ls-target-input-label">Target:</span>
           <input
@@ -222,12 +259,13 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
             className="ls-target-input"
             value={targetInput}
             onChange={e => setTargetInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleRun()}
+            onKeyDown={e => e.key === 'Enter' && handleRun()}  // Enter key to search
             disabled={isRunning}
             placeholder="value"
           />
         </div>
 
+        {/* Action buttons */}
         <div className="ls-topbar-right">
           <button className="ls-btn ls-btn-secondary" onClick={handleNewArray} disabled={isRunning}>⚡ Random</button>
           <button className="ls-btn ls-btn-run" onClick={handleRun} disabled={isRunning || isPaused}>▶ Search</button>
@@ -235,6 +273,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
         </div>
       </div>
 
+      {/* ===== CUSTOM INPUT PANEL ===== */}
       {inputOpen && (
         <div className="ls-custom-panel">
           <div className="ls-custom-row">
@@ -249,7 +288,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
         </div>
       )}
 
-      {/* Target panel */}
+      {/* ===== TARGET PANEL: Shows target value and search status ===== */}
       <TargetPanel
         target={vizState.target}
         foundIdx={vizState.foundIdx}
@@ -257,7 +296,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
         arr={vizState.arr}
       />
 
-      {/* Scanner */}
+      {/* ===== ARRAY SCANNER: Main visualization ===== */}
       <ArrayScanner
         arr={vizState.arr}
         currentIdx={vizState.currentIdx}
@@ -266,14 +305,14 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
         target={vizState.target}
       />
 
-      {/* Complexity note */}
+      {/* ===== COMPLEXITY NOTE: Analysis info ===== */}
       <ComplexityNote
         scannedCount={scannedCount}
         total={vizState.arr.length}
         found={vizState.foundIdx >= 0}
       />
 
-      {/* Legend */}
+      {/* ===== LEGEND: Explain colors ===== */}
       <div className="ls-legend">
         {[
           { color: COLORS.scanning.border, label: 'Currently checking' },

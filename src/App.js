@@ -76,7 +76,7 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        <span>AlgoViz v2 &mdash; SR University, Warangal</span>
+        <span>AlgoViz v2 &mdash; Palakurthi Lalith Prakash</span>
         <span>Each algorithm, its own visualization</span>
       </footer>
     </div>

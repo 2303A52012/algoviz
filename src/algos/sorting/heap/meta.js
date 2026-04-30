@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'heap', category: 'sorting', label: 'Heap Sort',
   emoji: '🏔️',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'heap-tree',
   keyInsight: 'The array itself represents the binary heap — index i has children at 2i+1 and 2i+2.',
   useCases: ['Guaranteed O(n log n)', 'In-place with no extra memory', 'Priority queues'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;
