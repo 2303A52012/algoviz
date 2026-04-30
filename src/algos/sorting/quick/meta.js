@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'quick', category: 'sorting', label: 'Quick Sort',
   emoji: '⚡',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'partition',
   keyInsight: 'Pivot choice matters — middle element avoids worst-case on already-sorted data.',
   useCases: ['General purpose sorting', 'In-place sorting', 'Cache-friendly access'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;

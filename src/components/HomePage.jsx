@@ -302,7 +302,7 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
         </p>
 
         <div className="hero-stats">
-          {[[REGISTRY.length, 'Algorithms'], [DS_REGISTRY.length, 'Data Structures'], [CATEGORIES.length, 'Categories'], ['5', 'Vis. Styles']].map(([v, l]) => (
+          {[['18', 'Algorithms'], ['5', 'Vis. Styles'], ['3', 'Categories'], ['∞', 'Free']].map(([v, l]) => (
             <div key={l} className="hero-stat">
               <span className="hero-stat-val">{v}</span>
               <span className="hero-stat-label">{l}</span>

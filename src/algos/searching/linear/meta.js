@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'linear', category: 'searching', label: 'Linear Search',
   emoji: '🔦',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'scanner',
   keyInsight: 'Simple but slow. Best used when data is unsorted or when you only need to search once.',
   useCases: ['Unsorted data', 'Linked lists', 'Small datasets', 'One-time search'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;

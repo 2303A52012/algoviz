@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { getById, CATEGORIES } from '../registry';
+import CodeViewer from './CodeViewer';
 import './AlgoPage.css';
 
 const SPEED_MAP    = { 1: 800, 2: 350, 3: 120, 4: 40, 5: 6 };
@@ -28,6 +29,7 @@ export default function AlgoPage({ algoId, onBack }) {
   const stepsRef   = useRef([]);
   const idxRef     = useRef(0);
   const statsRef   = useRef({ comparisons: 0, swaps: 0, steps: 0 });
+  const codeRef    = useRef(null);
 
   // Called by visualizer with its generated steps
   const handleRunSteps = useCallback((steps) => {
@@ -165,6 +167,17 @@ export default function AlgoPage({ algoId, onBack }) {
               {meta?.stable != null && (
                 <span className="tag">{meta.stable ? '✓ stable' : '✗ unstable'}</span>
               )}
+              {meta.codeSnippets && (
+                <button
+                  className="tag tag-code"
+                  onClick={() => {
+                    codeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  style={{ cursor: 'pointer', background: 'rgba(37, 99, 235, 0.1)', borderColor: 'var(--accent-blue)' }}
+                >
+                  ◆ Code
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -280,6 +293,16 @@ export default function AlgoPage({ algoId, onBack }) {
           )}
         </div>
       </div>
+
+      {/* Code Implementation */}
+      {meta.codeSnippets && (
+        <div ref={codeRef} className="code-section">
+          <CodeViewer 
+            codeSnippets={meta.codeSnippets}
+            algoLabel={meta.label}
+          />
+        </div>
+      )}
 
     </div>
   );

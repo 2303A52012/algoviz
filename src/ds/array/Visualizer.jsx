@@ -78,7 +78,7 @@ function ArrayRow({ cells, capacity }) {
   );
 }
 
-function OpPanel({ onAccess, onInsert, onDelete, onSearch, onReset, disabled }) {
+function OpPanel({ onAccess, onInsert, onDelete, onSearch, onReset, onRandom, disabled }) {
   const [val, setVal] = useState('');
   const [idx, setIdx] = useState('');
   const [op, setOp]   = useState('access');
@@ -145,6 +145,9 @@ function OpPanel({ onAccess, onInsert, onDelete, onSearch, onReset, disabled }) 
         )}
         <button className="ar-go-btn" onClick={handleGo} disabled={disabled}>
           ▶ Run
+        </button>
+        <button className="ar-rand-btn" onClick={onRandom} disabled={disabled}>
+          ⚡ Random Array
         </button>
         <button className="ar-reset-btn" onClick={onReset} disabled={disabled}>
           ↺ Reset
@@ -302,6 +305,15 @@ export default function Visualizer() {
     setLog('Reset. Choose an operation above and press ▶ Run.');
   };
 
+  const handleRandom = () => {
+    stop(); setRunning(false);
+    const size = 4 + Math.floor(Math.random() * 6);
+    const newArr = Array.from({ length: size }, () => Math.floor(Math.random() * 90) + 5);
+    setCells(newArr.map(v => ({ val: v, state: 'default' })));
+    setCapacity(MAX_SIZE);
+    setLog('Random array loaded: [' + newArr.join(', ') + ']. Size: ' + size + '/' + MAX_SIZE + '.');
+  };
+
   return (
     <div className="ar-root">
       <CapacityGauge size={size} capacity={capacity} />
@@ -309,7 +321,8 @@ export default function Visualizer() {
       <OpPanel
         onAccess={handleAccess} onInsert={handleInsert}
         onDelete={handleDelete} onSearch={handleSearch}
-        onReset={handleReset} disabled={running}
+        onReset={handleReset} onRandom={handleRandom}
+        disabled={running}
       />
       <div className="ar-log"><span className="ar-log-msg">{log}</span></div>
       <div className="ar-complexity-row">

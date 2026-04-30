@@ -1,0 +1,253 @@
+/* Code Viewer Component */
+
+.code-viewer {
+  margin-top: 40px;
+  background: var(--bg-card, #0f1729);
+  border: 1px solid var(--border-subtle, #1a2540);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.code-viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-subtle, #1a2540);
+  background: linear-gradient(135deg, rgba(100, 200, 255, 0.05), rgba(150, 100, 255, 0.05));
+}
+
+.code-viewer-header h3 {
+  margin: 0;
+  color: var(--text-primary, #fff);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.code-viewer-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.code-action-btn {
+  padding: 8px 16px;
+  background: var(--accent-blue, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.code-action-btn:hover {
+  background: var(--accent-blue-bright, #3b82f6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.code-action-btn:active {
+  transform: translateY(0);
+}
+
+.language-tabs {
+  display: flex;
+  gap: 0;
+  padding: 12px 24px;
+  background: var(--bg-dark, #0a0f1b);
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border-subtle, #1a2540);
+  scroll-behavior: smooth;
+}
+
+.language-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.language-tabs::-webkit-scrollbar-track {
+  background: var(--bg-darker, #050a13);
+}
+
+.language-tabs::-webkit-scrollbar-thumb {
+  background: var(--text-muted, #555);
+  border-radius: 3px;
+}
+
+.language-tabs::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary, #777);
+}
+
+.lang-tab {
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--text-muted, #888);
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 3px;
+}
+
+/* Language-specific icons */
+.lang-icon-js {
+  background: #f7df1e;
+  color: #000;
+}
+
+.lang-icon-py {
+  background: #3776ab;
+  color: #ffd43b;
+}
+
+.lang-icon-java {
+  background: #007396;
+  color: #f89820;
+}
+
+.lang-icon-cpp {
+  background: #00599c;
+  color: #fff;
+}
+
+.lang-icon-c {
+  background: #a8b9cc;
+  color: #003366;
+}
+
+.lang-icon-csharp {
+  background: #239120;
+  color: #fff;
+}
+
+.lang-icon-go {
+  background: #00add8;
+  color: #fff;
+}
+
+.lang-icon-rust {
+  background: #ce422b;
+  color: #fff;
+}
+
+.lang-icon-js::before {
+  content: 'JS';
+}
+
+.lang-icon-py::before {
+  content: 'Py';
+}
+
+.lang-icon-java::before {
+  content: 'J';
+}
+
+.lang-icon-cpp::before {
+  content: '++';
+}
+
+.lang-icon-c::before {
+  content: 'C';
+}
+
+.lang-icon-csharp::before {
+  content: 'C#';
+}
+
+.lang-icon-go::before {
+  content: 'Go';
+  font-size: 10px;
+}
+
+.lang-icon-rust::before {
+  content: 'Rs';
+}
+
+.lang-tab:hover {
+  color: var(--text-primary, #fff);
+}
+
+.lang-tab-active {
+  color: var(--accent-blue, #2563eb);
+  border-bottom-color: var(--accent-blue, #2563eb);
+}
+
+.code-block {
+  padding: 24px;
+  margin: 0;
+  background: var(--bg-darker, #050a13);
+  color: var(--text-code, #d4d4d4);
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  max-height: 500px;
+  overflow-y: auto;
+  border-radius: 0;
+}
+
+.code-block::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.code-block::-webkit-scrollbar-track {
+  background: var(--bg-card, #0f1729);
+}
+
+.code-block::-webkit-scrollbar-thumb {
+  background: var(--text-muted, #555);
+  border-radius: 4px;
+}
+
+.code-block::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary, #777);
+}
+
+.code-block code {
+  color: inherit;
+  font-family: inherit;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .code-viewer-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .code-viewer-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .code-block {
+    font-size: 12px;
+    padding: 16px;
+  }
+
+  .lang-tab {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}

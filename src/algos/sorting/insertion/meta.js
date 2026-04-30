@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'insertion', category: 'sorting', label: 'Insertion Sort',
   emoji: '🃏',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'bars-split',
   keyInsight: 'Very efficient for nearly sorted data — can be O(n) in the best case.',
   useCases: ['Nearly sorted arrays', 'Online sorting (stream)', 'Small datasets'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;

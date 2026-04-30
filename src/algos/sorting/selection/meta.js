@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'selection', category: 'sorting', label: 'Selection Sort',
   emoji: '🎯',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'bars-sweep',
   keyInsight: 'Makes exactly n-1 swaps — useful when write operations are expensive.',
   useCases: ['When swaps are costly', 'Small datasets', 'Memory-constrained systems'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;

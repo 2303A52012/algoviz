@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'merge', category: 'sorting', label: 'Merge Sort',
   emoji: '🌳',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'tree',
   keyInsight: 'The split phase builds a binary call tree. The merge phase climbs back up combining sorted pieces.',
   useCases: ['Large datasets', 'Linked lists', 'External sorting', 'Stable sort required'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;

@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'bubble', category: 'sorting', label: 'Bubble Sort',
   emoji: '🫧',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'bars',
   keyInsight: 'After each full pass, the next largest element is guaranteed to be in its correct position at the end.',
   useCases: ['Educational purposes', 'Nearly sorted arrays', 'Very small datasets'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;

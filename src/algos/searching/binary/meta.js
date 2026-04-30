@@ -1,3 +1,5 @@
+import { CODE_SNIPPETS } from './code';
+
 const meta = {
   id: 'binary', category: 'searching', label: 'Binary Search',
   emoji: '✂️',
@@ -9,5 +11,6 @@ const meta = {
   visualStyle: 'range-shrink',
   keyInsight: 'Every comparison cuts the problem in half. 1 million elements needs at most 20 comparisons.',
   useCases: ['Sorted arrays', 'Dictionary lookup', 'Finding boundaries', 'Frequent searches'],
+  codeSnippets: CODE_SNIPPETS,
 };
 export default meta;
