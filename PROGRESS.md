@@ -10,10 +10,10 @@
 
 | Category | Status | Algorithms | Files |
 |----------|--------|-----------|-------|
-| **Sorting** | 🟡 PARTIAL | 1/8 | 3/24 |
-| **Searching** | 🟡 PARTIAL | 3/3 | 9/9 |
+| **Sorting** | 🟡 PARTIAL | 2/8 | 6/24 |
+| **Searching** | ✅ COMPLETE | 3/3 | 9/9 |
 | **Graph** | ⬜ NOT STARTED | 0/4 | 0/12 |
-| **TOTAL** | 🟡 IN PROGRESS | 4/15 | 12/45 |
+| **TOTAL** | 🟡 IN PROGRESS | 5/15 | 15/45 |
 
 ---
 
@@ -27,6 +27,10 @@
 - ✅ **Heap Sort** - [code.js](src/algos/sorting/heap/code.js), [steps.js](src/algos/sorting/heap/steps.js), [Visualizer.jsx](src/algos/sorting/heap/Visualizer.jsx)
   - **Features:** Max heap building + extraction, dual tree/bar visualization
   - **Comment Pattern:** ===== HEAPIFY / ===== HEAP SORT headers + child index calculations + recursive logic
+
+- ✅ **Bubble Sort** - [code.js](src/algos/sorting/bubble/code.js), [steps.js](src/algos/sorting/bubble/steps.js), [Visualizer.jsx](src/algos/sorting/bubble/Visualizer.jsx)
+  - **Features:** Adjacent element comparison with pass tracking, early exit optimization
+  - **Comment Pattern:** ===== BUBBLE SORT header + pass/comparison/swap logic + state management comments
 
 ### Searching Algorithms
 - ✅ **Linear Search** - [code.js](src/algos/searching/linear/code.js), [steps.js](src/algos/searching/linear/steps.js), [Visualizer.jsx](src/algos/searching/linear/Visualizer.jsx)
@@ -45,16 +49,13 @@
 
 ## 🟡 IN PROGRESS
 
-### Sorting - Bubble Sort (1/3 Files)
-- ✅ **code.js** - All 8 languages commented with loop explanations
-- ⬜ **steps.js** - Need phase headers (PASS 1, PASS 2, etc) + swap tracking
-- ⬜ **Visualizer.jsx** - Need component state + control flow comments
+No algorithms currently in progress - ready to start next algorithm!
 
 ---
 
-## ⬜ NOT YET STARTED (9 Algorithms, 27 Files)
+## ⬜ NOT YET STARTED (8 Algorithms, 24 Files)
 
-### Sorting Algorithms (6 algorithms, 18 files)
+### Sorting Algorithms (5 algorithms, 15 files)
 1. **Insertion Sort** - Incremental insertion with gap movement
 2. **Selection Sort** - Find minimum and place in sorted section
 3. **Merge Sort** - Divide-and-conquer merging algorithm
@@ -161,9 +162,9 @@ src/algos/
 ## 📈 Progress Metrics
 
 **Current Status:**
-- ✅ Fully Commented: 5 algorithms (15 files, ~7000+ lines)
-- 🟡 In Progress: 1 algorithm (1/3 files)
-- ⬜ Pending: 11 algorithms (29 files, ~15,000+ lines)
+- ✅ Fully Commented: 6 algorithms (18 files, ~8500+ lines)
+- 🟡 In Progress: 0 algorithms
+- ⬜ Pending: 10 algorithms (27 files, ~14,000+ lines)
 
 **Estimated Remaining Work:**
 - Sorting algorithms: ~18 files
@@ -180,14 +181,13 @@ src/algos/
 
 ## 🎯 Next Steps (Priority Order)
 
-### Phase 1: Complete Sorting (HIGH PRIORITY)
-1. **Complete Bubble Sort** (steps.js + Visualizer.jsx)
-2. **Insertion Sort** (all 3 files)
-3. **Selection Sort** (all 3 files)
-4. **Merge Sort** (all 3 files)
-5. **Quick Sort** (all 3 files)
-6. **Shell Sort** (all 3 files)
-7. **Counting Sort** (all 3 files)
+### Phase 1: Complete Remaining Sorting (HIGH PRIORITY)
+1. **Insertion Sort** (all 3 files)
+2. **Selection Sort** (all 3 files)
+3. **Merge Sort** (all 3 files)
+4. **Quick Sort** (all 3 files)
+5. **Shell Sort** (all 3 files)
+6. **Counting Sort** (all 3 files)
 
 ### Phase 2: Complete Searching (MEDIUM PRIORITY)
 1. **Interpolation Search** (all 3 files)
@@ -240,12 +240,28 @@ src/algos/
 - Color coding system for visual feedback
 - Performance metrics tracking (comparisons, swaps, moves)
 
+## 🚀 Technical Details
+
+**Tech Stack:**
+- React 18+ with Hooks
+- JavaScript/JSX for components
+- CSS with CSS custom properties
+- Multi-language code snippets (8 languages)
+
+**Key Features Documented:**
+- Algorithm phase explanations
+- Loop and conditional logic
+- State management (useState, useRef, useCallback)
+- Visualization rendering logic
+- Color coding system for visual feedback
+- Performance metrics tracking (comparisons, swaps, moves)
+
 ---
 
 ## 📅 Last Updated
 **Date:** April 30, 2026  
-**Status:** 5/17 algorithms fully commented (29% complete)  
-**Completed Today:** Bubble Sort code.js (all 8 languages)
+**Status:** 6/16 algorithms fully commented (38% complete)  
+**Completed Today:** Bubble Sort steps.js + Visualizer.jsx (all 3 files finished)
 
 ---
 
