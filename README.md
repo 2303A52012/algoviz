@@ -50,10 +50,10 @@ All algorithms available in **8 languages**:
 - ✅ Bubble Sort
 - ✅ Heap Sort
 - ✅ Radix Sort
-- ⬜ Insertion Sort
-- ⬜ Selection Sort
-- ⬜ Merge Sort
-- ⬜ Quick Sort
+- ✅ Insertion Sort
+- ✅ Selection Sort
+- ✅ Merge Sort
+- ✅ Quick Sort
 - ⬜ Shell Sort
 - ⬜ Counting Sort
 
@@ -65,8 +65,8 @@ All algorithms available in **8 languages**:
 - ⬜ Ternary Search
 
 #### Graph Algorithms (4)
-- ⬜ Breadth-First Search (BFS)
-- ⬜ Depth-First Search (DFS)
+- ✅ Breadth-First Search (BFS)
+- ✅ Depth-First Search (DFS)
 - ⬜ Dijkstra's Algorithm
 - ⬜ A* Search
 
