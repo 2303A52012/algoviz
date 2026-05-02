@@ -264,7 +264,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
               placeholder="e.g. 64, 34, 25, 12, 22, 11, 90, 42"
               value={customInput}
               onChange={e => setCustomInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleLoadCustom()} {/* Load on Enter key */}
+              onKeyDown={e => e.key === 'Enter' && handleLoadCustom()}
             />
             {/* Load button to submit input */}
             <button className="bb-btn bb-btn-run" onClick={handleLoadCustom}>Load</button>
