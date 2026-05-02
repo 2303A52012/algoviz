@@ -281,11 +281,11 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
 
       {/* ===== BAR CHART: Main visualization of algorithm execution ===== */}
       <BarChart
-        arr={vizState.arr} {/* Current array state */}
-        comparing={vizState.comparing} {/* Indices being compared */}
-        swapping={vizState.swapping} {/* Indices being swapped */}
-        sortedFrom={vizState.sortedFrom} {/* Boundary of sorted region */}
-        justSorted={vizState.justSorted} {/* Index just placed in final position */}
+        arr={vizState.arr}
+        comparing={vizState.comparing}
+        swapping={vizState.swapping}
+        sortedFrom={vizState.sortedFrom}
+        justSorted={vizState.justSorted}
       />
 
       {/* ===== LEGEND: Explain color coding ===== */}
