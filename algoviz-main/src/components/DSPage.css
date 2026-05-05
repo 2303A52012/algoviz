@@ -1,0 +1,88 @@
+/* ===== DS PAGE ===== */
+.ds-page { display: flex; flex-direction: column; gap: 16px; }
+
+/* Header */
+.ds-page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.ds-back-btn {
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);
+  background: none; border: 1px solid var(--border-dim); border-radius: var(--radius-md);
+  padding: 6px 12px; cursor: pointer; transition: all var(--t-fast);
+  white-space: nowrap; flex-shrink: 0; margin-top: 4px;
+}
+.ds-back-btn:hover { color: var(--teal-light); border-color: var(--teal); }
+
+.ds-title-area { display: flex; gap: 14px; align-items: flex-start; }
+.ds-page-emoji { font-size: 28px; margin-top: 4px; }
+.ds-page-title {
+  font-family: var(--font-display); font-size: 24px; font-weight: 800;
+  color: var(--text-primary); margin-bottom: 8px;
+}
+.ds-page-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ds-tag {
+  font-family: var(--font-mono); font-size: 10px;
+  padding: 3px 9px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-dim); color: var(--text-muted); background: var(--bg-surface);
+}
+.ds-tag-category { color: var(--teal-light); border-color: var(--teal); background: #0a1f1a; }
+.ds-tag-diff     { color: var(--diff-beginner); border-color: var(--diff-beginner); }
+
+/* Viz area */
+.ds-viz-area {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-xl);
+  min-height: 300px;
+  overflow: hidden;
+}
+.ds-viz-loading {
+  display: flex; align-items: center; justify-content: center;
+  height: 300px; color: var(--text-muted); font-size: 12px;
+}
+
+/* Info panels */
+.ds-info-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.ds-info-panel {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 16px;
+}
+.ds-info-accent { border-left: 3px solid var(--teal); }
+.ds-panel-title {
+  font-size: 10px; color: var(--text-muted);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;
+}
+.ds-panel-body { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+.ds-use-cases  { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.ds-use-cases li { font-size: 12px; color: var(--text-secondary); padding-left: 14px; position: relative; }
+.ds-use-cases li::before { content: '→'; position: absolute; left: 0; color: var(--text-muted); }
+
+/* Complexity */
+.ds-complexity-panel {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 16px;
+}
+.ds-complexity-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.ds-complexity-cell {
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--bg-surface); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md); padding: 10px 14px; min-width: 90px;
+}
+.ds-op-label { font-size: 10px; color: var(--text-muted); text-transform: capitalize; }
+.ds-op-val   { font-size: 13px; font-weight: 500; }
+.ds-op-val.good { color: var(--green-light); }
+.ds-op-val.ok   { color: var(--amber-light); }
+.ds-op-val.bad  { color: var(--red-light); }
+
+.ds-page-error { padding: 40px; text-align: center; color: var(--text-muted); }
+.ds-page-error button {
+  margin-top: 16px; font-family: var(--font-mono); font-size: 12px;
+  padding: 8px 16px; cursor: pointer; background: none;
+  border: 1px solid var(--border-dim); color: var(--text-muted); border-radius: var(--radius-md);
+}

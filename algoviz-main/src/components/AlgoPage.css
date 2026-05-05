@@ -1,0 +1,180 @@
+/* ===== ALGO PAGE ===== */
+.algo-page { display: flex; flex-direction: column; gap: 16px; }
+
+/* Header */
+.algo-page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.back-btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  background: none;
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.back-btn:hover { color: var(--blue-light); border-color: var(--blue); }
+
+.algo-page-title-area { display: flex; gap: 14px; align-items: flex-start; }
+.algo-page-emoji { font-size: 28px; margin-top: 4px; }
+.algo-page-title { font-family: var(--font-display); font-size: 24px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; }
+
+.algo-page-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  background: var(--bg-surface);
+}
+
+/* Viz area */
+.viz-area {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-xl);
+  min-height: 280px;
+  overflow: hidden;
+}
+.viz-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 280px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* Controls */
+.algo-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+}
+.controls-left { display: flex; gap: 8px; }
+.controls-right { display: flex; align-items: center; gap: 16px; }
+
+.ctrl-btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  border-radius: var(--radius-md);
+  padding: 8px 20px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all var(--t-fast);
+  font-weight: 500;
+}
+.ctrl-run {
+  background: #1e3a5f;
+  color: var(--blue-light);
+  border-color: var(--blue);
+}
+.ctrl-run:hover:not(:disabled) { background: var(--blue); color: #fff; }
+.ctrl-run.pausing { background: #2d1f0a; color: var(--amber-light); border-color: var(--amber); }
+.ctrl-reset { background: none; color: var(--red-light); border-color: #7f1d1d; }
+.ctrl-reset:hover:not(:disabled) { background: #7f1d1d; }
+.ctrl-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.speed-control { display: flex; align-items: center; gap: 8px; }
+.ctrl-label { font-size: 11px; color: var(--text-muted); }
+.speed-control input[type=range] { width: 90px; }
+.speed-label { font-size: 11px; color: var(--blue-light); min-width: 52px; }
+
+/* Step log */
+.step-log {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--blue);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-height: 40px;
+}
+.step-log-label { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+.step-log-msg { font-size: 12px; color: var(--blue-light); line-height: 1.5; }
+
+/* Stats */
+.stats-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.stat-item {
+  flex: 1;
+  min-width: 100px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-val { font-family: var(--font-display); font-size: 22px; font-weight: 800; color: var(--blue-light); line-height: 1; }
+.stat-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; }
+
+/* Info panels */
+.algo-info-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.info-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+.info-panel-accent { border-left: 3px solid var(--accent, var(--blue)); }
+.info-panel-title { font-size: 10px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.info-panel-body { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+.use-cases-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.use-cases-list li { font-size: 12px; color: var(--text-secondary); padding-left: 14px; position: relative; }
+.use-cases-list li::before { content: '→'; position: absolute; left: 0; color: var(--text-muted); }
+
+/* Complexity */
+.complexity-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+.complexity-title { font-size: 10px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+.complexity-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.complexity-cell {
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  min-width: 110px;
+}
+.complexity-label { font-size: 10px; color: var(--text-muted); }
+.complexity-val { font-size: 13px; font-weight: 500; }
+.complexity-val.good { color: var(--green-light); }
+.complexity-val.ok   { color: var(--amber-light); }
+.complexity-val.bad  { color: var(--red-light); }
+
+.algo-page-error { padding: 40px; text-align: center; color: var(--text-muted); }
+.algo-page-error button { margin-top: 16px; font-family: var(--font-mono); font-size: 12px; padding: 8px 16px; cursor: pointer; background: none; border: 1px solid var(--border-dim); color: var(--text-muted); border-radius: var(--radius-md); }
+
+@media (max-width: 600px) {
+  .algo-page-header { flex-direction: column; }
+  .algo-controls { flex-direction: column; align-items: flex-start; }
+  .controls-right { width: 100%; }
+  .speed-control input[type=range] { flex: 1; }
+}
