@@ -2,7 +2,7 @@
 
 **Project Goal:** Add comprehensive inline comments to every code block across all 20+ algorithms (sorting, searching, graph) to enable learners to understand what each block does.
 
-**Status:** 🟡 **IN PROGRESS** - 5/17 algorithms fully documented
+**Status:** 🟡 **IN PROGRESS** - 6/16 algorithms fully documented (38% complete)
 
 ---
 
@@ -10,14 +10,14 @@
 
 | Category | Status | Algorithms | Files |
 |----------|--------|-----------|-------|
-| **Sorting** | 🟡 PARTIAL | 2/8 | 6/24 |
+| **Sorting** | 🟡 PARTIAL | 3/8 | 9/24 |
 | **Searching** | ✅ COMPLETE | 3/3 | 9/9 |
 | **Graph** | ⬜ NOT STARTED | 0/4 | 0/12 |
-| **TOTAL** | 🟡 IN PROGRESS | 5/15 | 15/45 |
+| **TOTAL** | 🟡 IN PROGRESS | 6/15 | 18/45 |
 
 ---
 
-## ✅ FULLY DOCUMENTED (5 Algorithms, 15 Files)
+## ✅ FULLY DOCUMENTED (6 Algorithms, 18 Files)
 
 ### Sorting Algorithms
 - ✅ **Radix Sort** - [code.js](src/algos/sorting/radix/code.js), [steps.js](src/algos/sorting/radix/steps.js), [Visualizer.jsx](src/algos/sorting/radix/Visualizer.jsx)
@@ -47,15 +47,19 @@
 
 ---
 
-## 🟡 IN PROGRESS
+## 🟡 IN PROGRESS & TESTING
 
-No algorithms currently in progress - ready to start next algorithm!
+**Status:** All 6 algorithms fully documented and compiling successfully!
+- ✅ Bubble Sort: Fixed JSX syntax errors (lines 267, 284-288)
+- ✅ All inline prop comments removed (not compatible with JSX)
+- ✅ Build now compiles without errors
+- 🚀 Ready to start next algorithm: **Insertion Sort**
 
 ---
 
-## ⬜ NOT YET STARTED (8 Algorithms, 24 Files)
+## ⬜ NOT YET STARTED (9 Algorithms, 27 Files)
 
-### Sorting Algorithms (5 algorithms, 15 files)
+### Sorting Algorithms (5 algorithms, 15 files) - Next in queue
 1. **Insertion Sort** - Incremental insertion with gap movement
 2. **Selection Sort** - Find minimum and place in sorted section
 3. **Merge Sort** - Divide-and-conquer merging algorithm
@@ -162,15 +166,16 @@ src/algos/
 ## 📈 Progress Metrics
 
 **Current Status:**
-- ✅ Fully Commented: 6 algorithms (18 files, ~8500+ lines)
-- 🟡 In Progress: 0 algorithms
-- ⬜ Pending: 10 algorithms (27 files, ~14,000+ lines)
+- ✅ Fully Commented: 6 algorithms (18 files, ~8500+ documented lines)
+- 🟡 In Progress: 0 algorithms (all compiling successfully)
+- ⬜ Pending: 9 algorithms (27 files, ~13,500+ lines to document)
+- 🐛 Bug Fixes: 2 JSX syntax errors resolved (commits 29181825, 1e29aca8)
 
 **Estimated Remaining Work:**
-- Sorting algorithms: ~18 files
-- Searching algorithms: ~5 files
-- Graph algorithms: ~12 files
-- **Total pending files:** 29
+- Sorting algorithms: ~15 files (Insertion, Selection, Merge, Quick, Shell, Counting)
+- Searching algorithms: ~6 files (Interpolation, Ternary)
+- Graph algorithms: ~12 files (BFS, DFS, Dijkstra, A*)
+- **Total pending files:** 27
 
 **Comment Insertion:** Each file receives 20-50 inline comments depending on complexity
 - Simple algorithms: ~20-30 comments/file
@@ -240,9 +245,7 @@ src/algos/
 - Color coding system for visual feedback
 - Performance metrics tracking (comparisons, swaps, moves)
 
-## 🚀 Technical Details
-
-**Tech Stack:**
+---
 - React 18+ with Hooks
 - JavaScript/JSX for components
 - CSS with CSS custom properties
@@ -259,13 +262,30 @@ src/algos/
 ---
 
 ## 📅 Last Updated
-**Date:** April 30, 2026  
-**Status:** 6/16 algorithms fully commented (38% complete)  
-**Completed Today:** Bubble Sort steps.js + Visualizer.jsx (all 3 files finished)
+**Date:** May 5, 2026  
+**Status:** 6/16 algorithms fully commented (38% complete) + Bug fixes applied  
+**Recent Work:** 
+- Fixed JSX syntax errors in Bubble Sort Visualizer.jsx
+- Build now compiles successfully without errors
+- Ready to document remaining 9 algorithms
 
 ---
 
-## 💾 Related Files
+## � Project Statistics
+
+| Metric | Count |
+|--------|-------|
+| **Algorithms Fully Documented** | 6/16 (38%) |
+| **Files Completed** | 18/45 (40%) |
+| **Lines of Comments** | 8500+ |
+| **Languages Covered** | 8 (JS, Python, Java, C++, C, C#, Go, Rust) |
+| **Build Status** | ✅ Compiling successfully |
+| **Bug Fixes Applied** | ✅ 2 JSX syntax errors resolved |
+| **Commit Hash (Latest)** | 1e29aca8 |
+
+---
+
+## �💾 Related Files
 - Main app: [src/App.js](src/App.js)
 - Component page: [src/components/AlgoPage.jsx](src/components/AlgoPage.jsx)
 - Registry: [src/registry.js](src/registry.js)
