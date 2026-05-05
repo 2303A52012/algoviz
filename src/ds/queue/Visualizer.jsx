@@ -270,14 +270,17 @@ function StatePanel({ queue }) {
   const total = queue.length;
   const front = total > 0 ? queue[0].val : null;
   const rear  = total > 0 ? queue[total - 1].val : null;
+  // Calculate visible and hidden counts
+  const visibleCount = Math.min(total, VISIBLE_LIMIT); // How many items are shown
+  const hiddenCount = total > visibleCount ? total - visibleCount : 0; // How many are hidden
   return (
     <div className="qu-state-panel">
       {[
         { label: 'Front',    val: front ?? '—', color: 'var(--green-light)' },
         { label: 'Rear',     val: rear  ?? '—', color: '#fcd34d'            },
         { label: 'Size',     val: total,         color: 'var(--blue-light)'  },
-        { label: 'Visible',  val: Math.min(total, VISIBLE_LIMIT), color: 'var(--blue-light)' },
-        { label: 'Hidden',   val: Math.max(0, total - VISIBLE_LIMIT), color: '#fcd34d' },
+        { label: 'Visible',  val: visibleCount, color: 'var(--blue-light)' },
+        { label: 'Hidden',   val: hiddenCount, color: '#fcd34d' },
         { label: 'isEmpty()', val: total === 0 ? 'true' : 'false',
           color: total === 0 ? 'var(--green-light)' : 'var(--red-light)' },
       ].map(({ label, val, color }) => (
