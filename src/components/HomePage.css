@@ -272,6 +272,20 @@
 }
 .algo-card:hover .algo-card-cta { opacity: 1; letter-spacing: 2px; }
 
+.algo-card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--amber-light);
+  color: var(--bg-base);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.3px;
+  z-index: 10;
+}
+
 @media (max-width: 600px) {
   .hero { padding: 36px 0 24px; }
   .algo-grid { grid-template-columns: 1fr; }

@@ -31,6 +31,10 @@ import arrayDSMeta      from './ds/array/meta';
 import stackDSMeta      from './ds/stack/meta';
 import queueDSMeta      from './ds/queue/meta';
 import linkedlistDSMeta from './ds/linkedlist/meta';
+import dllDSMeta        from './ds/dll/meta';
+import dcllDSMeta       from './ds/dcll/meta';
+import treesDSMeta      from './ds/trees/meta';
+import graphsDSMeta     from './ds/graphs/meta';
 
 // ===== ALGO REGISTRY =====
 export const REGISTRY = [
@@ -46,6 +50,10 @@ export const DS_REGISTRY = [
   stackDSMeta,
   queueDSMeta,
   linkedlistDSMeta,
+  dllDSMeta,
+  dcllDSMeta,
+  treesDSMeta,
+  graphsDSMeta,
   // Add more DS here as you build them
 ];
 

@@ -421,9 +421,13 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
               <button
                 key={ds.id}
                 className="algo-card"
-                style={{ '--card-color': 'var(--cat-tree)' }}
-                onClick={() => onSelectDS(ds.id)}
+                style={{ '--card-color': 'var(--cat-tree)', opacity: ds.status === 'under-construction' ? 0.7 : 1 }}
+                onClick={() => ds.status !== 'under-construction' && onSelectDS(ds.id)}
+                disabled={ds.status === 'under-construction'}
               >
+                {ds.status === 'under-construction' && (
+                  <div className="algo-card-badge">🔨 Under Construction</div>
+                )}
                 <div className="algo-card-top">
                   <div className="algo-card-info">
                     <div className="algo-card-header">
@@ -453,7 +457,7 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
                   </span>
                 </div>
                 <div className="algo-card-cta" style={{ color: 'var(--cat-tree)' }}>
-                  Explore →
+                  {ds.status === 'under-construction' ? 'Coming Soon' : 'Explore →'}
                 </div>
               </button>
             ))}
