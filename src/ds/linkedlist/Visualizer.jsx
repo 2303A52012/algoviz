@@ -2,210 +2,79 @@ import React, { useState, useCallback, useRef } from 'react';
 import { CODE_SNIPPETS } from './code';
 import './Visualizer.css';
 
-// ===== LINKED LIST VISUALIZATION COMPONENT =====
-// Interactive visualization of Singly Linked List operations
-// Shows nodes connected by pointers with animations
-
-const COLORS = {
-  default:  '#60a5fa',    // blue — regular node
-  head:     '#10b981',    // green — head pointer
-  focus:    '#f59e0b',    // amber — currently focused node
-  inserting: '#a78bfa',   // purple — node being inserted
-  deleted:  '#ef4444',    // red — deleted node
-  null:     '#6b7280',    // gray — null pointer
+// ===== NODE COLOR STATES =====
+const NODE_STATES = {
+  default:    { bg: '#1e3a5f', border: '#3b82f6', text: '#93c5fd' },
+  head:       { bg: '#0f2d1a', border: '#22c55e', text: '#86efac' },
+  focus:      { bg: '#2d1f08', border: '#f59e0b', text: '#fcd34d' },
+  inserting:  { bg: '#2d1b6e', border: '#a855f7', text: '#d8b4fe' },
 };
 
-// ===== LINKED LIST NODE COMPONENT =====
-// Represents a single node in the visualization
-function ListNode({ value, isHead, isFocused, state, label }) {
-  const getColor = () => {
-    if (isHead) return COLORS.head;
-    if (state === 'inserting') return COLORS.inserting;
-    if (state === 'deleted') return COLORS.deleted;
-    if (isFocused) return COLORS.focus;
-    return COLORS.default;
-  };
-
+// ===== SINGLE NODE COMPONENT =====
+function Node({ value, state, isHead }) {
+  const color = NODE_STATES[state] || NODE_STATES.default;
+  
   return (
-    <div className="ll-node-container">
-      <div
-        className={`ll-node ${state}`}
-        style={{ backgroundColor: getColor() }}
-      >
-        <div className="ll-node-value">{value}</div>
-        <div className="ll-node-pointer">→</div>
-      </div>
-      {isHead && <span className="ll-label ll-head-label">HEAD</span>}
-      {label && <span className="ll-label">{label}</span>}
-    </div>
-  );
-}
-
-// ===== LINKED LIST VISUALIZATION COMPONENT =====
-// Main component showing the list with nodes and connections
-function LinkedListVisual({ nodes, headIdx, focusIdx, operations }) {
-  return (
-    <div className="ll-visual">
-      <div className="ll-title">Singly Linked List Visualization</div>
+    <div className="ll-node-wrap">
+      {/* Head label */}
+      {isHead && <span className="ll-head-label">HEAD</span>}
       
-      <div className="ll-lane">
-        {nodes.map((node, idx) => (
-          <div key={idx} className="ll-node-wrapper">
-            <ListNode
-              value={node}
-              isHead={idx === headIdx}
-              isFocused={idx === focusIdx}
-              state={node === null ? 'deleted' : 'normal'}
-              label={`[${idx}]`}
-            />
-            {idx < nodes.length - 1 && (
-              <div className="ll-arrow">
-                {nodes[idx + 1] !== null ? '→' : '→ ∅'}
-              </div>
-            )}
-          </div>
-        ))}
-        <div className="ll-null-pointer">∅ (null)</div>
-      </div>
-
-      {/* Operations Log */}
-      <div className="ll-operations-log">
-        <div className="ll-log-title">Operations Log:</div>
-        {operations.length === 0 ? (
-          <div className="ll-log-entry">No operations yet</div>
-        ) : (
-          operations.slice(-5).map((op, idx) => (
-            <div key={idx} className="ll-log-entry">
-              {op}
-            </div>
-          ))
-        )}
+      {/* Node box */}
+      <div
+        className={`ll-node ll-node-${state}`}
+        style={{
+          background: color.bg,
+          border: `2px solid ${color.border}`,
+          color: color.text,
+        }}
+      >
+        <span className="ll-node-val">{value}</span>
+        <span className="ll-node-pointer">→</span>
       </div>
     </div>
   );
 }
 
-// ===== OPERATION PANEL COMPONENT =====
-// Controls for performing operations on the linked list
+// ===== OPERATION PANEL: TABS & CONTROLS =====
 function OpPanel({ onInsertAtHead, onInsertAtTail, onDeleteHead, onSearch, onRandom, onReset, running }) {
-  const [tab, setTab] = useState('insert'); // insert, delete, search, init
-  const [inputValue, setInputValue] = useState('');
-  const [searchValue, setSearchValue] = useState('');
+  const [tab, setTab] = useState('insert');
+  const [inputVal, setInputVal] = useState('');
+  const [searchVal, setSearchVal] = useState('');
 
   return (
     <div className="ll-op-panel">
+      {/* Tabs */}
       <div className="ll-tabs">
-        <button
-          className={`ll-tab ${tab === 'insert' ? 'active' : ''}`}
-          onClick={() => setTab('insert')}
-          disabled={running}
-        >
-          📥 Insert
-        </button>
-        <button
-          className={`ll-tab ${tab === 'delete' ? 'active' : ''}`}
-          onClick={() => setTab('delete')}
-          disabled={running}
-        >
-          📤 Delete
-        </button>
-        <button
-          className={`ll-tab ${tab === 'search' ? 'active' : ''}`}
-          onClick={() => setTab('search')}
-          disabled={running}
-        >
-          🔍 Search
-        </button>
-        <button
-          className={`ll-tab ${tab === 'init' ? 'active' : ''}`}
-          onClick={() => setTab('init')}
-          disabled={running}
-        >
-          ⚙️ Init
-        </button>
+        <button className={`ll-tab ${tab === 'insert' ? 'active' : ''}`} onClick={() => setTab('insert')} disabled={running}>Insert</button>
+        <button className={`ll-tab ${tab === 'delete' ? 'active' : ''}`} onClick={() => setTab('delete')} disabled={running}>Delete</button>
+        <button className={`ll-tab ${tab === 'search' ? 'active' : ''}`} onClick={() => setTab('search')} disabled={running}>Search</button>
+        <button className={`ll-tab ${tab === 'init' ? 'active' : ''}`} onClick={() => setTab('init')} disabled={running}>Init</button>
       </div>
 
-      <div className="ll-content">
+      {/* Tab Content */}
+      <div className="ll-tab-content">
         {tab === 'insert' && (
-          <div>
-            <input
-              type="number"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Enter value"
-              disabled={running}
-            />
-            <button
-              onClick={() => {
-                if (inputValue) {
-                  onInsertAtHead(parseInt(inputValue));
-                  setInputValue('');
-                }
-              }}
-              disabled={running || !inputValue}
-              className="ll-btn"
-            >
-              Insert at Head - O(1)
-            </button>
-            <button
-              onClick={() => {
-                if (inputValue) {
-                  onInsertAtTail(parseInt(inputValue));
-                  setInputValue('');
-                }
-              }}
-              disabled={running || !inputValue}
-              className="ll-btn"
-            >
-              Insert at Tail - O(n)
-            </button>
+          <div className="ll-tab-form">
+            <input type="number" value={inputVal} onChange={(e) => setInputVal(e.target.value)} placeholder="Value" disabled={running} />
+            <button onClick={() => { if(inputVal) { onInsertAtHead(+inputVal); setInputVal(''); } }} disabled={running || !inputVal} className="ll-btn">Insert Head - O(1)</button>
+            <button onClick={() => { if(inputVal) { onInsertAtTail(+inputVal); setInputVal(''); } }} disabled={running || !inputVal} className="ll-btn">Insert Tail - O(n)</button>
           </div>
         )}
-
         {tab === 'delete' && (
-          <div>
-            <button
-              onClick={onDeleteHead}
-              disabled={running}
-              className="ll-btn ll-btn-danger"
-            >
-              Delete from Head - O(1)
-            </button>
+          <div className="ll-tab-form">
+            <button onClick={onDeleteHead} disabled={running} className="ll-btn ll-btn-danger">Delete Head - O(1)</button>
           </div>
         )}
-
         {tab === 'search' && (
-          <div>
-            <input
-              type="number"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="Enter value to search"
-              disabled={running}
-            />
-            <button
-              onClick={() => {
-                if (searchValue) {
-                  onSearch(parseInt(searchValue));
-                  setSearchValue('');
-                }
-              }}
-              disabled={running || !searchValue}
-              className="ll-btn"
-            >
-              Search - O(n)
-            </button>
+          <div className="ll-tab-form">
+            <input type="number" value={searchVal} onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" disabled={running} />
+            <button onClick={() => { if(searchVal) { onSearch(+searchVal); setSearchVal(''); } }} disabled={running || !searchVal} className="ll-btn">Search - O(n)</button>
           </div>
         )}
-
         {tab === 'init' && (
-          <div>
-            <button onClick={onRandom} disabled={running} className="ll-btn">
-              Random List (5 nodes)
-            </button>
-            <button onClick={onReset} disabled={running} className="ll-btn ll-btn-reset">
-              Clear & Reset
-            </button>
+          <div className="ll-tab-form">
+            <button onClick={onRandom} disabled={running} className="ll-btn">Random List (5)</button>
+            <button onClick={onReset} disabled={running} className="ll-btn ll-btn-reset">Clear</button>
           </div>
         )}
       </div>
@@ -213,58 +82,45 @@ function OpPanel({ onInsertAtHead, onInsertAtTail, onDeleteHead, onSearch, onRan
   );
 }
 
-// ===== STATE PANEL COMPONENT =====
-// Shows current state information
+// ===== STATE PANEL =====
 function StatePanel({ list, size, operations }) {
   const head = list && list.length > 0 ? list[0] : null;
   const tail = list && list.length > 0 ? list[list.length - 1] : null;
 
   return (
     <div className="ll-state-panel">
-      <div className="ll-state-title">List State:</div>
-      <div className="ll-state-rows">
-        <div className="ll-state-row">
-          <span className="ll-state-label">Head</span>
-          <span className="ll-state-val" style={{ color: COLORS.head }}>
-            {head !== null ? head : '∅'}
-          </span>
-        </div>
-        <div className="ll-state-row">
-          <span className="ll-state-label">Tail</span>
-          <span className="ll-state-val" style={{ color: '#fcd34d' }}>
-            {tail !== null ? tail : '∅'}
-          </span>
-        </div>
-        <div className="ll-state-row">
-          <span className="ll-state-label">Size</span>
-          <span className="ll-state-val" style={{ color: COLORS.default }}>
-            {size}
-          </span>
-        </div>
-        <div className="ll-state-row">
-          <span className="ll-state-label">Operations</span>
-          <span className="ll-state-val">{operations.length}</span>
-        </div>
-        <div className="ll-state-row">
-          <span className="ll-state-label">isEmpty()</span>
-          <span className="ll-state-val" style={{ color: size === 0 ? '#10b981' : '#ef4444' }}>
-            {size === 0 ? 'true' : 'false'}
-          </span>
-        </div>
+      <div className="ll-state-row">
+        <span className="ll-state-label">Head</span>
+        <span className="ll-state-val" style={{ color: 'var(--green-light)' }}>{head !== null ? head : '∅'}</span>
+      </div>
+      <div className="ll-state-row">
+        <span className="ll-state-label">Tail</span>
+        <span className="ll-state-val" style={{ color: 'var(--amber-light)' }}>{tail !== null ? tail : '∅'}</span>
+      </div>
+      <div className="ll-state-row">
+        <span className="ll-state-label">Size</span>
+        <span className="ll-state-val">{size}</span>
+      </div>
+      <div className="ll-state-row">
+        <span className="ll-state-label">isEmpty()</span>
+        <span className="ll-state-val" style={{ color: size === 0 ? 'var(--green-light)' : 'var(--red-light)' }}>{size === 0 ? 'true' : 'false'}</span>
+      </div>
+      <div className="ll-state-row">
+        <span className="ll-state-label">Ops</span>
+        <span className="ll-state-val">{operations.length}</span>
       </div>
     </div>
   );
 }
 
-// ===== MAIN VISUALIZER COMPONENT =====
-// Entry point for Linked List visualization
+// ===== MAIN VISUALIZER =====
 export default function LinkedListVisualizer() {
   const [list, setList] = useState([15, 28, 7, 42]);
-  const [focusIdx, setFocusIdx] = useState(0);
-  const [operations, setOperations] = useState([]);
+  const [focusIdx, setFocusIdx] = useState(-1);
+  const [operations, setOperations] = useState(['List initialized with [15, 28, 7, 42]']);
   const [running, setRunning] = useState(false);
 
-  const addOperation = useCallback((op) => {
+  const addOp = useCallback((op) => {
     setOperations((prev) => [...prev, op]);
   }, []);
 
@@ -273,104 +129,130 @@ export default function LinkedListVisualizer() {
       setRunning(true);
       setTimeout(() => {
         setList((prev) => [value, ...prev]);
-        addOperation(`Inserted ${value} at HEAD - O(1)`);
+        addOp(`Inserted ${value} at HEAD - O(1)`);
         setRunning(false);
       }, 400);
     },
-    [addOperation]
+    [addOp]
   );
 
   const handleInsertAtTail = useCallback(
     (value) => {
       setRunning(true);
+      const steps = list.length;
       setTimeout(() => {
         setList((prev) => [...prev, value]);
-        addOperation(`Inserted ${value} at TAIL - O(n) [traversed ${list.length} nodes]`);
+        addOp(`Inserted ${value} at TAIL - O(n) [traversed ${steps} nodes]`);
         setRunning(false);
       }, 400);
     },
-    [list.length, addOperation]
+    [list.length, addOp]
   );
 
   const handleDeleteHead = useCallback(() => {
-    if (list.length === 0) {
-      alert('List is empty!');
-      return;
-    }
+    if (list.length === 0) return;
     setRunning(true);
     setTimeout(() => {
       const deleted = list[0];
       setList((prev) => prev.slice(1));
-      addOperation(`Deleted HEAD (${deleted}) - O(1)`);
+      addOp(`Deleted HEAD (${deleted}) - O(1)`);
       setRunning(false);
     }, 400);
-  }, [list, addOperation]);
+  }, [list, addOp]);
 
   const handleSearch = useCallback(
     (value) => {
       setRunning(true);
-      let position = -1;
-      let steps = 0;
+      let pos = -1;
+      let step = 0;
 
-      const searchStep = () => {
-        if (steps < list.length) {
-          setFocusIdx(steps);
-          if (list[steps] === value) {
-            position = steps;
-          }
-          steps++;
-          setTimeout(searchStep, 300);
+      const doSearch = () => {
+        if (step < list.length) {
+          setFocusIdx(step);
+          if (list[step] === value) pos = step;
+          step++;
+          setTimeout(doSearch, 300);
         } else {
-          if (position !== -1) {
-            addOperation(`Found ${value} at position ${position} - O(n) [${steps} steps]`);
+          if (pos !== -1) {
+            addOp(`Found ${value} at index ${pos} - O(n) [${step} steps]`);
           } else {
-            addOperation(`${value} not found in list - O(n) [searched ${steps} nodes]`);
+            addOp(`Not found ${value} - O(n) [searched ${step} nodes]`);
           }
+          setFocusIdx(-1);
           setRunning(false);
         }
       };
 
-      searchStep();
+      doSearch();
     },
-    [list, addOperation]
+    [list, addOp]
   );
 
   const handleRandom = useCallback(() => {
-    const randomList = Array.from({ length: 5 }, () =>
-      Math.floor(Math.random() * 100) + 1
-    );
-    setList(randomList);
+    const random = Array.from({ length: 5 }, () => Math.floor(Math.random() * 100) + 1);
+    setList(random);
     setOperations(['List initialized with random values']);
-    setFocusIdx(0);
+    setFocusIdx(-1);
   }, []);
 
   const handleReset = useCallback(() => {
     setList([]);
     setOperations([]);
-    setFocusIdx(0);
+    setFocusIdx(-1);
   }, []);
 
   return (
     <div className="ll-root">
+      {/* Header */}
       <div className="ll-header">
-        <h1>🔗 Singly Linked List</h1>
+        <div>
+          <h2 className="ll-title">🔗 Singly Linked List</h2>
+          <p className="ll-desc">Linear data structure with node-based sequential access</p>
+        </div>
         <div className="ll-badges">
           <span className="ll-badge">Intermediate</span>
           <span className="ll-badge">O(n) Search</span>
         </div>
       </div>
 
-      <div className="ll-container">
-        <div className="ll-left">
-          <LinkedListVisual
-            nodes={list}
-            headIdx={0}
-            focusIdx={focusIdx}
-            operations={operations}
-          />
+      {/* Main Content */}
+      <div className="ll-content">
+        {/* Visualization */}
+        <div className="ll-visual">
+          <div className="ll-visual-title">Node Chain Visualization</div>
+          <div className="ll-lane">
+            {list.length === 0 ? (
+              <div className="ll-empty">Empty list — Insert a value to start</div>
+            ) : (
+              <>
+                {list.map((val, idx) => (
+                  <div key={idx} className="ll-node-chain">
+                    <Node
+                      value={val}
+                      isHead={idx === 0}
+                      state={idx === focusIdx ? 'focus' : idx === 0 ? 'head' : 'default'}
+                    />
+                    {idx < list.length - 1 && <div className="ll-connector">→</div>}
+                  </div>
+                ))}
+                <div className="ll-null-term">∅</div>
+              </>
+            )}
+          </div>
+          
+          {/* Operations Log */}
+          <div className="ll-log">
+            <div className="ll-log-label">Recent Ops:</div>
+            <div className="ll-log-items">
+              {operations.slice(-4).map((op, i) => (
+                <div key={i} className="ll-log-item">{op}</div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="ll-right">
+        {/* Controls */}
+        <div className="ll-controls">
           <OpPanel
             onInsertAtHead={handleInsertAtHead}
             onInsertAtTail={handleInsertAtTail}
@@ -384,72 +266,41 @@ export default function LinkedListVisualizer() {
         </div>
       </div>
 
-      {/* Code Display */}
-      <div className="ll-code-section">
-        <details>
-          <summary>📝 Code Examples (Click to expand)</summary>
-          <div className="ll-code-tabs">
-            {Object.entries(CODE_SNIPPETS).map(([lang, code]) => (
-              <details key={lang}>
-                <summary className="ll-code-lang">{lang.toUpperCase()}</summary>
-                <pre className="ll-code-block">{code}</pre>
-              </details>
-            ))}
-          </div>
-        </details>
-      </div>
-
-      {/* Comparison Box */}
+      {/* Comparison */}
       <div className="ll-comparison">
-        <h3>Singly Linked List vs Array</h3>
-        <table className="ll-comparison-table">
+        <h3>Linked List vs Array</h3>
+        <table className="ll-table">
           <thead>
             <tr>
               <th>Operation</th>
               <th>Linked List</th>
               <th>Array</th>
-              <th>Advantage</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Insert at Head</td>
-              <td className="ll-good">O(1)</td>
-              <td>O(n)</td>
-              <td>🏆 LL is faster</td>
-            </tr>
-            <tr>
-              <td>Insert at Tail</td>
-              <td>O(n)</td>
-              <td className="ll-good">O(1)</td>
-              <td>🏆 Array is faster</td>
-            </tr>
-            <tr>
-              <td>Delete from Head</td>
-              <td className="ll-good">O(1)</td>
-              <td>O(n)</td>
-              <td>🏆 LL is faster</td>
-            </tr>
-            <tr>
-              <td>Random Access</td>
-              <td>O(n)</td>
-              <td className="ll-good">O(1)</td>
-              <td>🏆 Array is faster</td>
-            </tr>
-            <tr>
-              <td>Search</td>
-              <td>O(n)</td>
-              <td>O(n)</td>
-              <td>Same</td>
-            </tr>
-            <tr>
-              <td>Space</td>
-              <td>O(n) + pointers</td>
-              <td className="ll-good">O(n)</td>
-              <td>🏆 Array uses less memory</td>
-            </tr>
+            <tr><td>Insert at Head</td><td className="ll-good">O(1)</td><td>O(n)</td></tr>
+            <tr><td>Insert at Tail</td><td>O(n)</td><td className="ll-good">O(1)*</td></tr>
+            <tr><td>Delete from Head</td><td className="ll-good">O(1)</td><td>O(n)</td></tr>
+            <tr><td>Random Access</td><td>O(n)</td><td className="ll-good">O(1)</td></tr>
+            <tr><td>Search</td><td>O(n)</td><td>O(n)</td></tr>
+            <tr><td>Space Overhead</td><td>Extra (pointers)</td><td className="ll-good">Minimal</td></tr>
           </tbody>
         </table>
+      </div>
+
+      {/* Code */}
+      <div className="ll-code-wrap">
+        <details>
+          <summary className="ll-code-title">📝 Code Examples</summary>
+          <div className="ll-code-langs">
+            {Object.entries(CODE_SNIPPETS).map(([lang, code]) => (
+              <details key={lang}>
+                <summary className="ll-code-lang-title">{lang.toUpperCase()}</summary>
+                <pre className="ll-code-block">{code}</pre>
+              </details>
+            ))}
+          </div>
+        </details>
       </div>
     </div>
   );
