@@ -27,9 +27,10 @@ import dijkstraMeta from './algos/graph/dijkstra/meta';
 import astarMeta    from './algos/graph/astar/meta';
 
 // ---- DATA STRUCTURES ----
-import arrayDSMeta  from './ds/array/meta';
-import stackDSMeta  from './ds/stack/meta';
-import queueDSMeta  from './ds/queue/meta';
+import arrayDSMeta      from './ds/array/meta';
+import stackDSMeta      from './ds/stack/meta';
+import queueDSMeta      from './ds/queue/meta';
+import linkedlistDSMeta from './ds/linkedlist/meta';
 
 // ===== ALGO REGISTRY =====
 export const REGISTRY = [
@@ -44,6 +45,7 @@ export const DS_REGISTRY = [
   arrayDSMeta,
   stackDSMeta,
   queueDSMeta,
+  linkedlistDSMeta,
   // Add more DS here as you build them
 ];
 
