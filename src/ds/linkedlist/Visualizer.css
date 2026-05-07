@@ -84,6 +84,7 @@
   overflow-y: hidden;
   scroll-behavior: smooth;
   position: relative;
+  scrollbar-gutter: stable;
 }
 
 /* ===== CUSTOM SCROLLBAR STYLING ===== */
