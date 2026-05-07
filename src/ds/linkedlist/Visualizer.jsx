@@ -119,6 +119,21 @@ export default function LinkedListVisualizer() {
   const [focusIdx, setFocusIdx] = useState(-1);
   const [operations, setOperations] = useState(['List initialized with [15, 28, 7, 42]']);
   const [running, setRunning] = useState(false);
+  const [isScrollable, setIsScrollable] = useState(false);
+  const laneRef = useRef(null);
+
+  // Check if content is scrollable
+  React.useEffect(() => {
+    const checkScroll = () => {
+      if (laneRef.current) {
+        const { scrollWidth, clientWidth } = laneRef.current;
+        setIsScrollable(scrollWidth > clientWidth);
+      }
+    };
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    return () => window.removeEventListener('resize', checkScroll);
+  }, [list.length]);
 
   const addOp = useCallback((op) => {
     setOperations((prev) => [...prev, op]);
@@ -219,8 +234,11 @@ export default function LinkedListVisualizer() {
       <div className="ll-content">
         {/* Visualization */}
         <div className="ll-visual">
-          <div className="ll-visual-title">Node Chain Visualization</div>
-          <div className="ll-lane">
+          <div className="ll-visual-title">
+            Node Chain Visualization
+            {isScrollable && <span className="ll-scroll-hint"> ← Scroll →</span>}
+          </div>
+          <div className="ll-lane" ref={laneRef}>
             {list.length === 0 ? (
               <div className="ll-empty">Empty list — Insert a value to start</div>
             ) : (

@@ -57,6 +57,17 @@
   font-weight: bold;
   color: var(--text-primary);
   letter-spacing: 0.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ll-scroll-hint {
+  font-size: 11px;
+  color: var(--amber-light);
+  font-weight: normal;
+  letter-spacing: 0px;
+  animation: ll-scroll-pulse 1.5s infinite;
 }
 
 /* Node Lane */
@@ -70,6 +81,65 @@
   align-items: center;
   gap: 8px;
   overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+/* ===== CUSTOM SCROLLBAR STYLING ===== */
+.ll-lane::-webkit-scrollbar {
+  height: 8px;
+}
+
+.ll-lane::-webkit-scrollbar-track {
+  background: var(--bg-base);
+  border-radius: 4px;
+}
+
+.ll-lane::-webkit-scrollbar-thumb {
+  background: var(--border-mid);
+  border-radius: 4px;
+  border: 2px solid var(--bg-base);
+}
+
+.ll-lane::-webkit-scrollbar-thumb:hover {
+  background: var(--border-bright);
+}
+
+/* Firefox scrollbar */
+.ll-lane {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-mid) var(--bg-base);
+}
+
+/* Scroll Shadow Indicators */
+.ll-lane::before,
+.ll-lane::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.ll-lane::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-panel), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ll-lane::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-panel), transparent);
+  opacity: 1;
+}
+
+/* Show left shadow when scrolled */
+.ll-lane::-webkit-scrollbar {
+  height: 8px;
 }
 
 .ll-empty {
@@ -444,6 +514,11 @@
 @keyframes ll-pulse {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
+}
+
+@keyframes ll-scroll-pulse {
+  0%, 100% { opacity: 0.7; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(2px); }
 }
 
 /* Responsive */
