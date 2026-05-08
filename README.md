@@ -46,7 +46,7 @@ All algorithms available in **8 languages**:
 
 ### 🧠 Algorithm Coverage
 
-#### Sorting Algorithms (8)
+#### Sorting Algorithms (9)
 - ✅ Bubble Sort
 - ✅ Heap Sort
 - ✅ Radix Sort
@@ -69,6 +69,22 @@ All algorithms available in **8 languages**:
 - ✅ Depth-First Search (DFS)
 - ⬜ Dijkstra's Algorithm
 - ⬜ A* Search
+
+#### Data Structures (14)
+- ✅ Array
+- ✅ Stack
+- ✅ Queue
+- ✅ Singly Linked List
+- ✅ Doubly Linked List
+- ✅ Circular Linked List
+- ✅ Doubly Circular Linked List
+- ⬜ Binary Tree
+- ⬜ Binary Search Tree (BST)
+- ⬜ Min Heap
+- ⬜ Max Heap
+- ⬜ Trie
+- ⬜ Hashmap
+- ⬜ AVL Tree
 
 **Status Key:** ✅ = Fully Documented | ⬜ = In Progress
 
@@ -168,6 +184,11 @@ algoviz-v2/
 │   │       ├── bfs/           # Breadth-First Search
 │   │       ├── dfs/           # Depth-First Search
 │   │       └── dijkstra/      # Dijkstra's Algorithm
+│   ├── ds/                    # Data Structures visualizers
+│   │   ├── array/
+│   │   ├── linkedlist/
+│   │   ├── stack/
+│   │   └── (others)
 │   ├── components/
 │   │   ├── AlgoPage.jsx       # Algorithm page layout
 │   │   ├── HomePage.jsx       # Home page
@@ -258,7 +279,7 @@ For detailed documentation standards, see [PROGRESS.md](PROGRESS.md#-comment-pat
 
 ## 📈 Documentation Status
 
-**Current Progress:** 5/17 algorithms fully documented (29% complete)
+**Current Progress:** 9/32 items fully documented (28% complete)
 
 ### ✅ Fully Documented
 - Binary Search (9 files including 8 languages)
@@ -266,12 +287,16 @@ For detailed documentation standards, see [PROGRESS.md](PROGRESS.md#-comment-pat
 - Linear Search (9 files including 8 languages)
 - Heap Sort (9 files including 8 languages)
 - Radix Sort (9 files including 8 languages)
+- Singly Linked List
+- Doubly Linked List
+- Circular Linked List
+- Doubly Circular Linked List
 
 ### 🟡 In Progress
 - Bubble Sort (code.js done, steps.js and Visualizer.jsx pending)
 
 ### ⬜ Pending
-- 11+ remaining algorithms (sorting, searching, graph)
+- Remaining algorithms and data structures
 
 **See [PROGRESS.md](PROGRESS.md) for detailed progress tracking and roadmap.**
 
@@ -416,10 +441,10 @@ This project is licensed under the **MIT License**. See LICENSE file for details
 
 | Metric | Count |
 |--------|-------|
-| **Total Algorithms** | 17 |
+| **Total Algorithms & DS** | 32 |
 | **Programming Languages** | 8 |
-| **Fully Documented** | 5 (29%) |
-| **Lines of Comments** | 7000+ |
+| **Fully Documented** | 9 (28%) |
+| **Lines of Comments** | 8000+ |
 | **Components** | React Hooks-based |
 | **Build Tool** | Webpack + Babel |
 
