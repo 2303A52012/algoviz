@@ -1,23 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const TERNARY_SEARCH_PSEUDOCODE = [
-  "function ternarySearch(arr, target) {",
-  "  lo = 0, hi = arr.length - 1",
-  "  while lo <= hi {",
-  "    mid1 = lo + floor((hi - lo) / 3)",
-  "    mid2 = hi - floor((hi - lo) / 3)",
-  "    if arr[mid1] == target return mid1",
-  "    if arr[mid2] == target return mid2",
-  "    if target < arr[mid1] hi = mid1 - 1",
-  "    else if target > arr[mid2] lo = mid2 + 1",
-  "    else { lo = mid1 + 1; hi = mid2 - 1 }",
-  "  }",
-  "  return -1",
-  "}"
-];
 
 // ===== RANGE LINE COMPONENT =====
 function RangeLine({ arr, lo, hi, mid1, mid2, eliminated, foundIdx, target }) {
@@ -80,14 +64,7 @@ function RangeLine({ arr, lo, hi, mid1, mid2, eliminated, foundIdx, target }) {
 
       {lo <= hi && foundIdx < 0 && (
         <div className="ts-range-underline-wrap" style={{ '--n': n }}>
-          <div
-            className="ts-range-underline"
-            style={{
-              left:  `calc(${(lo / n) * 100}% + 2px)`,
-              width: `calc(${((hi - lo + 1) / n) * 100}% - 4px)`,
-            }}
-          />
-        </div>
+           
       )}
     </div>
   );
@@ -137,8 +114,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     arr: defaultArr,
     lo: 0, hi: defaultArr.length - 1, mid1: -1, mid2: -1,
     eliminated: [], foundIdx: -1, target: defaultTarget, comparisons: 0,
-    msg: 'Press Search to start Ternary Search',
-    activeLine: 0
+    msg: 'Press Search to start Ternary Search'
   });
 
   useEffect(() => {
@@ -146,8 +122,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       setVizState({
 arr, lo: 0, hi: arr.length - 1, mid1: -1, mid2: -1,
         eliminated: [], foundIdx: -1, target, comparisons: 0,
-        msg: 'Press Search to start Ternary Search',
-        activeLine: 0
+        msg: 'Press Search to start Ternary Search'
       });
       return;
     }
@@ -161,8 +136,7 @@ arr, lo: 0, hi: arr.length - 1, mid1: -1, mid2: -1,
       foundIdx:    currentStep.foundIdx    ?? -1,
       target:      currentStep.target      ?? target,
       comparisons: currentStep.comparisons ?? 0,
-      msg:         currentStep.msg         || '',
-      activeLine:  currentStep.activeLine  ?? prev.activeLine
+      msg:         currentStep.msg         || ''
     }));
   }, [currentStep]); // eslint-disable-line
 
@@ -179,8 +153,7 @@ arr, lo: 0, hi: arr.length - 1, mid1: -1, mid2: -1,
     setVizState({
       arr, lo: 0, hi: arr.length - 1, mid1: -1, mid2: -1,
       eliminated: [], foundIdx: -1, target, comparisons: 0,
-      msg: 'Press Search to start Ternary Search',
-      activeLine: 0
+      msg: 'Press Search to start Ternary Search'
     });
   };
 
@@ -194,7 +167,7 @@ arr, lo: 0, hi: arr.length - 1, mid1: -1, mid2: -1,
     setTargetInput(String(t));
     setTarget(t);
     onReset();
-    setVizState({ arr: a, lo: 0, hi: a.length - 1, mid1: -1, mid2: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, msg: 'Press Search to start Ternary Search', activeLine: 0 });
+    setVizState({ arr: a, lo: 0, hi: a.length - 1, mid1: -1, mid2: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, msg: 'Press Search to start Ternary Search'});
   };
 
   const handleLoadCustom = () => {
@@ -206,7 +179,7 @@ arr, lo: 0, hi: arr.length - 1, mid1: -1, mid2: -1,
       setArr(parsed);
       setTarget(t);
       onReset();
-      setVizState({ arr: parsed, lo: 0, hi: parsed.length - 1, mid1: -1, mid2: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, msg: 'Press Search to start Ternary Search', activeLine: 0 });
+      setVizState({ arr: parsed, lo: 0, hi: parsed.length - 1, mid1: -1, mid2: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, msg: 'Press Search to start Ternary Search'});
       setInputOpen(false);
       setCustomArr('');
     } catch (e) { setCustomErr(e.message); }
@@ -290,9 +263,11 @@ arr, lo: 0, hi: arr.length - 1, mid1: -1, mid2: -1,
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={TERNARY_SEARCH_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

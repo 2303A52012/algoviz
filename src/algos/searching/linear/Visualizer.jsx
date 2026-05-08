@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const LINEAR_SEARCH_PSEUDOCODE = [
-  "function linearSearch(arr, target) {",
-  "  for i = 0 to arr.length - 1 {",
-  "    if arr[i] == target {",
-  "      return i",
-  "    }",
-  "  }",
-  "  return -1",
-  "}"
-];
 
 // ===== COLOR SCHEME =====
 // Define colors for different cell states during visualization
@@ -48,10 +37,8 @@ function ArrayScanner({ arr, currentIdx, scannedIdx, foundIdx, target }) {
             {i === currentIdx && foundIdx < 0 && (
               <div className="ls-cursor">
                 <div className="ls-cursor-glass">
-                  <div className="ls-cursor-inner" />
-                </div>
-                <div className="ls-cursor-handle" />
-              </div>
+                   
+                 
             )}
             {/* Star marker showing where target was found */}
             {i === foundIdx && (
@@ -180,7 +167,6 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     scannedIdx: [],  // Indices already checked
     foundIdx: -1,  // Index where target was found (-1 if not found)
     target: defaultTarget,
-    activeLine: 0,
   });
 
   // ===== EFFECT: Sync visualization with animation step =====
@@ -189,7 +175,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     if (!currentStep) {
       // No step - reset to initial state
       setVizState({
-arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target, activeLine: 0 });
+arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target});
       return;
     }
     // Update visualization from current step
@@ -199,7 +185,6 @@ arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target, activeLine: 0 });
       scannedIdx: currentStep.scannedIdx || [],
       foundIdx:   currentStep.foundIdx   ?? -1,
       target:     currentStep.target     ?? target,
-      activeLine: currentStep.activeLine ?? prev.activeLine,
     }));
   }, [currentStep]); // eslint-disable-line
 
@@ -216,7 +201,7 @@ arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target, activeLine: 0 });
   // ===== HANDLE RESET: Clear visualization =====
   const handleReset = () => {
     onReset();
-    setVizState({ arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target, activeLine: 0 });
+    setVizState({ arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target});
   };
 
   // ===== HANDLE NEW ARRAY: Generate random array and target =====
@@ -231,7 +216,7 @@ arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target, activeLine: 0 });
     setTargetInput(String(t));
     setTarget(t);
     onReset();
-    setVizState({ arr: a, currentIdx: -1, scannedIdx: [], foundIdx: -1, target: t, activeLine: 0 });
+    setVizState({ arr: a, currentIdx: -1, scannedIdx: [], foundIdx: -1, target: t});
   };
 
   // ===== HANDLE LOAD CUSTOM: Load user-provided array and target =====
@@ -246,7 +231,7 @@ arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target, activeLine: 0 });
       setArr(parsed);
       setTarget(t);
       onReset();
-      setVizState({ arr: parsed, currentIdx: -1, scannedIdx: [], foundIdx: -1, target: t, activeLine: 0 });
+      setVizState({ arr: parsed, currentIdx: -1, scannedIdx: [], foundIdx: -1, target: t});
       setInputOpen(false);  // Close input panel
       setCustomArr('');
     } catch (e) { setCustomErr(e.message); }
@@ -341,9 +326,10 @@ arr, currentIdx: -1, scannedIdx: [], foundIdx: -1, target, activeLine: 0 });
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={LINEAR_SEARCH_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+

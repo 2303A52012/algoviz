@@ -1,55 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { CODE_SNIPPETS } from './code';
-import Pseudocode from '../../components/Pseudocode';
 import './Visualizer.css';
 
-const SLL_PSEUDOCODES = {
-  insertHead: [
-    "function insertAtHead(list, value) {",
-    "  newNode = new Node(value)",
-    "  newNode.next = list.head",
-    "  list.head = newNode",
-    "  list.size++",
-    "}"
-  ],
-  insertTail: [
-    "function insertAtTail(list, value) {",
-    "  newNode = new Node(value)",
-    "  if list.head == null {",
-    "    list.head = newNode",
-    "  } else {",
-    "    curr = list.head",
-    "    while curr.next != null {",
-    "      curr = curr.next",
-    "    }",
-    "    curr.next = newNode",
-    "  }",
-    "  list.size++",
-    "}"
-  ],
-  deleteHead: [
-    "function deleteHead(list) {",
-    "  if list.head == null return",
-    "  list.head = list.head.next",
-    "  list.size--",
-    "}"
-  ],
-  search: [
-    "function search(list, target) {",
-    "  curr = list.head",
-    "  while curr != null {",
-    "    if curr.value == target {",
-    "      return true",
-    "    }",
-    "    curr = curr.next",
-    "  }",
-    "  return false",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 // ===== NODE COLOR STATES =====
 const NODE_STATES = {
@@ -169,8 +121,6 @@ export default function LinkedListVisualizer() {
   const [operations, setOperations] = useState(['List initialized with [15, 28, 7, 42]']);
   const [running, setRunning] = useState(false);
   const [isScrollable, setIsScrollable] = useState(false);
-  const [activeCode, setActiveCode] = useState('default');
-  const [activeLine, setActiveLine] = useState(0);
   const laneRef = useRef(null);
 
   // Check if content is scrollable
@@ -192,13 +142,10 @@ export default function LinkedListVisualizer() {
 
   const handleInsertAtHead = useCallback(
     (value) => {
-      setActiveCode('insertHead');
-      setActiveLine(1);
       setRunning(true);
       setTimeout(() => {
         setList((prev) => [value, ...prev]);
         addOp(`Inserted ${value} at HEAD - O(1)`);
-        setActiveLine(4);
         setRunning(false);
       }, 400);
     },
@@ -207,14 +154,11 @@ export default function LinkedListVisualizer() {
 
   const handleInsertAtTail = useCallback(
     (value) => {
-      setActiveCode('insertTail');
-      setActiveLine(1);
       setRunning(true);
       const steps = list.length;
       setTimeout(() => {
         setList((prev) => [...prev, value]);
         addOp(`Inserted ${value} at TAIL - O(n) [traversed ${steps} nodes]`);
-        setActiveLine(11);
         setRunning(false);
       }, 400);
     },
@@ -222,23 +166,18 @@ export default function LinkedListVisualizer() {
   );
 
   const handleDeleteHead = useCallback(() => {
-    setActiveCode('deleteHead');
-    setActiveLine(0);
     if (list.length === 0) return;
     setRunning(true);
     setTimeout(() => {
       const deleted = list[0];
       setList((prev) => prev.slice(1));
       addOp(`Deleted HEAD (${deleted}) - O(1)`);
-      setActiveLine(3);
       setRunning(false);
     }, 400);
   }, [list, addOp]);
 
   const handleSearch = useCallback(
     (value) => {
-      setActiveCode('search');
-      setActiveLine(1);
       setRunning(true);
       let pos = -1;
       let step = 0;
@@ -246,17 +185,14 @@ export default function LinkedListVisualizer() {
       const doSearch = () => {
         if (step < list.length) {
           setFocusIdx(step);
-          setActiveLine(3);
           if (list[step] === value) pos = step;
           step++;
           setTimeout(doSearch, 300);
         } else {
           if (pos !== -1) {
             addOp(`Found ${value} at index ${pos} - O(n) [${step} steps]`);
-            setActiveLine(4);
           } else {
             addOp(`Not found ${value} - O(n) [searched ${step} nodes]`);
-            setActiveLine(8);
           }
           setFocusIdx(-1);
           setRunning(false);
@@ -279,8 +215,6 @@ export default function LinkedListVisualizer() {
     setList([]);
     setOperations([]);
     setFocusIdx(-1);
-    setActiveCode('default');
-    setActiveLine(0);
   }, []);
 
   return (
@@ -374,9 +308,12 @@ export default function LinkedListVisualizer() {
       </div>
 
       {/* Code */}
-      <div className="ll-code-wrap">
-        <Pseudocode code={SLL_PSEUDOCODES[activeCode]} activeLine={activeLine} />
-      </div>
+       
     </div>
   );
 }
+
+
+
+
+

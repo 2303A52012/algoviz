@@ -1,25 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const BINARY_SEARCH_PSEUDOCODE = [
-  "function binarySearch(arr, target) {",
-  "  lo = 0, hi = arr.length - 1",
-  "  while lo <= hi {",
-  "    mid = floor((lo + hi) / 2)",
-  "    if arr[mid] == target {",
-  "      return mid",
-  "    }",
-  "    if arr[mid] < target {",
-  "      lo = mid + 1",
-  "    } else {",
-  "      hi = mid - 1",
-  "    }",
-  "  }",
-  "  return -1",
-  "}"
-];
 
 // ===== RANGE LINE COMPONENT =====
 // Visualizes the search range with lo, mid, hi markers
@@ -90,14 +72,7 @@ function RangeLine({ arr, lo, hi, mid, eliminated, foundIdx, target }) {
       {/* ===== ACTIVE RANGE UNDERLINE: Shows current search boundaries ===== */}
       {lo <= hi && foundIdx < 0 && (
         <div className="bs-range-underline-wrap" style={{ '--n': n }}>
-          <div
-            className="bs-range-underline"
-            style={{
-              left:  `calc(${(lo / n) * 100}% + 2px)`,
-              width: `calc(${((hi - lo + 1) / n) * 100}% - 4px)`,
-            }}
-          />
-        </div>
+           
       )}
     </div>
   );
@@ -188,7 +163,6 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     foundIdx: -1,  // Index of found element
     target: defaultTarget,
     comparisons: 0,
-    activeLine: 0,
   });
 
   // ===== EFFECT: Sync visualization with animation step =====
@@ -198,7 +172,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       // No step - reset to initial state
       setVizState({
 arr, lo: 0, hi: arr.length - 1, mid: -1,
-        eliminated: [], foundIdx: -1, target, comparisons: 0, activeLine: 0,
+        eliminated: [], foundIdx: -1, target, comparisons: 0,
       });
       setCurrentStepIdx(-1);
       return;
@@ -213,7 +187,6 @@ arr, lo: 0, hi: arr.length - 1, mid: -1,
       foundIdx:    currentStep.foundIdx    ?? -1,
       target:      currentStep.target      ?? target,
       comparisons: currentStep.comparisons ?? 0,
-      activeLine:  currentStep.activeLine  ?? prev.activeLine,
     }));
     setCurrentStepIdx(prev => prev + 1);  // Increment step counter
   }, [currentStep]); // eslint-disable-line
@@ -238,7 +211,7 @@ arr, lo: 0, hi: arr.length - 1, mid: -1,
     setCurrentStepIdx(-1);
     setVizState({
       arr, lo: 0, hi: arr.length - 1, mid: -1,
-      eliminated: [], foundIdx: -1, target, comparisons: 0, activeLine: 0,
+      eliminated: [], foundIdx: -1, target, comparisons: 0,
     });
   };
 
@@ -259,7 +232,7 @@ arr, lo: 0, hi: arr.length - 1, mid: -1,
     onReset();
     setAllSteps([]);
     setCurrentStepIdx(-1);
-    setVizState({ arr: a, lo: 0, hi: a.length - 1, mid: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, activeLine: 0 });
+    setVizState({ arr: a, lo: 0, hi: a.length - 1, mid: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0});
   };
 
   // ===== HANDLE LOAD CUSTOM: Load user-provided array and target =====
@@ -276,7 +249,7 @@ arr, lo: 0, hi: arr.length - 1, mid: -1,
       onReset();
       setAllSteps([]);
       setCurrentStepIdx(-1);
-      setVizState({ arr: parsed, lo: 0, hi: parsed.length - 1, mid: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, activeLine: 0 });
+      setVizState({ arr: parsed, lo: 0, hi: parsed.length - 1, mid: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0});
       setInputOpen(false);  // Close input panel
       setCustomArr('');
     } catch (e) { setCustomErr(e.message); }
@@ -369,9 +342,11 @@ arr, lo: 0, hi: arr.length - 1, mid: -1,
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={BINARY_SEARCH_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

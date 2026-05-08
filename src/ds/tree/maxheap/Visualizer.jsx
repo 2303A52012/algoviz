@@ -1,50 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const MAXHEAP_PSEUDOCODES = {
-  insert: [
-    "function insert(heap, value) {",
-    "  heap.push(value)",
-    "  i = heap.length - 1",
-    "  while i > 0 {",
-    "    p = parent(i)",
-    "    if heap[i] > heap[p] {",
-    "      swap(heap[i], heap[p])",
-    "      i = p",
-    "    } else {",
-    "      break",
-    "    }",
-    "  }",
-    "}"
-  ],
-  extract: [
-    "function extractMax(heap) {",
-    "  if heap.length == 0 return null",
-    "  if heap.length == 1 return heap.pop()",
-    "  max = heap[0]",
-    "  heap[0] = heap.pop()",
-    "  i = 0",
-    "  while true {",
-    "    target = i",
-    "    if left(i) < len && heap[left(i)] > heap[target]",
-    "      target = left(i)",
-    "    if right(i) < len && heap[right(i)] > heap[target]",
-    "      target = right(i)",
-    "    if target != i {",
-    "      swap(heap[i], heap[target])",
-    "      i = target",
-    "    } else {",
-    "      break",
-    "    }",
-    "  }",
-    "  return max",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 // ===== CONSTANTS =====
 const NODE_R = 20;
@@ -200,17 +156,13 @@ export default function MaxHeapVisualizer() {
   
   const [ops, setOps] = useState(['Initialized Max-Heap']);
   const [running, setRunning] = useState(false);
-  const [activeCode, setActiveCode] = useState('default');
-  const [activeLine, setActiveLine] = useState(0);
 
   const addOp = useCallback(msg => setOps(p => [...p, msg]), []);
 
   const runAnimation = async (steps, operationCode) => {
     setRunning(true);
-    setActiveCode(operationCode);
-    setActiveLine(1);
     for (const step of steps) {
-      if (step.line !== undefined) setActiveLine(step.line);
+      if (step.line !== undefined)
       setHeap([...step.h]);
       setHl(step.hl || []);
       setCmp(step.cmp || []);
@@ -296,7 +248,7 @@ export default function MaxHeapVisualizer() {
     runAnimation(steps, 'extract');
   };
 
-  const handleClear = () => { setHeap([]); setOps(['Cleared Max-Heap']); setActiveCode('default'); setActiveLine(0); };
+  const handleClear = () => { setHeap([]); setOps(['Cleared Max-Heap']); };
 
   return (
     <div className="maxheap-root">
@@ -341,9 +293,12 @@ export default function MaxHeapVisualizer() {
         </div>
       </div>
       
-      <div className="maxheap-code-wrap" style={{ marginTop: '16px', background: 'var(--bg-panel)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '14px' }}>
-        <Pseudocode code={MAXHEAP_PSEUDOCODES[activeCode]} activeLine={activeLine} />
-      </div>
+       
     </div>
   );
 }
+
+
+
+
+

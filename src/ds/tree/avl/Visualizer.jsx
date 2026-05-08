@@ -1,37 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const AVL_PSEUDOCODES = {
-  insert: [
-    "function insert(node, value) {",
-    "  if node == null return new Node(value)",
-    "  if value < node.value",
-    "    node.left = insert(node.left, value)",
-    "  else if value > node.value",
-    "    node.right = insert(node.right, value)",
-    "  else return node",
-    "  updateHeight(node)",
-    "  balance = getBalance(node)",
-    "  if balance > 1 && value < node.left.value",
-    "    return rightRotate(node)",
-    "  if balance < -1 && value > node.right.value",
-    "    return leftRotate(node)",
-    "  if balance > 1 && value > node.left.value {",
-    "    node.left = leftRotate(node.left)",
-    "    return rightRotate(node)",
-    "  }",
-    "  if balance < -1 && value < node.right.value {",
-    "    node.right = rightRotate(node.right)",
-    "    return leftRotate(node)",
-    "  }",
-    "  return node",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 // ===== AVL NODE =====
 function newNode(val) {
@@ -198,8 +167,6 @@ export default function AVLVisualizer() {
   const [ops, setOps] = useState(['Initialized balanced AVL Tree']);
   const [running, setRunning] = useState(false);
   const [rotMsg, setRotMsg] = useState('');
-  const [activeCode, setActiveCode] = useState('default');
-  const [activeLine, setActiveLine] = useState(0);
 
   const addOp = useCallback(msg => setOps(p => [...p, msg]), []);
 
@@ -214,8 +181,6 @@ export default function AVLVisualizer() {
 
   const runInsert = async (val) => {
     setRunning(true);
-    setActiveCode('insert');
-    setActiveLine(1);
     setRotMsg('');
     let currentTree = cloneTree(root);
     
@@ -290,7 +255,7 @@ export default function AVLVisualizer() {
 
     // Run animation steps
     for (const step of steps) {
-      if (step.line !== undefined) setActiveLine(step.line);
+      if (step.line !== undefined)
       setRoot(step.tree);
       setHlNode(step.hl || null);
       setCmpNode(step.cmp || null);
@@ -310,8 +275,6 @@ export default function AVLVisualizer() {
     setRoot(null);
     setOps(['Cleared AVL Tree']);
     setHlNode(null); setCmpNode(null); setRotMsg('');
-    setActiveCode('default');
-    setActiveLine(0);
   };
 
   return (
@@ -360,9 +323,12 @@ export default function AVLVisualizer() {
         </div>
       </div>
       
-      <div className="avl-code-wrap" style={{ marginTop: '16px', background: 'var(--bg-panel)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '14px' }}>
-        <Pseudocode code={AVL_PSEUDOCODES[activeCode]} activeLine={activeLine} />
-      </div>
+       
     </div>
   );
 }
+
+
+
+
+

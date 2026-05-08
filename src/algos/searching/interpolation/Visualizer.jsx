@@ -1,25 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const INTERPOLATION_SEARCH_PSEUDOCODE = [
-  "function interpolationSearch(arr, target) {",
-  "  lo = 0",
-  "  hi = arr.length - 1",
-  "  while lo <= hi and target >= arr[lo] and target <= arr[hi] {",
-  "    if lo == hi {",
-  "      if arr[lo] == target return lo",
-  "      return -1",
-  "    }",
-  "    pos = lo + floor(((target - arr[lo]) * (hi - lo)) / (arr[hi] - arr[lo]))",
-  "    if arr[pos] == target return pos",
-  "    if arr[pos] < target lo = pos + 1",
-  "    else hi = pos - 1",
-  "  }",
-  "  return -1",
-  "}"
-];
 
 // ===== RANGE LINE COMPONENT =====
 function RangeLine({ arr, lo, hi, pos, eliminated, foundIdx, target }) {
@@ -80,14 +62,7 @@ function RangeLine({ arr, lo, hi, pos, eliminated, foundIdx, target }) {
 
       {lo <= hi && foundIdx < 0 && (
         <div className="int-range-underline-wrap" style={{ '--n': n }}>
-          <div
-            className="int-range-underline"
-            style={{
-              left:  `calc(${(lo / n) * 100}% + 2px)`,
-              width: `calc(${((hi - lo + 1) / n) * 100}% - 4px)`,
-            }}
-          />
-        </div>
+           
       )}
     </div>
   );
@@ -128,8 +103,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     arr: defaultArr,
     lo: 0, hi: defaultArr.length - 1, pos: -1,
     eliminated: [], foundIdx: -1, target: defaultTarget, comparisons: 0,
-    msg: 'Press Search to start Interpolation Search',
-    activeLine: 0
+    msg: 'Press Search to start Interpolation Search'
   });
 
   useEffect(() => {
@@ -137,8 +111,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       setVizState({
 arr, lo: 0, hi: arr.length - 1, pos: -1,
         eliminated: [], foundIdx: -1, target, comparisons: 0,
-        msg: 'Press Search to start Interpolation Search',
-        activeLine: 0
+        msg: 'Press Search to start Interpolation Search'
       });
       return;
     }
@@ -151,8 +124,7 @@ arr, lo: 0, hi: arr.length - 1, pos: -1,
       foundIdx:    currentStep.foundIdx    ?? -1,
       target:      currentStep.target      ?? target,
       comparisons: currentStep.comparisons ?? 0,
-      msg:         currentStep.msg         || '',
-      activeLine:  currentStep.activeLine  ?? prev.activeLine
+      msg:         currentStep.msg         || ''
     }));
   }, [currentStep]); // eslint-disable-line
 
@@ -169,8 +141,7 @@ arr, lo: 0, hi: arr.length - 1, pos: -1,
     setVizState({
       arr, lo: 0, hi: arr.length - 1, pos: -1,
       eliminated: [], foundIdx: -1, target, comparisons: 0,
-      msg: 'Press Search to start Interpolation Search',
-      activeLine: 0
+      msg: 'Press Search to start Interpolation Search'
     });
   };
 
@@ -181,7 +152,7 @@ arr, lo: 0, hi: arr.length - 1, pos: -1,
     setTargetInput(String(t));
     setTarget(t);
     onReset();
-    setVizState({ arr: a, lo: 0, hi: a.length - 1, pos: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, msg: 'Press Search to start Interpolation Search', activeLine: 0 });
+    setVizState({ arr: a, lo: 0, hi: a.length - 1, pos: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, msg: 'Press Search to start Interpolation Search'});
   };
 
   const handleLoadCustom = () => {
@@ -193,7 +164,7 @@ arr, lo: 0, hi: arr.length - 1, pos: -1,
       setArr(parsed);
       setTarget(t);
       onReset();
-      setVizState({ arr: parsed, lo: 0, hi: parsed.length - 1, pos: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, msg: 'Press Search to start Interpolation Search', activeLine: 0 });
+      setVizState({ arr: parsed, lo: 0, hi: parsed.length - 1, pos: -1, eliminated: [], foundIdx: -1, target: t, comparisons: 0, msg: 'Press Search to start Interpolation Search'});
       setInputOpen(false);
       setCustomArr('');
     } catch (e) { setCustomErr(e.message); }
@@ -274,9 +245,11 @@ arr, lo: 0, hi: arr.length - 1, pos: -1,
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={INTERPOLATION_SEARCH_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

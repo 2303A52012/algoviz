@@ -1,33 +1,6 @@
 import React, { useState, useRef } from 'react';
-import Pseudocode from '../../components/Pseudocode';
 import './Visualizer.css';
 
-const QUEUE_PSEUDOCODES = {
-  enqueue: [
-    "function enqueue(queue, value) {",
-    "  queue.addRear(value)",
-    "}"
-  ],
-  dequeue: [
-    "function dequeue(queue) {",
-    "  if queue.isEmpty() {",
-    "    return error",
-    "  }",
-    "  return queue.removeFront()",
-    "}"
-  ],
-  peek: [
-    "function peek(queue) {",
-    "  if queue.isEmpty() {",
-    "    return error",
-    "  }",
-    "  return queue.front()",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 const VISIBLE_LIMIT = 7; // max cells shown at once
 const INITIAL_QUEUE = [11, 34, 7, 52, 23]; // front to rear
@@ -337,14 +310,10 @@ export default function Visualizer() {
   const [log, setLog]               = useState('Enqueue adds to rear ▶, Dequeue removes from front ◀. FIFO — fair order.');
   const [running, setRunning]       = useState(false);
   const [underflowing, setUnderflowing] = useState(false);
-  const [activeCode, setActiveCode]     = useState('default');
-  const [activeLine, setActiveLine]     = useState(0);
   const { run, stop } = useStepRunner();
 
   // ENQUEUE
   const handleEnqueue = (val) => {
-    setActiveCode('enqueue');
-    setActiveLine(0);
     setUnderflowing(false);
     setRunning(true);
     const newItem = makeItem(val);
@@ -359,7 +328,6 @@ export default function Visualizer() {
             ? 'Enqueuing ' + val + ' at rear... (exceeds visible limit, added to hidden block)'
             : 'Enqueuing ' + val + ' at rear of queue...'
         );
-        setActiveLine(1);
       },
       () => {
         setRearState('default');
@@ -376,13 +344,10 @@ export default function Visualizer() {
 
   // DEQUEUE
   const handleDequeue = () => {
-    setActiveCode('dequeue');
-    setActiveLine(0);
     setUnderflowing(false);
     if (queue.length === 0) {
       setUnderflowing(true);
       setLog('✗ Queue is empty — nothing to dequeue!');
-      setActiveLine(2);
       setTimeout(() => setUnderflowing(false), 2000);
       return;
     }
@@ -394,7 +359,6 @@ export default function Visualizer() {
       () => {
         setFrontState('dequeuing');
         setLog('Dequeuing ' + frontVal + ' from front...' + (hadHidden ? ' Hidden element will shift into view.' : ''));
-        setActiveLine(4);
       },
       () => {
         setQueue(prev => prev.slice(1));
@@ -414,18 +378,15 @@ export default function Visualizer() {
 
   // PEEK
   const handlePeek = () => {
-    setActiveCode('peek');
-    setActiveLine(0);
     setUnderflowing(false);
     if (queue.length === 0) {
       setLog('Queue is empty — nothing to peek. isEmpty() → true.');
-      setActiveLine(2);
       return;
     }
     const frontVal = queue[0].val;
     setRunning(true);
     run([
-      () => { setFrontState('peeking'); setLog('Peeking at front element...'); setActiveLine(4); },
+      () => { setFrontState('peeking'); setLog('Peeking at front element...'); },
       () => { setLog('✓ Front = ' + frontVal + '. Not removed. O(1). Queue size = ' + queue.length + '.'); },
       () => { setFrontState('default'); setRunning(false); },
     ], 500);
@@ -471,8 +432,6 @@ export default function Visualizer() {
     setFrontState('default');
     setRearState('default');
     setUnderflowing(false);
-    setActiveCode('default');
-    setActiveLine(0);
     setRunning(false);
     setLog('Reset to initial state.');
   };
@@ -548,9 +507,11 @@ export default function Visualizer() {
           </div>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={QUEUE_PSEUDOCODES[activeCode]} activeLine={activeLine} />
     </div>
   );
 }
+
+
+
+
+

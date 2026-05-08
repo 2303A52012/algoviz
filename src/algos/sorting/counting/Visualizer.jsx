@@ -1,26 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const COUNTING_SORT_PSEUDOCODE = [
-  "function countingSort(arr) {",
-  "  max = findMax(arr)",
-  "  counts = new Array(max + 1).fill(0)",
-  "  output = new Array(arr.length)",
-  "  for i = 0 to arr.length - 1 {",
-  "    counts[arr[i]]++",
-  "  }",
-  "  for i = 1 to max {",
-  "    counts[i] += counts[i - 1]",
-  "  }",
-  "  for i = arr.length - 1 down to 0 {",
-  "    output[counts[arr[i]] - 1] = arr[i]",
-  "    counts[arr[i]]--",
-  "  }",
-  "  return output",
-  "}"
-];
 
 const COLORS = {
   activeArr: '#3b82f6',
@@ -67,14 +48,13 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     phase: 'init',
     outputIdx: -1,
     msg: 'Press Run to start Counting Sort',
-    activeLine: 0,
   });
 
   useEffect(() => {
     if (!currentStep) {
       setVizState({
 arr, counts: null, output: null, phase: 'init',
-        activeIdx: -1, countIdx: -1, outputIdx: -1, msg: 'Press Run to start Counting Sort', activeLine: 0,
+        activeIdx: -1, countIdx: -1, outputIdx: -1, msg: 'Press Run to start Counting Sort',
       });
       return;
     }
@@ -85,7 +65,6 @@ arr, counts: null, output: null, phase: 'init',
       phase:     currentStep.phase     || 'init',
       outputIdx: currentStep.outputIdx ?? -1,
       msg:       currentStep.msg       || '',
-      activeLine:currentStep.activeLine?? prev.activeLine,
     }));
   }, [currentStep]); // eslint-disable-line
 
@@ -95,7 +74,7 @@ arr, counts: null, output: null, phase: 'init',
     onReset();
     setVizState({
       arr, counts: null, output: null, phase: 'init',
-      activeIdx: -1, countIdx: -1, outputIdx: -1, msg: 'Press Run to start Counting Sort', activeLine: 0,
+      activeIdx: -1, countIdx: -1, outputIdx: -1, msg: 'Press Run to start Counting Sort',
     });
   };
 
@@ -106,7 +85,7 @@ arr, counts: null, output: null, phase: 'init',
     onReset();
     setVizState({
       arr: a, counts: null, output: null, phase: 'init',
-      activeIdx: -1, countIdx: -1, outputIdx: -1, msg: 'Press Run to start Counting Sort', activeLine: 0,
+      activeIdx: -1, countIdx: -1, outputIdx: -1, msg: 'Press Run to start Counting Sort',
     });
   };
 
@@ -118,7 +97,7 @@ arr, counts: null, output: null, phase: 'init',
       onReset();
       setVizState({
         arr: parsed, counts: null, output: null, phase: 'init',
-        activeIdx: -1, countIdx: -1, outputIdx: -1, msg: 'Press Run to start Counting Sort', activeLine: 0,
+        activeIdx: -1, countIdx: -1, outputIdx: -1, msg: 'Press Run to start Counting Sort',
       });
       setInputOpen(false);
       setCustomInput('');
@@ -203,9 +182,11 @@ arr, counts: null, output: null, phase: 'init',
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={COUNTING_SORT_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

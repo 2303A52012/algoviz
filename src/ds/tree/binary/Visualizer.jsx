@@ -1,87 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const BTREE_PSEUDOCODES = {
-  insert: [
-    "function insertBFS(root, value) {",
-    "  node = new Node(value)",
-    "  if root == null return node",
-    "  queue.push(root)",
-    "  while queue is not empty {",
-    "    curr = queue.shift()",
-    "    if curr.left == null { curr.left = node; return root }",
-    "    else queue.push(curr.left)",
-    "    if curr.right == null { curr.right = node; return root }",
-    "    else queue.push(curr.right)",
-    "  }",
-    "}"
-  ],
-  delete: [
-    "function deleteNode(root, value) {",
-    "  if root == null return null",
-    "  target = findTarget(root, value)",
-    "  deepest = findDeepestRightmost(root)",
-    "  if target != null {",
-    "    target.value = deepest.value",
-    "    deleteDeepest(root, deepest)",
-    "  }",
-    "  return root",
-    "}"
-  ],
-  search: [
-    "function searchBFS(root, target) {",
-    "  if root == null return false",
-    "  queue.push(root)",
-    "  while queue is not empty {",
-    "    curr = queue.shift()",
-    "    if curr.value == target return true",
-    "    if curr.left != null queue.push(curr.left)",
-    "    if curr.right != null queue.push(curr.right)",
-    "  }",
-    "  return false",
-    "}"
-  ],
-  inorder: [
-    "function inorder(node) {",
-    "  if node == null return",
-    "  inorder(node.left)",
-    "  visit(node)",
-    "  inorder(node.right)",
-    "}"
-  ],
-  preorder: [
-    "function preorder(node) {",
-    "  if node == null return",
-    "  visit(node)",
-    "  preorder(node.left)",
-    "  preorder(node.right)",
-    "}"
-  ],
-  postorder: [
-    "function postorder(node) {",
-    "  if node == null return",
-    "  postorder(node.left)",
-    "  postorder(node.right)",
-    "  visit(node)",
-    "}"
-  ],
-  levelorder: [
-    "function levelOrder(root) {",
-    "  if root == null return",
-    "  queue.push(root)",
-    "  while queue is not empty {",
-    "    curr = queue.shift()",
-    "    visit(curr)",
-    "    if curr.left != null queue.push(curr.left)",
-    "    if curr.right != null queue.push(curr.right)",
-    "  }",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 // ===== TREE DATA STRUCTURE =====
 function newNode(val) {
@@ -369,14 +288,10 @@ export default function BinaryTreeVisualizer() {
   const [ops, setOps] = useState([`Initialized with [${INIT_VALS.join(', ')}]`]);
   const [traverseResult, setTraverseResult] = useState('');
   const [running, setRunning] = useState(false);
-  const [activeCode, setActiveCode] = useState('default');
-  const [activeLine, setActiveLine] = useState(0);
 
   const addOp = useCallback(op => setOps(p => [...p, op]), []);
 
   const handleInsert = useCallback(val => {
-    setActiveCode('insert');
-    setActiveLine(1);
     const node = newNode(val);
     setRoot(r => {
       const newRoot = insertBFS(cloneTree(r), val);
@@ -390,27 +305,21 @@ export default function BinaryTreeVisualizer() {
         if (cur.right) q.push(cur.right);
       }
       setInsertId(allIds[allIds.length - 1]);
-      setActiveLine(4);
-      setTimeout(() => { setInsertId(null); setActiveLine(6); }, 1000);
+      setTimeout(() => { setInsertId(null); }, 1000);
       return newRoot;
     });
     addOp(`Inserted ${val} (BFS level-order) — O(n)`);
   }, [addOp]);
 
   const handleDelete = useCallback(val => {
-    setActiveCode('delete');
-    setActiveLine(1);
     setRoot(r => {
       const newRoot = deleteNodeBFS(cloneTree(r), val);
       return newRoot;
     });
     addOp(`Deleted node with value ${val}`);
-    setActiveLine(4);
   }, [addOp]);
 
   const handleSearch = useCallback(val => {
-    setActiveCode('search');
-    setActiveLine(1);
     // BFS search — animate path
     setRunning(true); setHighlightIds([]);
     const found = [];
@@ -426,7 +335,6 @@ export default function BinaryTreeVisualizer() {
     const tick = () => {
       if (i < found.length) {
         setHighlightIds(found.slice(0, i + 1));
-        setActiveLine(5);
         i++;
         setTimeout(tick, 300);
       } else {
@@ -435,7 +343,6 @@ export default function BinaryTreeVisualizer() {
           while (q2.length) { const c = q2.shift(); if (c.val === val) { last = c; break; } if (c.left) q2.push(c.left); if (c.right) q2.push(c.right); }
           return last;
         })();
-        setActiveLine(last ? 6 : 10);
         addOp(last ? `Found ${val} — O(n) [${i} nodes visited]` : `Not found: ${val} — O(n) [${i} nodes searched]`);
         setTimeout(() => { setHighlightIds([]); setRunning(false); }, 800);
       }
@@ -444,8 +351,6 @@ export default function BinaryTreeVisualizer() {
   }, [root, addOp]);
 
   const handleTraverse = useCallback(type => {
-    setActiveCode(type);
-    setActiveLine(0);
     setRunning(true); setHighlightIds([]); setTraverseResult('');
     const order = [];
     const inorder   = n => { if (!n) return; inorder(n.left); order.push(n); inorder(n.right); };
@@ -463,7 +368,6 @@ export default function BinaryTreeVisualizer() {
       if (i < order.length) {
         setHighlightIds([order[i].id]);
         setTraverseResult(order.slice(0, i + 1).map(n => n.val).join(' → '));
-        setActiveLine(type === 'inorder' ? 3 : type === 'preorder' ? 2 : type === 'postorder' ? 4 : 5);
         i++;
         setTimeout(tick, 350);
       } else {
@@ -481,14 +385,10 @@ export default function BinaryTreeVisualizer() {
     setRoot(r);
     setOps([`Random tree: [${vals.join(', ')}]`]);
     setHighlightIds([]); setTraverseResult('');
-    setActiveCode('default');
-    setActiveLine(0);
   }, []);
 
   const handleReset = useCallback(() => {
     setRoot(null); setOps([]); setHighlightIds([]); setTraverseResult('');
-    setActiveCode('default');
-    setActiveLine(0);
   }, []);
 
   return (
@@ -531,9 +431,12 @@ export default function BinaryTreeVisualizer() {
         </div>
         </div>
 
-      <div className="btree-code-wrap" style={{ marginTop: '16px' }}>
-        <Pseudocode code={BTREE_PSEUDOCODES[activeCode]} activeLine={activeLine} />
-      </div>
+       
     </div>
   );
 }
+
+
+
+
+

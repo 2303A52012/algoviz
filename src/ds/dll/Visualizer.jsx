@@ -1,74 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
-import Pseudocode from '../../components/Pseudocode';
 import './Visualizer.css';
 
-const DLL_PSEUDOCODES = {
-  insertHead: [
-    "function insertAtHead(list, value) {",
-    "  newNode = new Node(value)",
-    "  if list.head == null {",
-    "    list.head = list.tail = newNode",
-    "  } else {",
-    "    newNode.next = list.head",
-    "    list.head.prev = newNode",
-    "    list.head = newNode",
-    "  }",
-    "  list.size++",
-    "}"
-  ],
-  insertTail: [
-    "function insertAtTail(list, value) {",
-    "  newNode = new Node(value)",
-    "  if list.tail == null {",
-    "    list.head = list.tail = newNode",
-    "  } else {",
-    "    newNode.prev = list.tail",
-    "    list.tail.next = newNode",
-    "    list.tail = newNode",
-    "  }",
-    "  list.size++",
-    "}"
-  ],
-  deleteHead: [
-    "function deleteHead(list) {",
-    "  if list.head == null return",
-    "  if list.head == list.tail {",
-    "    list.head = list.tail = null",
-    "  } else {",
-    "    list.head = list.head.next",
-    "    list.head.prev = null",
-    "  }",
-    "  list.size--",
-    "}"
-  ],
-  deleteTail: [
-    "function deleteTail(list) {",
-    "  if list.tail == null return",
-    "  if list.head == list.tail {",
-    "    list.head = list.tail = null",
-    "  } else {",
-    "    list.tail = list.tail.prev",
-    "    list.tail.next = null",
-    "  }",
-    "  list.size--",
-    "}"
-  ],
-  search: [
-    "function search(list, target) {",
-    "  curr = list.head",
-    "  while curr != null {",
-    "    if curr.value == target {",
-    "      return true",
-    "    }",
-    "    curr = curr.next",
-    "  }",
-    "  return false",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 // ===== NODE COLOR STATES =====
 const NODE_STATES = {
@@ -191,8 +123,6 @@ export default function DoublyLinkedListVisualizer() {
   const [operations, setOperations] = useState(['List initialized with [15, 28, 7, 42]']);
   const [running, setRunning] = useState(false);
   const [isScrollable, setIsScrollable] = useState(false);
-  const [activeCode, setActiveCode] = useState('default');
-  const [activeLine, setActiveLine] = useState(0);
   const laneRef = useRef(null);
 
   // Check if content is scrollable
@@ -214,13 +144,10 @@ export default function DoublyLinkedListVisualizer() {
 
   const handleInsertAtHead = useCallback(
     (value) => {
-      setActiveCode('insertHead');
-      setActiveLine(1);
       setRunning(true);
       setTimeout(() => {
         setList((prev) => [value, ...prev]);
         addOp(`Inserted ${value} at HEAD - O(1)`);
-        setActiveLine(list.length === 0 ? 3 : 7);
         setRunning(false);
       }, 400);
     },
@@ -229,13 +156,10 @@ export default function DoublyLinkedListVisualizer() {
 
   const handleInsertAtTail = useCallback(
     (value) => {
-      setActiveCode('insertTail');
-      setActiveLine(1);
       setRunning(true);
       setTimeout(() => {
         setList((prev) => [...prev, value]);
         addOp(`Inserted ${value} at TAIL - O(1)`);
-        setActiveLine(list.length === 0 ? 3 : 7);
         setRunning(false);
       }, 400);
     },
@@ -243,37 +167,29 @@ export default function DoublyLinkedListVisualizer() {
   );
 
   const handleDeleteHead = useCallback(() => {
-    setActiveCode('deleteHead');
-    setActiveLine(0);
     if (list.length === 0) return;
     setRunning(true);
     setTimeout(() => {
       const deleted = list[0];
       setList((prev) => prev.slice(1));
       addOp(`Deleted HEAD (${deleted}) - O(1)`);
-      setActiveLine(list.length === 1 ? 3 : 6);
       setRunning(false);
     }, 400);
   }, [list, addOp]);
 
   const handleDeleteTail = useCallback(() => {
-    setActiveCode('deleteTail');
-    setActiveLine(0);
     if (list.length === 0) return;
     setRunning(true);
     setTimeout(() => {
       const deleted = list[list.length - 1];
       setList((prev) => prev.slice(0, -1));
       addOp(`Deleted TAIL (${deleted}) - O(1)`);
-      setActiveLine(list.length === 1 ? 3 : 6);
       setRunning(false);
     }, 400);
   }, [list, addOp]);
 
   const handleSearch = useCallback(
     (value) => {
-      setActiveCode('search');
-      setActiveLine(1);
       setRunning(true);
       let pos = -1;
       let step = 0;
@@ -281,17 +197,14 @@ export default function DoublyLinkedListVisualizer() {
       const doSearch = () => {
         if (step < list.length) {
           setFocusIdx(step);
-          setActiveLine(3);
           if (list[step] === value) pos = step;
           step++;
           setTimeout(doSearch, 300);
         } else {
           if (pos !== -1) {
             addOp(`Found ${value} at index ${pos} - O(n) [${step} steps]`);
-            setActiveLine(4);
           } else {
             addOp(`Not found ${value} - O(n) [searched ${step} nodes]`);
-            setActiveLine(8);
           }
           setFocusIdx(-1);
           setRunning(false);
@@ -308,16 +221,12 @@ export default function DoublyLinkedListVisualizer() {
     setList(random);
     setOperations(['List initialized with random values']);
     setFocusIdx(-1);
-    setActiveCode('default');
-    setActiveLine(0);
   }, []);
 
   const handleReset = useCallback(() => {
     setList([]);
     setOperations([]);
     setFocusIdx(-1);
-    setActiveCode('default');
-    setActiveLine(0);
   }, []);
 
   return (
@@ -388,9 +297,12 @@ export default function DoublyLinkedListVisualizer() {
       </div>
 
       {/* Code */}
-      <div className="dll-code-wrap">
-        <Pseudocode code={DLL_PSEUDOCODES[activeCode]} activeLine={activeLine} />
-      </div>
+       
     </div>
   );
 }
+
+
+
+
+

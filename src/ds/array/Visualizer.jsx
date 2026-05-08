@@ -1,47 +1,6 @@
 import React, { useState, useRef } from 'react';
-import Pseudocode from '../../components/Pseudocode';
 import './Visualizer.css';
 
-const ARRAY_PSEUDOCODES = {
-  access: [
-    "function access(arr, index) {",
-    "  return arr[index]",
-    "}"
-  ],
-  search: [
-    "function search(arr, target) {",
-    "  for i = 0 to arr.length - 1 {",
-    "    if arr[i] == target {",
-    "      return i",
-    "    }",
-    "  }",
-    "  return -1",
-    "}"
-  ],
-  insert: [
-    "function insert(arr, index, value) {",
-    "  if size == capacity {",
-    "    resize(arr, capacity * 2)",
-    "  }",
-    "  for i = size down to index + 1 {",
-    "    arr[i] = arr[i - 1]",
-    "  }",
-    "  arr[index] = value",
-    "  size++",
-    "}"
-  ],
-  delete: [
-    "function delete(arr, index) {",
-    "  for i = index to size - 2 {",
-    "    arr[i] = arr[i + 1]",
-    "  }",
-    "  size--",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 const MAX_SIZE = 12;
 const INITIAL  = [14, 7, 23, 5, 38, 11, 42, 19];
@@ -81,9 +40,7 @@ function CapacityGauge({ size, capacity }) {
     <div className="ar-gauge">
       <span className="ar-gauge-label">Size / Capacity</span>
       <div className="ar-gauge-bar">
-        <div className="ar-gauge-fill"
-          style={{ width: `${pct}%`, background: color, transition: 'width 0.3s ease' }} />
-      </div>
+         
       <span className="ar-gauge-text" style={{ color }}>{size} / {capacity}</span>
     </div>
   );
@@ -208,8 +165,6 @@ export default function Visualizer() {
   const [capacity, setCapacity] = useState(MAX_SIZE);
   const [log, setLog]           = useState('Choose an operation above and press ▶ Run.');
   const [running, setRunning]   = useState(false);
-  const [activeCode, setActiveCode] = useState('default');
-  const [activeLine, setActiveLine] = useState(0);
   const { run, stop }           = useStepRunner();
 
   const size = cells.length;
@@ -222,24 +177,20 @@ export default function Visualizer() {
 
   // ACCESS
   const handleAccess = (idx) => {
-    setActiveCode('access');
-    setActiveLine(0);
     if (idx < 0 || idx >= size) {
       setLog(`✗ Index ${idx} out of bounds. Array has ${size} elements (indices 0–${size - 1}).`);
       return;
     }
     setRunning(true);
     run([
-      () => { setCells(prev => setCell(prev, idx, { state: 'highlighted' })); setLog(`Accessing arr[${idx}]...`); setActiveLine(1); },
-      () => { setLog(`✓ arr[${idx}] = ${cells[idx].val}. O(1) — base address + offset. No loop!`); setActiveLine(1); },
+      () => { setCells(prev => setCell(prev, idx, { state: 'highlighted' })); setLog(`Accessing arr[${idx}]...`); },
+      () => { setLog(`✓ arr[${idx}] = ${cells[idx].val}. O(1) — base address + offset. No loop!`); },
       () => { setCells(prev => resetAll(prev)); setRunning(false); },
     ], 500);
   };
 
   // SEARCH
   const handleSearch = (val) => {
-    setActiveCode('search');
-    setActiveLine(0);
     setRunning(true);
     setLog(`Searching for ${val}...`);
     const steps = [];
@@ -253,7 +204,6 @@ export default function Visualizer() {
           state: j < ci ? 'shifting' : j === ci ? 'highlighted' : 'default',
         })));
         setLog(`Checking arr[${ci}] = ${cells[ci].val} ${cells[ci].val === val ? '= ' + val + ' — MATCH!' : '≠ ' + val}`);
-        setActiveLine(2);
       });
 
       if (cells[i].val === val) {
@@ -262,7 +212,6 @@ export default function Visualizer() {
         steps.push(() => {
           setCells(prev => setCell(resetAll(prev), fi, { state: 'found' }));
           setLog(`✓ Found ${val} at index ${fi}! Took ${fi + 1} comparison${fi > 0 ? 's' : ''} — O(n).`);
-          setActiveLine(3);
           setRunning(false);
           setTimeout(() => setCells(prev => resetAll(prev)), 1800);
         });
@@ -274,7 +223,6 @@ export default function Visualizer() {
       steps.push(() => {
         setCells(prev => prev.map(c => ({ ...c, state: 'notfound' })));
         setLog(`✗ ${val} not found after checking all ${cells.length} elements — O(n) worst case.`);
-        setActiveLine(6);
         setRunning(false);
         setTimeout(() => setCells(prev => resetAll(prev)), 1800);
       });
@@ -284,8 +232,6 @@ export default function Visualizer() {
 
   // INSERT
   const handleInsert = (val, atIdx) => {
-    setActiveCode('insert');
-    setActiveLine(0);
     const insertAt = (atIdx < 0 || atIdx > size) ? size : atIdx;
 
     if (size >= capacity) {
@@ -294,17 +240,16 @@ export default function Visualizer() {
       setRunning(true);
       setLog(`Array full (${size}/${capacity})! Resizing — doubling capacity to ${newCap}...`);
       run([
-        () => { setCells(prev => prev.map(c => ({ ...c, state: 'shifting' }))); setActiveLine(1); },
-        () => { setCapacity(newCap); setLog(`Capacity → ${newCap}. Old elements copied to new array. Now inserting ${val}...`); setActiveLine(2); },
+        () => { setCells(prev => prev.map(c => ({ ...c, state: 'shifting' }))); },
+        () => { setCapacity(newCap); setLog(`Capacity → ${newCap}. Old elements copied to new array. Now inserting ${val}...`); },
         () => {
           setCells(prev => {
             const next = [...prev];
             next.splice(insertAt, 0, { val, state: 'new' });
             return next;
           });
-          setActiveLine(6);
         },
-        () => { setCells(prev => resetAll(prev)); setLog(`✓ Inserted ${val} at index ${insertAt}. Size: ${size + 1}/${newCap}.`); setActiveLine(7); setRunning(false); },
+        () => { setCells(prev => resetAll(prev)); setLog(`✓ Inserted ${val} at index ${insertAt}. Size: ${size + 1}/${newCap}.`); setRunning(false); },
       ], 600);
       return;
     }
@@ -316,7 +261,7 @@ export default function Visualizer() {
     run([
       () => { setCells(prev => prev.map((c, i) => ({
         ...c, state: i === insertAt ? 'highlighted' : i > insertAt ? 'shifting' : 'default',
-      }))); setActiveLine(4); },
+      }))); },
       () => {
         setCells(prev => {
           const next = [...prev];
@@ -324,16 +269,13 @@ export default function Visualizer() {
           return next;
         });
         setLog(`Gap created at index ${insertAt}. Dropping ${val} in...`);
-        setActiveLine(6);
       },
-      () => { setCells(prev => resetAll(prev)); setLog(`✓ Inserted ${val} at index ${insertAt}. Size: ${size + 1}/${capacity}.`); setActiveLine(7); setRunning(false); },
+      () => { setCells(prev => resetAll(prev)); setLog(`✓ Inserted ${val} at index ${insertAt}. Size: ${size + 1}/${capacity}.`); setRunning(false); },
     ], 500);
   };
 
   // DELETE
   const handleDelete = (idx) => {
-    setActiveCode('delete');
-    setActiveLine(0);
     if (idx < 0 || idx >= size) {
       setLog(`✗ Index ${idx} out of bounds. Array has ${size} elements (0–${size - 1}).`);
       return;
@@ -344,14 +286,13 @@ export default function Visualizer() {
     setLog(`Deleting arr[${idx}] = ${deletedVal}. Shifting ${shiftCount} element${shiftCount !== 1 ? 's' : ''} left...`);
 
     run([
-      () => { setCells(prev => setCell(prev, idx, { state: 'deleting' })); setActiveLine(1); },
+      () => { setCells(prev => setCell(prev, idx, { state: 'deleting' })); },
       () => { setCells(prev => prev.map((c, i) => ({
         ...c, state: i === idx ? 'deleting' : i > idx ? 'shifting' : 'default',
-      }))); setActiveLine(2); },
+      }))); },
       () => {
         setCells(prev => { const next = [...prev]; next.splice(idx, 1); return resetAll(next); });
         setLog(`✓ Deleted ${deletedVal} from index ${idx}. Size: ${size - 1}/${capacity}.`);
-        setActiveLine(4);
         setRunning(false);
       },
     ], 480);
@@ -360,8 +301,6 @@ export default function Visualizer() {
   const handleReset = () => {
     stop(); setRunning(false);
     setCells(initCells()); setCapacity(MAX_SIZE);
-    setActiveCode('default');
-    setActiveLine(0);
     setLog('Reset. Choose an operation above and press ▶ Run.');
   };
 
@@ -399,9 +338,11 @@ export default function Visualizer() {
           </div>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={ARRAY_PSEUDOCODES[activeCode]} activeLine={activeLine} />
     </div>
   );
 }
+
+
+
+
+

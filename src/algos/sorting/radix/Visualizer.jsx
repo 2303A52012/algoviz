@@ -1,30 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { generateSteps } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const RADIX_SORT_PSEUDOCODE = [
-  "function radixSort(arr) {",
-  "  maxNum = max(arr)",
-  "  numDigits = maxNum.length",
-  "  digitPosition = 1",
-  "  for pass = 0 to numDigits - 1 {",
-  "    buckets = create 10 empty buckets",
-  "    for i = 0 to arr.length - 1 {",
-  "      digit = floor(arr[i] / digitPosition) % 10",
-  "      buckets[digit].push(arr[i])",
-  "    }",
-  "    arrIdx = 0",
-  "    for b = 0 to 9 {",
-  "      for each num in buckets[b] {",
-  "        arr[arrIdx++] = num",
-  "      }",
-  "    }",
-  "    digitPosition *= 10",
-  "  }",
-  "  return arr",
-  "}"
-];
 
 export default function Visualizer({ isRunning, isPaused, currentStep, onRunSteps, onReset, speed }) {
   // ===== STATE MANAGEMENT =====
@@ -214,9 +191,11 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
           ⏱️ <strong>Time Complexity:</strong> O(nk) where n is array size and k is number of digits.
         </p>
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={RADIX_SORT_PSEUDOCODE} activeLine={currentStep?.activeLine} />
     </div>
   );
 }
+
+
+
+
+

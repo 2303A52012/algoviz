@@ -3,26 +3,8 @@ import {
   ROWS, COLS, START, END,
   createEmptyGrid, createRandomWallGrid, generateSteps,
 } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const DFS_PSEUDOCODE = [
-  "function DFS(graph, start) {",
-  "  stack = [start]",
-  "  visited = set()",
-  "  while stack.length > 0 {",
-  "    curr = stack.pop()",
-  "    if curr not in visited {",
-  "      visited.add(curr)",
-  "      if curr == target return true",
-  "      for neighbor in getNeighbors(curr) {",
-  "        stack.push(neighbor)",
-  "      }",
-  "    }",
-  "  }",
-  "  return false",
-  "}"
-];
 
 function key(r, c) { return `${r},${c}`; }
 
@@ -80,11 +62,7 @@ function PathDepthPanel({ pathStack, stackDepth, backtrackedCount }) {
       <div className="dfs-depth-bar-wrap">
         <span className="dfs-depth-bar-label">Depth</span>
         <div className="dfs-depth-bar">
-          <div
-            className="dfs-depth-fill"
-            style={{ width: `${Math.min(100, (pathStack.length / (ROWS * COLS)) * 100 * 4)}%` }}
-          />
-        </div>
+           
       </div>
     </div>
   );
@@ -151,7 +129,6 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     stackDepth:     0,
     done:           false,
     found:          false,
-    activeLine:     0,
   });
 
   useEffect(() => {
@@ -159,7 +136,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       setVizState({
 visitedSet: new Set(), backtrackedSet: new Set(),
         stack: [], pathStack: [], path: [],
-        current: null, stackDepth: 0, done: false, found: false, activeLine: 0,
+        current: null, stackDepth: 0, done: false, found: false,
       });
       return;
     }
@@ -173,7 +150,6 @@ visitedSet: new Set(), backtrackedSet: new Set(),
       stackDepth:     currentStep.stackDepth     || 0,
       done:           currentStep.done           || false,
       found:          currentStep.type === 'found',
-      activeLine:     currentStep.activeLine     ?? prev.activeLine,
     }));
   }, [currentStep]);
 
@@ -194,7 +170,7 @@ visitedSet: new Set(), backtrackedSet: new Set(),
     setVizState({
       visitedSet: new Set(), backtrackedSet: new Set(),
       stack: [], pathStack: [], path: [],
-      current: null, stackDepth: 0, done: false, found: false, activeLine: 0,
+      current: null, stackDepth: 0, done: false, found: false,
     });
   };
 
@@ -300,9 +276,11 @@ visitedSet: new Set(), backtrackedSet: new Set(),
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={DFS_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

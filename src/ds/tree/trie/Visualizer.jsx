@@ -1,48 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const TRIE_PSEUDOCODES = {
-  insert: [
-    "function insert(word) {",
-    "  curr = root",
-    "  for char in word {",
-    "    if !curr.children[char] {",
-    "      curr.children[char] = new Node(char)",
-    "    }",
-    "    curr = curr.children[char]",
-    "  }",
-    "  curr.isEnd = true",
-    "}"
-  ],
-  search: [
-    "function search(word) {",
-    "  curr = root",
-    "  for char in word {",
-    "    if !curr.children[char] {",
-    "      return false",
-    "    }",
-    "    curr = curr.children[char]",
-    "  }",
-    "  return curr.isEnd",
-    "}"
-  ],
-  prefix: [
-    "function startsWith(prefix) {",
-    "  curr = root",
-    "  for char in prefix {",
-    "    if !curr.children[char] {",
-    "      return false",
-    "    }",
-    "    curr = curr.children[char]",
-    "  }",
-    "  return true",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 // ===== TRIE NODE =====
 function newTrieNode(char = '') {
@@ -250,23 +208,17 @@ export default function TrieVisualizer() {
   const [ops, setOps] = useState(['Initialized with: cat, car, cart, dog']);
   const [wordCount, setWordCount] = useState(4);
   const [running, setRunning] = useState(false);
-  const [activeCode, setActiveCode] = useState('default');
-  const [activeLine, setActiveLine] = useState(0);
 
   const addOp = useCallback(msg => setOps(p => [...p, msg]), []);
 
   const runAnimation = async (word, isInsert, isPrefixSearch) => {
     setRunning(true);
-    setActiveCode(isInsert ? 'insert' : isPrefixSearch ? 'prefix' : 'search');
-    setActiveLine(1);
     setFoundNode(null);
     setHlPath([]); setHlNode(null);
 
     const r = { ...root }; // shallow copy for trigger
     let curr = r;
     const path = [curr.id];
-    
-    setActiveLine(2);
     setHlPath([...path]);
     setHlNode(curr.id);
     await new Promise(res => setTimeout(res, 400));
@@ -274,18 +226,13 @@ export default function TrieVisualizer() {
     let createdNew = false;
 
     for (let i = 0; i < word.length; i++) {
-      setActiveLine(3);
       const char = word[i];
-      
-      setActiveLine(4);
       if (!curr.children[char]) {
         if (isInsert) {
-          setActiveLine(5);
           curr.children[char] = newTrieNode(char);
           createdNew = true;
           addOp(`Added node '${char}'`);
         } else {
-          setActiveLine(5);
           addOp(`Character '${char}' not found. ${isPrefixSearch ? 'Prefix' : 'Word'} does not exist.`);
           setHlNode(null);
           setRunning(false);
@@ -294,7 +241,6 @@ export default function TrieVisualizer() {
       }
       
       curr = curr.children[char];
-      setActiveLine(7);
       path.push(curr.id);
       
       setHlPath([...path]);
@@ -305,7 +251,6 @@ export default function TrieVisualizer() {
     }
 
     if (isInsert) {
-      setActiveLine(9);
       if (!curr.isEnd) {
         curr.isEnd = true;
         setWordCount(c => c + 1);
@@ -315,11 +260,9 @@ export default function TrieVisualizer() {
       }
       setFoundNode(curr.id);
     } else if (isPrefixSearch) {
-      setActiveLine(9);
       addOp(`Prefix '${word}' found!`);
       setFoundNode(curr.id);
     } else {
-      setActiveLine(9);
       if (curr.isEnd) {
         addOp(`Word '${word}' found!`);
         setFoundNode(curr.id);
@@ -343,8 +286,6 @@ export default function TrieVisualizer() {
     setWordCount(0);
     setOps(['Cleared Trie']);
     setHlPath([]); setHlNode(null); setFoundNode(null);
-    setActiveCode('default');
-    setActiveLine(0);
   };
 
   return (
@@ -404,9 +345,12 @@ export default function TrieVisualizer() {
         </div>
       </div>
       
-      <div className="trie-code-wrap" style={{ marginTop: '16px', background: 'var(--bg-panel)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '14px' }}>
-        <Pseudocode code={TRIE_PSEUDOCODES[activeCode]} activeLine={activeLine} />
-      </div>
+       
     </div>
   );
 }
+
+
+
+
+

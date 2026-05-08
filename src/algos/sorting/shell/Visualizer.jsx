@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const SHELL_SORT_PSEUDOCODE = [
-  "function shellSort(arr) {",
-  "  for gap = floor(n / 2); gap > 0; gap = floor(gap / 2) {",
-  "    for i = gap to arr.length - 1 {",
-  "      temp = arr[i]",
-  "      for j = i; j >= gap and arr[j - gap] > temp; j -= gap {",
-  "        arr[j] = arr[j - gap]",
-  "      }",
-  "      arr[j] = temp",
-  "    }",
-  "  }",
-  "  return arr",
-  "}"
-];
 
 const COLORS = {
   unsorted:     '#1e3a6e',
@@ -116,13 +101,12 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     comparingIdx: -1,
     gapPartnerIdx: -1,
     msg: 'Press Run to start Shell Sort',
-    activeLine: 0,
   });
 
   useEffect(() => {
     if (!currentStep) {
       setVizState({
-arr, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shell Sort', activeLine: 0,
+arr, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shell Sort',
       });
       return;
     }
@@ -132,7 +116,6 @@ arr, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shel
       comparingIdx:  currentStep.comparingIdx  ?? -1,
       gapPartnerIdx: currentStep.gapPartnerIdx ?? -1,
       msg:           currentStep.msg           || '',
-      activeLine:    currentStep.activeLine    ?? prev.activeLine,
     }));
   }, [currentStep]); // eslint-disable-line
 
@@ -141,7 +124,7 @@ arr, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shel
   const handleReset = () => {
     onReset();
     setVizState({
-      arr, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shell Sort', activeLine: 0,
+      arr, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shell Sort',
     });
   };
 
@@ -151,7 +134,7 @@ arr, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shel
     setArr(a);
     onReset();
     setVizState({
-      arr: a, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shell Sort', activeLine: 0,
+      arr: a, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shell Sort',
     });
   };
 
@@ -162,7 +145,7 @@ arr, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shel
       setArr(parsed);
       onReset();
       setVizState({
-        arr: parsed, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shell Sort', activeLine: 0,
+        arr: parsed, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shell Sort',
       });
       setInputOpen(false);
       setCustomInput('');
@@ -225,9 +208,11 @@ arr, gap: -1, comparingIdx: -1, gapPartnerIdx: -1, msg: 'Press Run to start Shel
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={SHELL_SORT_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

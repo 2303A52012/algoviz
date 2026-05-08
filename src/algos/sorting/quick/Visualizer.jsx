@@ -1,29 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const QUICK_SORT_PSEUDOCODE = [
-  "function quickSort(arr, lo, hi) {",
-  "  if lo >= hi return",
-  "  p = partition(arr, lo, hi)",
-  "  quickSort(arr, lo, p - 1)",
-  "  quickSort(arr, p + 1, hi)",
-  "}",
-  "function partition(arr, lo, hi) {",
-  "  pivot = arr[getPivotIdx(lo, hi)]",
-  "  swap(arr[pivotIdx], arr[hi])",
-  "  i = lo - 1",
-  "  for j = lo to hi - 1 {",
-  "    if arr[j] <= pivot {",
-  "      i++",
-  "      swap(arr[i], arr[j])",
-  "    }",
-  "  }",
-  "  swap(arr[i + 1], arr[hi])",
-  "  return i + 1",
-  "}"
-];
 
 const COLORS = {
   default:     '#1e3a6e',
@@ -194,7 +172,6 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     settled: [],
     swapping: null,
     depth: 0,
-    activeLine: 0,
   });
 
   useEffect(() => {
@@ -203,7 +180,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
 arr, pivotIdx: -1, pivotVal: null,
         lo: 0, hi: arr.length - 1,
         scanIdx: -1, leftZone: [], rightZone: [],
-        settled: [], swapping: null, depth: 0, activeLine: 0,
+        settled: [], swapping: null, depth: 0,
       });
       return;
     }
@@ -219,7 +196,6 @@ arr, pivotIdx: -1, pivotVal: null,
       settled:    currentStep.settled    || [],
       swapping:   currentStep.swapping   || null,
       depth:      currentStep.depth      ?? 0,
-      activeLine: currentStep.activeLine ?? prev.activeLine,
     }));
   }, [currentStep]); // eslint-disable-line
 
@@ -231,7 +207,7 @@ arr, pivotIdx: -1, pivotVal: null,
       arr, pivotIdx: -1, pivotVal: null,
       lo: 0, hi: arr.length - 1,
       scanIdx: -1, leftZone: [], rightZone: [],
-      settled: [], swapping: null, depth: 0, activeLine: 0,
+      settled: [], swapping: null, depth: 0,
     });
   };
 
@@ -244,7 +220,7 @@ arr, pivotIdx: -1, pivotVal: null,
       arr: a, pivotIdx: -1, pivotVal: null,
       lo: 0, hi: a.length - 1,
       scanIdx: -1, leftZone: [], rightZone: [],
-      settled: [], swapping: null, depth: 0, activeLine: 0,
+      settled: [], swapping: null, depth: 0,
     });
   };
 
@@ -258,7 +234,7 @@ arr, pivotIdx: -1, pivotVal: null,
         arr: parsed, pivotIdx: -1, pivotVal: null,
         lo: 0, hi: parsed.length - 1,
         scanIdx: -1, leftZone: [], rightZone: [],
-        settled: [], swapping: null, depth: 0, activeLine: 0,
+        settled: [], swapping: null, depth: 0,
       });
       setInputOpen(false);
       setCustomInput('');
@@ -364,9 +340,11 @@ arr, pivotIdx: -1, pivotVal: null,
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={QUICK_SORT_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

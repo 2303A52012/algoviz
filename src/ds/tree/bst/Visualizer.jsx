@@ -1,95 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const BST_PSEUDOCODES = {
-  insert: [
-    "function insert(node, value) {",
-    "  if node == null return new Node(value)",
-    "  if value < node.value {",
-    "    node.left = insert(node.left, value)",
-    "  } else if value > node.value {",
-    "    node.right = insert(node.right, value)",
-    "  }",
-    "  return node",
-    "}"
-  ],
-  delete: [
-    "function delete(node, value) {",
-    "  if node == null return null",
-    "  if value < node.value: node.left = delete(node.left, value)",
-    "  else if value > node.value: node.right = delete(node.right, value)",
-    "  else {",
-    "    if node.left == null return node.right",
-    "    if node.right == null return node.left",
-    "    succ = findMin(node.right)",
-    "    node.value = succ.value",
-    "    node.right = delete(node.right, succ.value)",
-    "  }",
-    "  return node",
-    "}"
-  ],
-  search: [
-    "function search(node, target) {",
-    "  if node == null return false",
-    "  if target == node.value return true",
-    "  if target < node.value {",
-    "    return search(node.left, target)",
-    "  } else {",
-    "    return search(node.right, target)",
-    "  }",
-    "}"
-  ],
-  validate: [
-    "function isValidBST(node, min, max) {",
-    "  if node == null return true",
-    "  if node.value <= min or node.value >= max {",
-    "    return false",
-    "  }",
-    "  return isValidBST(node.left, min, node.value)",
-    "      && isValidBST(node.right, node.value, max)",
-    "}"
-  ],
-  inorder: [
-    "function inorder(node) {",
-    "  if node == null return",
-    "  inorder(node.left)",
-    "  visit(node)",
-    "  inorder(node.right)",
-    "}"
-  ],
-  preorder: [
-    "function preorder(node) {",
-    "  if node == null return",
-    "  visit(node)",
-    "  preorder(node.left)",
-    "  preorder(node.right)",
-    "}"
-  ],
-  postorder: [
-    "function postorder(node) {",
-    "  if node == null return",
-    "  postorder(node.left)",
-    "  postorder(node.right)",
-    "  visit(node)",
-    "}"
-  ],
-  levelorder: [
-    "function levelOrder(root) {",
-    "  if root == null return",
-    "  queue.push(root)",
-    "  while queue is not empty {",
-    "    curr = queue.shift()",
-    "    visit(curr)",
-    "    if curr.left != null queue.push(curr.left)",
-    "    if curr.right != null queue.push(curr.right)",
-    "  }",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 // ===== BST OPERATIONS =====
 function newNode(val) {
@@ -367,14 +278,10 @@ export default function BSTVisualizer() {
   const [ops, setOps] = useState([`Initialized with [${INIT_VALS.join(', ')}]`]);
   const [traverseResult, setTraverseResult] = useState('');
   const [running, setRunning] = useState(false);
-  const [activeCode, setActiveCode] = useState('default');
-  const [activeLine, setActiveLine] = useState(0);
 
   const addOp = useCallback(op => setOps(p => [...p, op]), []);
 
   const handleInsert = useCallback(val => {
-    setActiveCode('insert');
-    setActiveLine(1);
     let insertedId = null;
     setRoot(r => {
       const before = new Set();
@@ -386,35 +293,27 @@ export default function BSTVisualizer() {
       collectAfter(newRoot);
       for (const id of after) { if (!before.has(id)) { insertedId = id; break; } }
       setNewId(insertedId);
-      setActiveLine(7);
-      setTimeout(() => { setNewId(null); setActiveLine(8); }, 1000);
+      setTimeout(() => { setNewId(null); }, 1000);
       return newRoot;
     });
     addOp(`BST Insert: ${val} — O(log n) avg`);
   }, [addOp]);
 
   const handleDelete = useCallback(val => {
-    setActiveCode('delete');
-    setActiveLine(1);
     setRoot(r => bstDelete(r, val));
     addOp(`BST Delete: ${val} (using in-order successor if 2 children)`);
-    setActiveLine(12);
   }, [addOp]);
 
   const handleSearch = useCallback(val => {
-    setActiveCode('search');
-    setActiveLine(1);
     setRunning(true); setHighlightIds([]); setTraverseResult('');
     const { found, path } = bstSearch(root, val);
     let i = 0;
     const tick = () => {
       if (i < path.length) {
         setHighlightIds(path.slice(0, i + 1));
-        setActiveLine(4);
         i++;
         setTimeout(tick, 350);
       } else {
-        setActiveLine(found ? 2 : 1);
         addOp(found
           ? `Found ${val} — path length ${path.length} — O(log n) avg`
           : `Not found: ${val} — searched ${path.length} nodes`);
@@ -425,8 +324,6 @@ export default function BSTVisualizer() {
   }, [root, addOp]);
 
   const handleTraverse = useCallback(type => {
-    setActiveCode(type);
-    setActiveLine(0);
     setRunning(true); setHighlightIds([]); setTraverseResult('');
     const order = [];
     const inorder   = n => { if (!n) return; inorder(n.left); order.push(n); inorder(n.right); };
@@ -444,7 +341,6 @@ export default function BSTVisualizer() {
       if (i < order.length) {
         setHighlightIds([order[i].id]);
         setTraverseResult(order.slice(0, i+1).map(n => n.val).join(' → '));
-        setActiveLine(type === 'inorder' ? 3 : type === 'preorder' ? 2 : type === 'postorder' ? 4 : 5);
         i++;
         setTimeout(tick, 300);
       } else {
@@ -456,10 +352,7 @@ export default function BSTVisualizer() {
   }, [root, addOp]);
 
   const handleValidate = useCallback(() => {
-    setActiveCode('validate');
-    setActiveLine(0);
     const valid = isValidBST(root);
-    setActiveLine(6);
     addOp(valid ? '✅ Valid BST: all left < node < right holds everywhere' : '❌ NOT a valid BST!');
   }, [root, addOp]);
 
@@ -469,14 +362,10 @@ export default function BSTVisualizer() {
     [...new Set(vals)].forEach(v => { r = bstInsert(r, v); });
     setRoot(r); setOps([`Random BST: [${vals.join(', ')}]`]);
     setHighlightIds([]); setTraverseResult('');
-    setActiveCode('default');
-    setActiveLine(0);
   }, []);
 
   const handleReset = useCallback(() => {
     setRoot(null); setOps([]); setHighlightIds([]); setTraverseResult('');
-    setActiveCode('default');
-    setActiveLine(0);
   }, []);
 
   return (
@@ -537,9 +426,12 @@ export default function BSTVisualizer() {
         </div>
       </div>
       
-      <div className="bst-code-wrap" style={{ marginTop: '16px' }}>
-        <Pseudocode code={BST_PSEUDOCODES[activeCode]} activeLine={activeLine} />
-      </div>
+       
     </div>
   );
 }
+
+
+
+
+

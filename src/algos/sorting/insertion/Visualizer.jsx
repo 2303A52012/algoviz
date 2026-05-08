@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const INSERTION_SORT_PSEUDOCODE = [
-  "function insertionSort(arr) {",
-  "  for i = 1 to arr.length - 1 {",
-  "    pickedVal = arr[i]",
-  "    j = i - 1",
-  "    while j >= 0 and arr[j] > pickedVal {",
-  "      arr[j + 1] = arr[j]",
-  "      j--",
-  "    }",
-  "    arr[j + 1] = pickedVal",
-  "  }",
-  "  return arr",
-  "}"
-];
 
 const COLORS = {
   sorted:       '#16a34a',
@@ -168,14 +153,13 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     insertAt: -1,
     shiftingRange: [],
     justInserted: -1,
-    activeLine: 0,
   });
 
   useEffect(() => {
     if (!currentStep) {
       setVizState({
 arr, sortedCount: 1, pickedIdx: -1, pickedVal: null,
-        comparingIdx: -1, insertAt: -1, shiftingRange: [], justInserted: -1, activeLine: 0,
+        comparingIdx: -1, insertAt: -1, shiftingRange: [], justInserted: -1,
       });
       return;
     }
@@ -188,7 +172,6 @@ arr, sortedCount: 1, pickedIdx: -1, pickedVal: null,
       insertAt:      currentStep.insertAt      ?? -1,
       shiftingRange: currentStep.shiftingRange || [],
       justInserted:  currentStep.type === 'insert' ? currentStep.justInserted : -1,
-      activeLine:    currentStep.activeLine    ?? prev.activeLine,
     }));
   }, [currentStep]); // eslint-disable-line
 
@@ -198,7 +181,7 @@ arr, sortedCount: 1, pickedIdx: -1, pickedVal: null,
     onReset();
     setVizState({
       arr, sortedCount: 1, pickedIdx: -1, pickedVal: null,
-      comparingIdx: -1, insertAt: -1, shiftingRange: [], justInserted: -1, activeLine: 0,
+      comparingIdx: -1, insertAt: -1, shiftingRange: [], justInserted: -1,
     });
   };
 
@@ -209,7 +192,7 @@ arr, sortedCount: 1, pickedIdx: -1, pickedVal: null,
     onReset();
     setVizState({
       arr: a, sortedCount: 1, pickedIdx: -1, pickedVal: null,
-      comparingIdx: -1, insertAt: -1, shiftingRange: [], justInserted: -1, activeLine: 0,
+      comparingIdx: -1, insertAt: -1, shiftingRange: [], justInserted: -1,
     });
   };
 
@@ -221,7 +204,7 @@ arr, sortedCount: 1, pickedIdx: -1, pickedVal: null,
       onReset();
       setVizState({
         arr: parsed, sortedCount: 1, pickedIdx: -1, pickedVal: null,
-        comparingIdx: -1, insertAt: -1, shiftingRange: [], justInserted: -1, activeLine: 0,
+        comparingIdx: -1, insertAt: -1, shiftingRange: [], justInserted: -1,
       });
       setInputOpen(false);
       setCustomInput('');
@@ -291,9 +274,11 @@ arr, sortedCount: 1, pickedIdx: -1, pickedVal: null,
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={INSERTION_SORT_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

@@ -1,49 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import Pseudocode from '../../components/Pseudocode';
 import './Visualizer.css';
 
-const HASHMAP_PSEUDOCODES = {
-  put: [
-    "function put(key, value) {",
-    "  index = hash(key) % capacity",
-    "  chain = table[index]",
-    "  for node in chain {",
-    "    if node.key == key {",
-    "      node.value = value",
-    "      return",
-    "    }",
-    "  }",
-    "  chain.push({key, value})",
-    "}"
-  ],
-  get: [
-    "function get(key) {",
-    "  index = hash(key) % capacity",
-    "  chain = table[index]",
-    "  for node in chain {",
-    "    if node.key == key {",
-    "      return node.value",
-    "    }",
-    "  }",
-    "  return null",
-    "}"
-  ],
-  remove: [
-    "function remove(key) {",
-    "  index = hash(key) % capacity",
-    "  chain = table[index]",
-    "  for i = 0 to chain.length - 1 {",
-    "    if chain[i].key == key {",
-    "      chain.removeAt(i)",
-    "      return",
-    "    }",
-    "  }",
-    "}"
-  ],
-  default: [
-    "// Select an operation to see pseudocode"
-  ]
-};
 
 // ===== CONSTANTS & HELPERS =====
 const TABLE_SIZE = 7; // Small prime number for visualization
@@ -179,15 +136,11 @@ export default function HashMapVisualizer() {
   const [ops, setOps] = useState(['Initialized Hash Map']);
   const [itemCount, setItemCount] = useState(4);
   const [running, setRunning] = useState(false);
-  const [activeCode, setActiveCode] = useState('default');
-  const [activeLine, setActiveLine] = useState(0);
 
   const addOp = useCallback(msg => setOps(p => [...p, msg]), []);
 
   const runAnimation = async (action, key, val = null) => {
     setRunning(true);
-    setActiveCode(action);
-    setActiveLine(1);
     setFoundNodeKey(null); setHlNodeKey(null); setCmpNodeKey(null); setHlBucket(null);
     
     // 1. Calculate Hash
@@ -198,7 +151,6 @@ export default function HashMapVisualizer() {
     setHashCalc({ key, index, active: false });
 
     // 2. Highlight Bucket
-    setActiveLine(2);
     setHlBucket(index);
     const chain = [...table[index]]; // copy chain
     addOp(`Jumped to bucket [${index}] in O(1) time.`);
@@ -207,12 +159,9 @@ export default function HashMapVisualizer() {
     // 3. Traverse Chain
     let foundIdx = -1;
     for (let i = 0; i < chain.length; i++) {
-      setActiveLine(3);
       setCmpNodeKey(chain[i].k);
       addOp(`Comparing with key '${chain[i].k}'...`);
       await new Promise(r => setTimeout(r, 600));
-      
-      setActiveLine(4);
       if (chain[i].k === key) {
         foundIdx = i;
         setFoundNodeKey(key);
@@ -228,11 +177,9 @@ export default function HashMapVisualizer() {
     
     if (action === 'put') {
       if (foundIdx !== -1) {
-        setActiveLine(5);
         newTable[index][foundIdx].v = val;
         addOp(`Updated value for '${key}' to '${val}'.`);
       } else {
-        setActiveLine(9);
         newTable[index].push({ k: key, v: val });
         setItemCount(c => c + 1);
         setHlNodeKey(key);
@@ -240,15 +187,12 @@ export default function HashMapVisualizer() {
       }
     } else if (action === 'get') {
       if (foundIdx === -1) {
-        setActiveLine(8);
         setCmpNodeKey(null);
         addOp(`Key '${key}' not found in map.`);
       } else {
-        setActiveLine(5);
       }
     } else if (action === 'remove') {
       if (foundIdx !== -1) {
-        setActiveLine(5);
         newTable[index].splice(foundIdx, 1);
         setItemCount(c => c - 1);
         setFoundNodeKey(null);
@@ -276,8 +220,6 @@ export default function HashMapVisualizer() {
     setItemCount(0);
     setOps(['Cleared Hash Map']);
     setHashCalc(null); setHlBucket(null); setFoundNodeKey(null); setHlNodeKey(null); setCmpNodeKey(null);
-    setActiveCode('default');
-    setActiveLine(0);
   };
 
   const loadFactor = (itemCount / TABLE_SIZE).toFixed(2);
@@ -342,9 +284,12 @@ export default function HashMapVisualizer() {
         </div>
       </div>
       
-      <div className="hash-code-wrap" style={{ marginTop: '16px', background: 'var(--bg-panel)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '14px' }}>
-        <Pseudocode code={HASHMAP_PSEUDOCODES[activeCode]} activeLine={activeLine} />
-      </div>
+       
     </div>
   );
 }
+
+
+
+
+

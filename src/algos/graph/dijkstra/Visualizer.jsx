@@ -3,30 +3,8 @@ import {
   ROWS, COLS, START, END, WEIGHT_COST,
   createEmptyGrid, createRandomGrid, generateSteps,
 } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const DIJKSTRA_PSEUDOCODE = [
-  "function dijkstra(graph, start) {",
-  "  pq = new PriorityQueue()",
-  "  pq.enqueue(start, 0)",
-  "  dist = {start: 0}",
-  "  while !pq.isEmpty() {",
-  "    curr = pq.dequeue()",
-  "    if curr == target return dist[curr]",
-  "    if curr in visited continue",
-  "    visited.add(curr)",
-  "    for neighbor in getNeighbors(curr) {",
-  "      newDist = dist[curr] + cost(curr, neighbor)",
-  "      if newDist < dist[neighbor] {",
-  "        dist[neighbor] = newDist",
-  "        pq.enqueue(neighbor, newDist)",
-  "      }",
-  "    }",
-  "  }",
-  "  return -1",
-  "}"
-];
 
 function key(r, c) { return `${r},${c}`; }
 
@@ -140,7 +118,6 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     distMap:     {},
     done:        false,
     found:       false,
-    activeLine:  0,
   });
 
   useEffect(() => {
@@ -148,7 +125,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       setVizState({
 visitedSet: new Set(), frontierSet: new Set(),
         queue: [], path: [], current: null, distMap: {},
-        done: false, found: false, activeLine: 0,
+        done: false, found: false,
       });
       return;
     }
@@ -161,7 +138,6 @@ visitedSet: new Set(), frontierSet: new Set(),
       distMap:     currentStep.distMap     || {},
       done:        currentStep.done        || false,
       found:       currentStep.type === 'found',
-      activeLine:  currentStep.activeLine  ?? prev.activeLine,
     }));
   }, [currentStep]);
 
@@ -189,7 +165,7 @@ visitedSet: new Set(), frontierSet: new Set(),
     setVizState({
       visitedSet: new Set(), frontierSet: new Set(),
       queue: [], path: [], current: null, distMap: {},
-      done: false, found: false, activeLine: 0,
+      done: false, found: false,
     });
   };
 
@@ -320,9 +296,11 @@ visitedSet: new Set(), frontierSet: new Set(),
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={DIJKSTRA_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

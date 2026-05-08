@@ -1,24 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const SELECTION_SORT_PSEUDOCODE = [
-  "function selectionSort(arr) {",
-  "  for i = 0 to arr.length - 2 {",
-  "    minIdx = i",
-  "    for j = i + 1 to arr.length - 1 {",
-  "      if arr[j] < arr[minIdx] {",
-  "        minIdx = j",
-  "      }",
-  "    }",
-  "    if minIdx != i {",
-  "      swap(arr[i], arr[minIdx])",
-  "    }",
-  "  }",
-  "  return arr",
-  "}"
-];
 
 // Color scheme unique to selection sort
 const COLORS = {
@@ -128,11 +111,7 @@ function MinTracker({ minIdx, minVal, scanning, sortedBoundary, passNum, totalPa
         <div className="sl-pass-info">
           Pass <b>{passNum}</b> of <b>{totalPasses}</b>
           <div className="sl-pass-bar">
-            <div
-              className="sl-pass-fill"
-              style={{ width: `${((passNum - 1) / totalPasses) * 100}%` }}
-            />
-          </div>
+             
         </div>
       )}
     </div>
@@ -153,12 +132,11 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     swapping: [],
     justPlaced: -1,
     passNum: 0,
-    activeLine: 0,
   });
 
   useEffect(() => {
     if (!currentStep) {
-      setVizState(v => ({ ...v, arr, sortedBoundary: 0, scanning: -1, minIdx: -1, swapping: [], justPlaced: -1, passNum: 0, activeLine: 0 }));
+      setVizState(v => ({ ...v, arr, sortedBoundary: 0, scanning: -1, minIdx: -1, swapping: [], justPlaced: -1, passNum: 0}));
       return;
     }
     setVizState(prev => ({
@@ -169,7 +147,6 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       swapping:       currentStep.swapping       || [],
       justPlaced:     currentStep.type === 'placed' ? currentStep.justPlaced : -1,
       passNum:        currentStep.passNum        || prev.passNum,
-      activeLine:     currentStep.activeLine     ?? prev.activeLine,
     }));
   }, [currentStep]); // eslint-disable-line
 
@@ -177,7 +154,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
 
   const handleReset = () => {
     onReset();
-    setVizState({ arr, sortedBoundary: 0, scanning: -1, minIdx: -1, swapping: [], justPlaced: -1, passNum: 0, activeLine: 0 });
+    setVizState({ arr, sortedBoundary: 0, scanning: -1, minIdx: -1, swapping: [], justPlaced: -1, passNum: 0});
   };
 
   const handleNewArray = () => {
@@ -185,7 +162,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     const a = Array.from({ length: size }, () => Math.floor(Math.random() * 88) + 10);
     setArr(a);
     onReset();
-    setVizState({ arr: a, sortedBoundary: 0, scanning: -1, minIdx: -1, swapping: [], justPlaced: -1, passNum: 0, activeLine: 0 });
+    setVizState({ arr: a, sortedBoundary: 0, scanning: -1, minIdx: -1, swapping: [], justPlaced: -1, passNum: 0});
   };
 
   const handleLoadCustom = () => {
@@ -194,7 +171,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       const parsed = parseCustomInput(customInput);
       setArr(parsed);
       onReset();
-      setVizState({ arr: parsed, sortedBoundary: 0, scanning: -1, minIdx: -1, swapping: [], justPlaced: -1, passNum: 0, activeLine: 0 });
+      setVizState({ arr: parsed, sortedBoundary: 0, scanning: -1, minIdx: -1, swapping: [], justPlaced: -1, passNum: 0});
       setInputOpen(false);
       setCustomInput('');
     } catch (e) { setCustomErr(e.message); }
@@ -265,9 +242,11 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={SELECTION_SORT_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

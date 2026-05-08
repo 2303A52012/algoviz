@@ -1,27 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { generateSteps } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const HEAP_SORT_PSEUDOCODE = [
-  "function heapSort(arr) {",
-  "  for i = floor(n/2)-1 down to 0",
-  "    heapify(arr, n, i)",
-  "  for i = n-1 down to 1",
-  "    swap(arr[0], arr[i])",
-  "    heapify(arr, i, 0)",
-  "}",
-  "function heapify(arr, size, root) {",
-  "  largest = root, left = 2*root+1, right = 2*root+2",
-  "  if left < size and arr[left] > arr[largest]",
-  "    largest = left",
-  "  if right < size and arr[right] > arr[largest]",
-  "    largest = right",
-  "  if largest != root",
-  "    swap(arr[root], arr[largest])",
-  "    heapify(arr, size, largest)",
-  "}"
-];
 
 export default function Visualizer({ isRunning, isPaused, currentStep, onRunSteps, onReset, speed }) {
   // ===== STATE MANAGEMENT =====
@@ -318,11 +298,13 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
           💡 <strong>Index Formula:</strong> Parent i → Left: 2i+1, Right: 2i+2
         </p>
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={HEAP_SORT_PSEUDOCODE} activeLine={currentStep?.activeLine} />
     </div>
   );
 }
+
+
+
+
+
 
 

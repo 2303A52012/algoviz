@@ -3,31 +3,8 @@ import {
   ROWS, COLS, START, END,
   createEmptyGrid, createRandomGrid, generateSteps,
 } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const ASTAR_PSEUDOCODE = [
-  "function aStar(graph, start, target) {",
-  "  pq = new PriorityQueue()",
-  "  pq.enqueue(start, 0)",
-  "  g = {start: 0}",
-  "  while !pq.isEmpty() {",
-  "    curr = pq.dequeue()",
-  "    if curr == target return g[curr]",
-  "    if curr in visited continue",
-  "    visited.add(curr)",
-  "    for neighbor in getNeighbors(curr) {",
-  "      newG = g[curr] + cost(curr, neighbor)",
-  "      if newG < g[neighbor] {",
-  "        g[neighbor] = newG",
-  "        f = newG + heuristic(neighbor, target)",
-  "        pq.enqueue(neighbor, f)",
-  "      }",
-  "    }",
-  "  }",
-  "  return -1",
-  "}"
-];
 
 function key(r, c) { return `${r},${c}`; }
 
@@ -153,7 +130,6 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     hMap:        {},
     done:        false,
     found:       false,
-    activeLine:  0,
   });
 
   useEffect(() => {
@@ -162,7 +138,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
 visitedSet: new Set(), frontierSet: new Set(),
         queue: [], path: [], current: null, 
         fMap: {}, gMap: {}, hMap: {},
-        done: false, found: false, activeLine: 0,
+        done: false, found: false,
       });
       return;
     }
@@ -177,7 +153,6 @@ visitedSet: new Set(), frontierSet: new Set(),
       hMap:        currentStep.hMap        || {},
       done:        currentStep.done        || false,
       found:       currentStep.type === 'found',
-      activeLine:  currentStep.activeLine  ?? prev.activeLine,
     }));
   }, [currentStep]);
 
@@ -202,7 +177,7 @@ visitedSet: new Set(), frontierSet: new Set(),
       visitedSet: new Set(), frontierSet: new Set(),
       queue: [], path: [], current: null, 
       fMap: {}, gMap: {}, hMap: {},
-      done: false, found: false, activeLine: 0,
+      done: false, found: false,
     });
   };
 
@@ -321,9 +296,11 @@ visitedSet: new Set(), frontierSet: new Set(),
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={ASTAR_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+

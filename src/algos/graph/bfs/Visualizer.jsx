@@ -3,26 +3,8 @@ import {
   ROWS, COLS, START, END,
   createEmptyGrid, createRandomWallGrid, generateSteps,
 } from './steps';
-import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
 
-const BFS_PSEUDOCODE = [
-  "function BFS(graph, start) {",
-  "  queue = [start]",
-  "  visited = set([start])",
-  "  while queue.length > 0 {",
-  "    curr = queue.shift()",
-  "    if curr == target return true",
-  "    for neighbor in getNeighbors(curr) {",
-  "      if neighbor not in visited {",
-  "        visited.add(neighbor)",
-  "        queue.push(neighbor)",
-  "      }",
-  "    }",
-  "  }",
-  "  return false",
-  "}"
-];
 
 function key(r, c) { return `${r},${c}`; }
 
@@ -134,7 +116,6 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     distMap:     {},
     done:        false,
     found:       false,
-    activeLine:  0,
   });
 
   useEffect(() => {
@@ -142,7 +123,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       setVizState({
 visitedSet: new Set(), frontierSet: new Set(),
         queue: [], path: [], current: null, distMap: {},
-        done: false, found: false, activeLine: 0,
+        done: false, found: false,
       });
       return;
     }
@@ -155,7 +136,6 @@ visitedSet: new Set(), frontierSet: new Set(),
       distMap:     currentStep.distMap     || {},
       done:        currentStep.done        || false,
       found:       currentStep.type === 'found',
-      activeLine:  currentStep.activeLine  ?? prev.activeLine,
     }));
   }, [currentStep]);
 
@@ -179,7 +159,7 @@ visitedSet: new Set(), frontierSet: new Set(),
     setVizState({
       visitedSet: new Set(), frontierSet: new Set(),
       queue: [], path: [], current: null, distMap: {},
-      done: false, found: false, activeLine: 0,
+      done: false, found: false,
     });
   };
 
@@ -297,9 +277,11 @@ visitedSet: new Set(), frontierSet: new Set(),
           </span>
         ))}
       </div>
-
-      {/* ===== PSEUDOCODE TRACKER ===== */}
-      <Pseudocode code={BFS_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }
+
+
+
+
+
