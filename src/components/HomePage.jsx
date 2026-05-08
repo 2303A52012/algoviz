@@ -228,42 +228,75 @@ function PreviewThumb({ visualStyle, color }) {
   );
 }
 
-function AlgoCard({ algo, categoryColor, onSelect }) {
+function ItemCard({ item, categoryColor, onSelect }) {
+  const isDS = item.category === 'ds';
+  const isLocked = isDS && item.status === 'under-construction';
+
   return (
     <button
-      className="algo-card"
-      style={{ '--card-color': categoryColor }}
-      onClick={() => onSelect(algo.id)}
+      className={`algo-card ${isLocked ? 'algo-card-locked' : ''}`}
+      style={{
+        '--card-color': categoryColor,
+        opacity: isLocked ? 0.7 : 1
+      }}
+      onClick={() => !isLocked && onSelect(item)}
+      disabled={isLocked}
     >
+      {isLocked && (
+        <div className="algo-card-badge">🔨 Under Construction</div>
+      )}
+
       <div className="algo-card-top">
-        <PreviewThumb visualStyle={algo.visualStyle} color={categoryColor} />
+        {item.visualStyle ? (
+          <PreviewThumb visualStyle={item.visualStyle} color={categoryColor} />
+        ) : (
+          <div className="preview-thumb-ds">
+            <span className="ds-icon-placeholder">{item.emoji}</span>
+          </div>
+        )}
         <div className="algo-card-info">
           <div className="algo-card-header">
-            <span className="algo-emoji">{algo.emoji}</span>
-            <span className="algo-label">{algo.label}</span>
+            <span className="algo-emoji">{item.emoji}</span>
+            <span className="algo-label">{item.label}</span>
           </div>
           <span
             className="algo-difficulty"
-            style={{ color: DIFFICULTY_COLOR[algo.difficulty] }}
+            style={{ color: DIFFICULTY_COLOR[item.difficulty] || 'var(--text-muted)' }}
           >
-            {DIFFICULTY_LABEL[algo.difficulty]}
+            {DIFFICULTY_LABEL[item.difficulty] || item.difficulty}
           </span>
         </div>
       </div>
 
       <div className="algo-complexity">
-        <span className="complexity-avg">{algo.timeComplexity.average}</span>
-        <span className="complexity-space">space {algo.spaceComplexity}</span>
+        {isDS ? (
+          Object.entries(item.complexities || {}).slice(0, 2).map(([op, val]) => (
+            <span key={op} className="complexity-avg" style={{ color: categoryColor }}>
+              {op}: {val}
+            </span>
+          ))
+        ) : (
+          <>
+            <span className="complexity-avg">{item.timeComplexity?.average}</span>
+            <span className="complexity-space">space {item.spaceComplexity}</span>
+          </>
+        )}
       </div>
 
-      <p className="algo-desc">{algo.description}</p>
+      <p className="algo-desc">{item.description}</p>
 
       <div className="algo-card-footer">
-        <span className="algo-insight">💡 {algo.keyInsight}</span>
+        <span className="algo-insight">
+          {isDS ? (
+            `⚡ ${item.operations?.slice(0, 3).join(' · ')}${item.operations?.length > 3 ? ' …' : ''}`
+          ) : (
+            `💡 ${item.keyInsight}`
+          )}
+        </span>
       </div>
 
       <div className="algo-card-cta" style={{ color: categoryColor }}>
-        Visualize →
+        {isLocked ? 'Coming Soon' : isDS ? 'Explore →' : 'Visualize →'}
       </div>
     </button>
   );
@@ -273,16 +306,27 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
   const [activeCategory, setActiveCategory] = useState(null);
   const [search, setSearch] = useState('');
 
-  const filteredRegistry = search.trim()
-    ? REGISTRY.filter(a =>
-        a.label.toLowerCase().includes(search.toLowerCase()) ||
-        (a.description && a.description.toLowerCase().includes(search.toLowerCase()))
+  const fullRegistry = [...REGISTRY, ...DS_REGISTRY];
+
+  const filteredItems = search.trim()
+    ? fullRegistry.filter(item =>
+        item.label.toLowerCase().includes(search.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(search.toLowerCase())) ||
+        (item.category && item.category.toLowerCase().includes(search.toLowerCase()))
       )
     : null;
 
   const visibleCategories = activeCategory
     ? CATEGORIES.filter(c => c.id === activeCategory)
     : CATEGORIES;
+
+  const handleSelect = (item) => {
+    if (item.category === 'ds') {
+      onSelectDS(item.id);
+    } else {
+      onSelectAlgo(item.id);
+    }
+  };
 
   return (
     <div className="home-root">
@@ -298,11 +342,16 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
         <p className="hero-desc">
           Every algorithm has its own unique visualization — watch Merge Sort build a tree,
           see BFS expand in waves, observe Quick Sort partition around its pivot.
-          Not just colored bars — the actual structure behind each algorithm.
+          Explore data structures interactively.
         </p>
 
         <div className="hero-stats">
-          {[['18', 'Algorithms'], ['5', 'Vis. Styles'], ['3', 'Categories'], ['∞', 'Free']].map(([v, l]) => (
+          {[
+            [REGISTRY.length.toString(), 'Algorithms'],
+            [DS_REGISTRY.length.toString(), 'Structures'],
+            [CATEGORIES.length.toString(), 'Categories'],
+            ['∞', 'Free']
+          ].map(([v, l]) => (
             <div key={l} className="hero-stat">
               <span className="hero-stat-val">{v}</span>
               <span className="hero-stat-label">{l}</span>
@@ -313,31 +362,31 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
 
       {/* Category filter pills + Search */}
       <div className="category-pills-search-row">
-      <div className="category-pills">
-        <button
-          className={`pill ${!activeCategory ? 'pill-active' : ''}`}
-          onClick={() => setActiveCategory(null)}
-        >
-          All
-        </button>
-        {CATEGORIES.map(cat => (
+        <div className="category-pills">
           <button
-            key={cat.id}
-            className={`pill ${activeCategory === cat.id ? 'pill-active' : ''}`}
-            style={{ '--pill-color': cat.color }}
-            onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
+            className={`pill ${!activeCategory ? 'pill-active' : ''}`}
+            onClick={() => setActiveCategory(null)}
           >
-            {cat.icon} {cat.label}
+            All
           </button>
-        ))}
-      </div>
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat.id}
+              className={`pill ${activeCategory === cat.id ? 'pill-active' : ''}`}
+              style={{ '--pill-color': cat.color }}
+              onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
+            >
+              {cat.icon} {cat.label}
+            </button>
+          ))}
+        </div>
         <input
           className="algo-search-bar"
           type="text"
-          placeholder="Search algorithms..."
+          placeholder="Search algorithms & structures..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          aria-label="Search algorithms"
+          aria-label="Search algorithms and data structures"
         />
       </div>
 
@@ -349,121 +398,54 @@ export default function HomePage({ onSelectAlgo, onSelectDS }) {
               <span className="cat-icon-big">🔍</span>
               <div>
                 <h2 className="category-title" style={{ color: 'var(--blue-light)' }}>Search Results</h2>
-                <p className="category-desc">{filteredRegistry.length} algorithm{filteredRegistry.length !== 1 ? 's' : ''} found</p>
+                <p className="category-desc">{filteredItems.length} result{filteredItems.length !== 1 ? 's' : ''} found</p>
               </div>
             </div>
           </div>
           <div className="algo-grid">
-            {filteredRegistry.length === 0 && (
+            {filteredItems.length === 0 && (
               <div style={{ padding: '24px', color: 'var(--text-muted)', fontSize: '12px' }}>
-                No algorithms found for "{search}".
+                No results found for "{search}".
               </div>
             )}
-            {filteredRegistry.map(algo => (
-              <AlgoCard
-                key={algo.id}
-                algo={algo}
-                categoryColor={CATEGORIES.find(c => c.id === algo.category)?.color || 'var(--blue-light)'}
-                onSelect={onSelectAlgo}
+            {filteredItems.map(item => (
+              <ItemCard
+                key={`${item.category}-${item.id}`}
+                item={item}
+                categoryColor={CATEGORIES.find(c => c.id === item.category)?.color || 'var(--blue-light)'}
+                onSelect={handleSelect}
               />
             ))}
           </div>
         </section>
       )}
 
-      {/* Algorithm sections */}
+      {/* Main sections */}
       {!search.trim() && visibleCategories.map(cat => (
         <section key={cat.id} className="category-section">
           <div className="category-header" style={{ '--cat-color': cat.color }}>
             <div className="category-title-row">
               <span className="cat-icon-big">{cat.icon}</span>
               <div>
-                <h2 className="category-title" style={{ color: cat.color }}>{cat.label} Algorithms</h2>
+                <h2 className="category-title" style={{ color: cat.color }}>{cat.label} {cat.id !== 'ds' ? 'Algorithms' : ''}</h2>
                 <p className="category-desc">{cat.desc}</p>
               </div>
             </div>
-            <span className="category-count">{getByCategory(cat.id).length} algorithms</span>
+            <span className="category-count">{getByCategory(cat.id).length} {cat.id === 'ds' ? 'structures' : 'algorithms'}</span>
           </div>
 
           <div className="algo-grid">
-            {getByCategory(cat.id).map(algo => (
-              <AlgoCard
-                key={algo.id}
-                algo={algo}
+            {getByCategory(cat.id).map(item => (
+              <ItemCard
+                key={`${item.category}-${item.id}`}
+                item={item}
                 categoryColor={cat.color}
-                onSelect={onSelectAlgo}
+                onSelect={handleSelect}
               />
             ))}
           </div>
         </section>
       ))}
-
-      {/* ===== DATA STRUCTURES SECTION ===== */}
-      {!search.trim() && (
-        <section className="category-section">
-          <div className="category-header" style={{ '--cat-color': 'var(--cat-tree)' }}>
-            <div className="category-title-row">
-              <span className="cat-icon-big">⬛</span>
-              <div>
-                <h2 className="category-title" style={{ color: 'var(--cat-tree)' }}>
-                  Data Structures
-                </h2>
-                <p className="category-desc">
-                  Interactive — add, delete, search and traverse each structure
-                </p>
-              </div>
-            </div>
-            <span className="category-count">{DS_REGISTRY.length} structures</span>
-          </div>
-
-          <div className="algo-grid">
-            {DS_REGISTRY.map(ds => (
-              <button
-                key={ds.id}
-                className="algo-card"
-                style={{ '--card-color': 'var(--cat-tree)', opacity: ds.status === 'under-construction' ? 0.7 : 1 }}
-                onClick={() => ds.status !== 'under-construction' && onSelectDS(ds.id)}
-                disabled={ds.status === 'under-construction'}
-              >
-                {ds.status === 'under-construction' && (
-                  <div className="algo-card-badge">🔨 Under Construction</div>
-                )}
-                <div className="algo-card-top">
-                  <div className="algo-card-info">
-                    <div className="algo-card-header">
-                      <span className="algo-emoji">{ds.emoji}</span>
-                      <span className="algo-label">{ds.label}</span>
-                    </div>
-                    <span
-                      className="algo-difficulty"
-                      style={{ color: `var(--diff-${ds.difficulty})` }}
-                    >
-                      {ds.difficulty}
-                    </span>
-                  </div>
-                </div>
-                <div className="algo-complexity">
-                  {Object.entries(ds.complexities || {}).slice(0, 2).map(([op, val]) => (
-                    <span key={op} className="complexity-avg" style={{ color: 'var(--cat-tree)' }}>
-                      {op}: {val}
-                    </span>
-                  ))}
-                </div>
-                <p className="algo-desc">{ds.description}</p>
-                <div className="algo-card-footer">
-                  <span className="algo-insight">
-                    ⚡ {ds.operations?.slice(0, 4).join(' · ')}
-                    {ds.operations?.length > 4 ? ' …' : ''}
-                  </span>
-                </div>
-                <div className="algo-card-cta" style={{ color: 'var(--cat-tree)' }}>
-                  {ds.status === 'under-construction' ? 'Coming Soon' : 'Explore →'}
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
 
     </div>
   );

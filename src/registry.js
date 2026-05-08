@@ -74,6 +74,7 @@ export const CATEGORIES = [
   { id: 'sorting',   label: 'Sorting',   icon: '▦', color: 'var(--cat-sort)',   desc: 'Arrange elements in order' },
   { id: 'searching', label: 'Searching', icon: '◎', color: 'var(--cat-search)', desc: 'Locate elements in data'   },
   { id: 'graph',     label: 'Graph',     icon: '⬡', color: 'var(--cat-graph)',  desc: 'Traverse nodes and edges'  },
+  { id: 'ds',        label: 'Data Structures', icon: '⬛', color: 'var(--cat-tree)', desc: 'Interactive — add, delete, search, traverse' },
 ];
 
 // ===== DS CATEGORY =====
@@ -85,6 +86,7 @@ export const DS_CATEGORY = {
 
 // ===== HELPERS =====
 export function getByCategory(categoryId) {
+  if (categoryId === 'ds') return DS_REGISTRY;
   return REGISTRY.filter(a => a.category === categoryId);
 }
 export function getById(algoId) {
