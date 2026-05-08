@@ -41,6 +41,10 @@
   min-height: 400px;
 }
 
+/* CRITICAL: grid cells are min-width:auto by default which lets content overflow.
+   Setting min-width:0 forces the cell to respect its 2fr/1fr column boundary,
+   so the scrollable lane stays inside its box and controls are never pushed out. */
+
 /* Visualization Panel */
 .ll-visual {
   background: var(--bg-panel);
@@ -50,6 +54,12 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;        /* prevent grid cell from expanding beyond 2fr */
+  overflow: hidden;    /* contain the scrollable lane */
+}
+
+.ll-controls {
+  min-width: 0;        /* prevent grid cell from expanding beyond 1fr */
 }
 
 .ll-visual-title {

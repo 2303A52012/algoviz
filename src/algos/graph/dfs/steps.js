@@ -57,8 +57,8 @@ export function generateSteps(grid) {
     pathStack:     [startKey],
     path:          [],
     current:       null,
-    stackDepth:    1,
     msg: `DFS starts at (${START.r},${START.c}). Stack initialized. DFS explores as deep as possible before backtracking.`,
+    activeLine: 0,
     done: false,
   });
 
@@ -95,6 +95,7 @@ export function generateSteps(grid) {
         current:       cur,
         stackDepth:    0,
         msg: `✓ Reached (${END.r},${END.c})! DFS found A path in ${visitedSet.size} visits. Note: this may NOT be the shortest path!`,
+        activeLine: 7,
         done: true,
       });
       return steps;
@@ -121,6 +122,7 @@ export function generateSteps(grid) {
       current:       cur,
       stackDepth:    stack.length,
       msg: `Popped (${r},${c}) from stack. Pushed ${newNeighbors.length} unvisited neighbor${newNeighbors.length !== 1 ? 's' : ''}. Stack depth: ${stack.length}.`,
+      activeLine: 10,
       done: false,
     });
   }
@@ -135,6 +137,7 @@ export function generateSteps(grid) {
     current:       null,
     stackDepth:    0,
     msg: `✗ No path found. DFS visited ${visitedSet.size} cells before exhausting all options.`,
+    activeLine: 14,
     done: true,
   });
 

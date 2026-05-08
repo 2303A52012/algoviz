@@ -18,6 +18,7 @@ export function generateSteps(inputArr) {
     swapping: [], // No elements being swapped initially
     sortedFrom: n, // Sorted region starts after all elements (none sorted yet)
     msg: `Starting Bubble Sort on ${n} elements. We will make up to ${n - 1} passes.`,
+    activeLine: 0,
     done: false, // Algorithm not complete
   });
 
@@ -35,6 +36,7 @@ export function generateSteps(inputArr) {
       sortedFrom: n - i, // After i passes, rightmost i elements are in place
       passNum: i + 1,
       msg: `Pass ${i + 1}: scanning from index 0 to ${n - i - 2}, comparing adjacent pairs.`,
+      activeLine: 1,
       done: false,
     });
 
@@ -49,6 +51,7 @@ export function generateSteps(inputArr) {
         swapping: [],
         sortedFrom: n - i,
         msg: `Comparing arr[${j}] = ${arr[j]} and arr[${j + 1}] = ${arr[j + 1]}`,
+        activeLine: 4,
         done: false,
       });
 
@@ -66,6 +69,7 @@ export function generateSteps(inputArr) {
           swapping: [j, j + 1], // Highlight swapped elements
           sortedFrom: n - i,
           msg: `${arr[j + 1]} > ${arr[j]} — swapping! arr[${j}] ↔ arr[${j + 1}]`,
+          activeLine: 5,
           done: false,
         });
       } else {
@@ -77,6 +81,7 @@ export function generateSteps(inputArr) {
           swapping: [],
           sortedFrom: n - i,
           msg: `${arr[j]} ≤ ${arr[j + 1]} — already in order, no swap needed.`,
+          activeLine: 4,
           done: false,
         });
       }
@@ -93,6 +98,7 @@ export function generateSteps(inputArr) {
       passNum: i + 1,
       justSorted: n - i - 1, // Highlight the element just placed
       msg: `Pass ${i + 1} complete. ${arr[n - i - 1]} is now in its final position at index ${n - i - 1}.`,
+      activeLine: 7,
       done: false,
     });
 
@@ -106,6 +112,7 @@ export function generateSteps(inputArr) {
         swapping: [],
         sortedFrom: 0, // Entire array is now sorted
         msg: `No swaps in pass ${i + 1} — array is already sorted! Early exit.`,
+        activeLine: 8,
         done: true, // Algorithm complete
       });
       return steps; // Exit function early
@@ -120,6 +127,7 @@ export function generateSteps(inputArr) {
     swapping: [],
     sortedFrom: 0, // Entire array is sorted
     msg: `Bubble Sort complete! All ${n} elements are sorted.`,
+    activeLine: 9,
     done: true, // Algorithm finished
   });
 

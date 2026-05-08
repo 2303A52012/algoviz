@@ -1,0 +1,363 @@
+/* ===== DOUBLY LINKED LIST VISUALIZER ===== */
+
+.dll-root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+/* Header */
+.dll-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.dll-header h2 { margin: 0; font-size: 24px; color: var(--blue-light); }
+.dll-desc { font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0; }
+
+.dll-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dll-badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+}
+
+/* Main Content Grid */
+.dll-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  min-height: 400px;
+}
+
+.dll-visual {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dll-controls {
+  min-width: 0;
+}
+
+.dll-visual-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dll-scroll-hint {
+  font-size: 11px;
+  color: var(--amber-light);
+  font-weight: normal;
+  letter-spacing: 0px;
+  animation: dll-scroll-pulse 1.5s infinite;
+}
+
+/* Node Lane */
+.dll-lane {
+  background: var(--bg-base);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 20px 16px;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  position: relative;
+  scrollbar-gutter: stable;
+}
+
+.dll-lane::-webkit-scrollbar { height: 8px; }
+.dll-lane::-webkit-scrollbar-track { background: var(--bg-base); border-radius: 4px; }
+.dll-lane::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 4px; border: 2px solid var(--bg-base); }
+.dll-lane::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
+.dll-lane { scrollbar-width: thin; scrollbar-color: var(--border-mid) var(--bg-base); }
+
+.dll-empty {
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.dll-node-chain {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+/* Node Styling */
+.dll-node-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: fit-content;
+}
+
+.dll-head-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--green-light);
+  letter-spacing: 0.5px;
+  height: 12px;
+}
+
+.dll-node {
+  width: 70px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 2px solid currentColor;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dll-node:hover {
+  transform: scale(1.06);
+}
+
+.dll-node-val {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.dll-node-pointer-left, .dll-node-pointer-right {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* Connector Arrow */
+.dll-connector {
+  color: var(--blue);
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 24px;
+  text-align: center;
+  animation: dll-pulse 1.5s infinite;
+}
+
+.dll-null-term {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+/* Operations Log */
+.dll-log {
+  background: var(--bg-base);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.dll-log-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: bold;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.dll-log-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dll-log-item {
+  font-size: 11px;
+  color: var(--blue-light);
+  padding: 4px;
+  border-left: 2px solid var(--blue);
+  padding-left: 8px;
+}
+
+/* Controls Panel */
+.dll-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Operation Panel */
+.dll-op-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dll-tabs {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--border-dim);
+  padding-bottom: 8px;
+}
+
+.dll-tab {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: bold;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: var(--t-fast);
+}
+
+.dll-tab:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--blue);
+}
+
+.dll-tab.active {
+  background: var(--blue);
+  color: white;
+}
+
+.dll-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dll-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dll-tab-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dll-tab-form input {
+  background: var(--bg-base);
+  border: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  transition: var(--t-mid);
+}
+
+.dll-tab-form input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 8px var(--blue)11;
+}
+
+.dll-btn {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--t-fast);
+}
+
+.dll-btn:hover:not(:disabled) { background: var(--blue-light); transform: translateY(-1px); }
+.dll-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.dll-btn-danger { background: var(--red); }
+.dll-btn-danger:hover:not(:disabled) { background: var(--red-light); }
+.dll-btn-reset { background: var(--text-muted); }
+.dll-btn-reset:hover:not(:disabled) { background: var(--text-secondary); }
+
+/* State Panel */
+.dll-state-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dll-state-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  background: var(--bg-base);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--border-mid);
+}
+
+.dll-state-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: bold;
+}
+
+.dll-state-val {
+  font-weight: bold;
+  font-size: 12px;
+  color: var(--blue-light);
+}
+
+/* Code Section */
+.dll-code-wrap {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+}
+
+@keyframes dll-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes dll-scroll-pulse {
+  0%, 100% { opacity: 0.7; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(2px); }
+}
+
+@media (max-width: 900px) {
+  .dll-content { grid-template-columns: 1fr; }
+  .dll-lane { min-height: 80px; }
+}

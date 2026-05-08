@@ -1,6 +1,31 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
+import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
+
+const MERGE_SORT_PSEUDOCODE = [
+  "function mergeSort(arr, lo, hi) {",
+  "  if lo >= hi return",
+  "  mid = floor((lo + hi) / 2)",
+  "  mergeSort(arr, lo, mid)",
+  "  mergeSort(arr, mid + 1, hi)",
+  "  merge(arr, lo, mid, hi)",
+  "}",
+  "function merge(arr, lo, mid, hi) {",
+  "  left = arr[lo..mid], right = arr[mid+1..hi]",
+  "  i = 0, j = 0, k = lo",
+  "  while i < left.length and j < right.length {",
+  "    if left[i] <= right[j]",
+  "      arr[k++] = left[i++]",
+  "    else",
+  "      arr[k++] = right[j++]",
+  "  }",
+  "  while i < left.length",
+  "    arr[k++] = left[i++]",
+  "  while j < right.length",
+  "    arr[k++] = right[j++]",
+  "}"
+];
 
 const NODE_COLORS = {
   waiting:  { fill: '#111827', stroke: '#1e3a5f', text: '#4a6080' },
@@ -281,6 +306,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     activeNodeId: -1,
     phase: 'idle',
     currentStep: null,
+    activeLine: 0,
   });
   const [canvasWidth, setCanvasWidth] = useState(680);
   const containerRef = React.useRef(null);
@@ -299,25 +325,26 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
   useEffect(() => {
     if (!currentStep) {
       setVizState({
-        arr, nodes: {}, nodeStates: {}, activeNodeId: -1, phase: 'idle', currentStep: null,
+arr, nodes: {}, nodeStates: {}, activeNodeId: -1, phase: 'idle', currentStep: null, activeLine: 0,
       });
       return;
     }
-    setVizState({
+    setVizState(prev => ({
       arr:          currentStep.arr         || arr,
       nodes:        currentStep.nodes       || {},
       nodeStates:   currentStep.nodeStates  || {},
       activeNodeId: currentStep.activeNodeId ?? -1,
       phase:        currentStep.phase        || 'idle',
       currentStep,
-    });
+      activeLine:   currentStep.activeLine   ?? prev.activeLine,
+    }));
   }, [currentStep]); // eslint-disable-line
 
   const handleRun = () => onRunSteps(generateSteps(arr));
 
   const handleReset = () => {
     onReset();
-    setVizState({ arr, nodes: {}, nodeStates: {}, activeNodeId: -1, phase: 'idle', currentStep: null });
+    setVizState({ arr, nodes: {}, nodeStates: {}, activeNodeId: -1, phase: 'idle', currentStep: null, activeLine: 0 });
   };
 
   const handleNewArray = () => {
@@ -325,7 +352,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     const a = Array.from({ length: size }, () => Math.floor(Math.random() * 88) + 10);
     setArr(a);
     onReset();
-    setVizState({ arr: a, nodes: {}, nodeStates: {}, activeNodeId: -1, phase: 'idle', currentStep: null });
+    setVizState({ arr: a, nodes: {}, nodeStates: {}, activeNodeId: -1, phase: 'idle', currentStep: null, activeLine: 0 });
   };
 
   const handleLoadCustom = () => {
@@ -334,7 +361,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       const parsed = parseCustomInput(customInput);
       setArr(parsed);
       onReset();
-      setVizState({ arr: parsed, nodes: {}, nodeStates: {}, activeNodeId: -1, phase: 'idle', currentStep: null });
+      setVizState({ arr: parsed, nodes: {}, nodeStates: {}, activeNodeId: -1, phase: 'idle', currentStep: null, activeLine: 0 });
       setInputOpen(false);
       setCustomInput('');
     } catch (e) { setCustomErr(e.message); }
@@ -414,6 +441,9 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
           </span>
         ))}
       </div>
+
+      {/* ===== PSEUDOCODE TRACKER ===== */}
+      <Pseudocode code={MERGE_SORT_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }

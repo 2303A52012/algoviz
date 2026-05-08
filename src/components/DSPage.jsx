@@ -20,17 +20,23 @@ export default function DSPage({ dsId, onBack }) {
   const VisualizerModule = React.lazy(() => {
     // Handle nested paths like linked-list/sll
     const pathMap = {
-      sll:      'linked-list/sll',
-      dll:      'linked-list/dll',
-      cll:      'linked-list/cll',
-      dcll:     'linked-list/dcll',
-      binary:   'tree/binary',
-      bst:      'tree/bst',
+      linkedlist: 'linkedlist',   // SLL — at ds/linkedlist/
+      dll:        'linked-list/dll',
+      cll:        'linked-list/cll',
+      dcll:       'linked-list/dcll',
+      binary:     'tree/binary',
+      bst:        'tree/bst',
+      minheap:    'tree/minheap',
+      maxheap:    'tree/maxheap',
+      trie:       'tree/trie',
+      avl:        'tree/avl',
+      hashmap:    'hashmap',
       'graph-ds': 'graph-ds',
     };
     const folder = pathMap[meta.id] || meta.id;
     return import(`../ds/${folder}/Visualizer.jsx`);
   });
+
 
   return (
     <div className="ds-page">

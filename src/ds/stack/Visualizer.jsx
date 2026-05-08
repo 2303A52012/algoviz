@@ -1,5 +1,33 @@
 import React, { useState, useRef } from 'react';
+import Pseudocode from '../../components/Pseudocode';
 import './Visualizer.css';
+
+const STACK_PSEUDOCODES = {
+  push: [
+    "function push(stack, value) {",
+    "  stack.add(value)",
+    "}"
+  ],
+  pop: [
+    "function pop(stack) {",
+    "  if stack.isEmpty() {",
+    "    return error",
+    "  }",
+    "  return stack.removeLast()",
+    "}"
+  ],
+  peek: [
+    "function peek(stack) {",
+    "  if stack.isEmpty() {",
+    "    return error",
+    "  }",
+    "  return stack.last()",
+    "}"
+  ],
+  default: [
+    "// Select an operation to see pseudocode"
+  ]
+};
 
 const VISIBLE_LIMIT = 8; // max plates shown at once
 const INITIAL_STACK = [3, 17, 42, 8]; // bottom to top
@@ -299,12 +327,16 @@ export default function Visualizer() {
   const [running, setRunning]   = useState(false);
   const [overflowing, setOverflowing]   = useState(false);
   const [underflowing, setUnderflowing] = useState(false);
+  const [activeCode, setActiveCode]     = useState('default');
+  const [activeLine, setActiveLine]     = useState(0);
   const { run, stop } = useStepRunner();
 
   const clearWarnings = () => { setOverflowing(false); setUnderflowing(false); };
 
   // PUSH
   const handlePush = (val) => {
+    setActiveCode('push');
+    setActiveLine(0);
     clearWarnings();
     setRunning(true);
     const newItem = makeItem(val);
@@ -320,6 +352,7 @@ export default function Visualizer() {
             ? 'Pushing ' + val + '... bottom visible plate sinks into hidden block.'
             : 'Pushing ' + val + ' onto the stack...'
         );
+        setActiveLine(1);
       },
       () => {
         setTopState('default');
@@ -336,10 +369,13 @@ export default function Visualizer() {
 
   // POP
   const handlePop = () => {
+    setActiveCode('pop');
+    setActiveLine(0);
     clearWarnings();
     if (stack.length === 0) {
       setUnderflowing(true);
       setLog('✗ Stack Underflow! Stack is empty — nothing to pop.');
+      setActiveLine(2);
       setTimeout(() => setUnderflowing(false), 2000);
       return;
     }
@@ -351,6 +387,7 @@ export default function Visualizer() {
       () => {
         setTopState('popping');
         setLog('Popping ' + topVal + ' from top...' + (hadHidden ? ' Hidden element will rise up.' : ''));
+        setActiveLine(4);
       },
       () => {
         setStack(prev => prev.slice(0, -1));
@@ -371,15 +408,18 @@ export default function Visualizer() {
 
   // PEEK
   const handlePeek = () => {
+    setActiveCode('peek');
+    setActiveLine(0);
     clearWarnings();
     if (stack.length === 0) {
       setLog('Stack is empty — nothing to peek. isEmpty() → true.');
+      setActiveLine(2);
       return;
     }
     const topVal = stack[stack.length - 1].val;
     setRunning(true);
     run([
-      () => { setTopState('peeking'); setLog('Peeking at top element...'); },
+      () => { setTopState('peeking'); setLog('Peeking at top element...'); setActiveLine(4); },
       () => { setLog('✓ Top = ' + topVal + '. Not removed. O(1). Total size = ' + stack.length + '.'); },
       () => { setTopState('default'); setRunning(false); },
     ], 500);
@@ -427,6 +467,8 @@ export default function Visualizer() {
     setStack(INITIAL_STACK.map(v => makeItem(v)));
     setTopState('default');
     clearWarnings();
+    setActiveCode('default');
+    setActiveLine(0);
     setRunning(false);
     setLog('Reset to initial state.');
   };
@@ -491,6 +533,9 @@ export default function Visualizer() {
           </div>
         ))}
       </div>
+
+      {/* ===== PSEUDOCODE TRACKER ===== */}
+      <Pseudocode code={STACK_PSEUDOCODES[activeCode]} activeLine={activeLine} />
     </div>
   );
 }

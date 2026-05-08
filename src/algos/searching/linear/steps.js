@@ -16,6 +16,7 @@ export function generateSteps(inputArr, target) {
     foundIdx: -1,  // Nothing found yet
     target,
     msg: `Searching for ${target} in ${n} elements. Scanning left to right — no sorting required.`,
+    activeLine: 0,
     done: false,
   });
 
@@ -31,6 +32,7 @@ export function generateSteps(inputArr, target) {
       foundIdx: -1,  // Not found yet
       target,
       msg: `Checking index ${i}: arr[${i}] = ${arr[i]} ${arr[i] === target ? `— MATCH! Found ${target}!` : `≠ ${target}, move right`}`,
+      activeLine: 2,
       done: false,
     });
 
@@ -44,6 +46,7 @@ export function generateSteps(inputArr, target) {
         foundIdx: i,  // Store where we found it
         target,
         msg: `✓ Found ${target} at index ${i}! Scanned ${i + 1} of ${n} elements.`,
+        activeLine: 3,
         done: true,  // Search complete
       });
       return steps;  // Early exit on success
@@ -58,6 +61,7 @@ export function generateSteps(inputArr, target) {
       foundIdx: -1,  // Still not found
       target,
       msg: `arr[${i}] = ${arr[i]} ≠ ${target}. Moving to next.`,
+      activeLine: 1,
       done: false,
     });
   }
@@ -72,6 +76,7 @@ export function generateSteps(inputArr, target) {
     foundIdx: -1,  // Nothing found
     target,
     msg: `✗ ${target} not found. Scanned all ${n} elements — O(n) worst case.`,
+    activeLine: 6,
     done: true,  // Search complete
   });
 

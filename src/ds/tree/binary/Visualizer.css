@@ -1,0 +1,138 @@
+/* ===== BINARY TREE VISUALIZER ===== */
+
+.btree-root { display: flex; flex-direction: column; gap: 16px; padding: 20px; }
+
+.btree-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.btree-title { margin: 0; font-size: 24px; color: var(--green-light); }
+.btree-desc  { font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0; }
+
+.btree-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.btree-badge {
+  font-size: 11px; padding: 4px 8px;
+  background: var(--bg-elevated); border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md); color: var(--text-secondary);
+}
+
+/* Grid */
+.btree-content {
+  display: grid; grid-template-columns: 2fr 1fr; gap: 16px;
+}
+
+.btree-visual {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  min-width: 0; overflow: hidden;
+}
+
+.btree-controls { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+.btree-visual-title {
+  font-size: 13px; font-weight: bold; color: var(--text-primary);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+}
+
+.btree-traverse-result {
+  font-size: 11px; color: var(--purple-light);
+  background: #1a0a2d; padding: 3px 10px;
+  border-radius: var(--radius-sm); border: 1px solid var(--purple);
+  font-family: var(--font-mono); max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* SVG Canvas */
+.btree-svg-scroll {
+  background: var(--bg-base); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  overflow-x: auto; overflow-y: auto;
+  max-height: 520px; min-height: 220px;
+  scrollbar-width: thin; scrollbar-color: var(--border-mid) var(--bg-base);
+}
+.btree-svg-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+.btree-svg-scroll::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
+
+.btree-svg-empty {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 180px; font-size: 12px; color: var(--text-muted); font-style: italic;
+}
+
+/* Log */
+.btree-log {
+  background: var(--bg-base); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md); padding: 12px; max-height: 110px; overflow-y: auto;
+}
+.btree-log-label { font-size: 10px; color: var(--text-muted); font-weight: bold; margin-bottom: 6px; }
+.btree-log-items { display: flex; flex-direction: column; gap: 4px; }
+.btree-log-item { font-size: 11px; color: var(--green-light); padding: 4px 8px; border-left: 2px solid var(--green); }
+
+/* Op Panel */
+.btree-op-panel {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.btree-tabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--border-dim); padding-bottom: 8px; }
+.btree-tab {
+  background: transparent; border: none; color: var(--text-secondary);
+  font-size: 10px; font-weight: bold; padding: 5px 8px;
+  cursor: pointer; border-radius: var(--radius-sm); transition: var(--t-fast);
+}
+.btree-tab:hover:not(:disabled) { background: var(--bg-hover); color: var(--green); }
+.btree-tab.active { background: var(--green); color: #001a0a; }
+.btree-tab:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btree-tab-content { display: flex; flex-direction: column; gap: 8px; }
+.btree-tab-form { display: flex; flex-direction: column; gap: 8px; }
+.btree-tab-form input {
+  background: var(--bg-base); border: 1px solid var(--border-dim);
+  color: var(--text-primary); padding: 6px 10px;
+  border-radius: var(--radius-sm); font-size: 12px;
+}
+.btree-tab-form input:focus { outline: none; border-color: var(--green); }
+
+.btree-btn {
+  background: var(--green); color: #001a0a; border: none;
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  font-size: 11px; font-weight: bold; cursor: pointer; transition: var(--t-fast);
+}
+.btree-btn:hover:not(:disabled) { background: var(--green-light); transform: translateY(-1px); }
+.btree-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btree-btn-danger { background: var(--red); color: white; }
+.btree-btn-danger:hover:not(:disabled) { background: var(--red-light); color: #1a0000; }
+.btree-btn-teal { background: var(--teal); color: #001a18; }
+.btree-btn-teal:hover:not(:disabled) { background: var(--teal-light); }
+.btree-btn-reset { background: var(--text-muted); color: white; }
+.btree-btn-reset:hover:not(:disabled) { background: var(--text-secondary); }
+
+/* State Panel */
+.btree-state-panel {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 14px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.btree-state-row {
+  display: flex; justify-content: space-between; padding: 8px;
+  background: var(--bg-base); border-radius: var(--radius-sm);
+  border-left: 3px solid var(--green);
+}
+.btree-state-label { font-size: 11px; color: var(--text-secondary); font-weight: bold; }
+.btree-state-val   { font-weight: bold; font-size: 12px; }
+
+/* Traversal Legend */
+.btree-legend {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 16px;
+}
+.btree-legend-title { font-size: 12px; font-weight: bold; color: var(--text-primary); margin-bottom: 12px; }
+.btree-legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.btree-legend-item {
+  background: var(--bg-base); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md); padding: 10px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.btree-legend-name  { font-size: 12px; font-weight: bold; color: var(--green-light); }
+.btree-legend-order { font-size: 11px; color: var(--amber-light); font-family: var(--font-mono); }
+.btree-legend-desc  { font-size: 10px; color: var(--text-muted); line-height: 1.4; }
+
+/* Responsive */
+@media (max-width: 900px) { .btree-content { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .btree-root { padding: 12px; } .btree-header { flex-direction: column; } }

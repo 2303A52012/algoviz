@@ -15,8 +15,8 @@ export function generateSteps(inputArr, target) {
     eliminated: [],  // Indices eliminated from search
     foundIdx: -1,
     target,
-    comparisons: 0,
     msg: `Array sorted. Searching for ${target}. Each step eliminates half — O(log n) max ${Math.ceil(Math.log2(n))} steps for ${n} elements.`,
+    activeLine: 1,
     done: false,
   });
 
@@ -38,8 +38,8 @@ export function generateSteps(inputArr, target) {
       eliminated: [...eliminated],
       foundIdx: -1,
       target,
-      comparisons,
       msg: `lo=${lo}, hi=${hi} → mid=⌊(${lo}+${hi})/2⌋=${mid}. Checking arr[${mid}]=${arr[mid]}.`,
+      activeLine: 3,
       done: false,
     });
 
@@ -52,8 +52,8 @@ export function generateSteps(inputArr, target) {
         eliminated: [...eliminated],
         foundIdx: mid,  // Store where we found it
         target,
-        comparisons,
         msg: `✓ arr[${mid}] = ${arr[mid]} = ${target}. Found in ${comparisons} comparison${comparisons > 1 ? 's' : ''}! (Binary search needed at most ${Math.ceil(Math.log2(n))} for this array.)`,
+        activeLine: 5,
         done: true,  // Search complete
       });
       return steps;  // Early exit on success
@@ -70,8 +70,8 @@ export function generateSteps(inputArr, target) {
         eliminated: [...eliminated],
         foundIdx: -1,
         target,
-        comparisons,
         msg: `arr[${mid}]=${arr[mid]} < ${target} → target is in RIGHT half. Eliminate [${lo}..${mid}] (${mid - lo + 1} elements gone).`,
+        activeLine: 8,
         done: false,
       });
       lo = mid + 1;  // Update left boundary
@@ -86,8 +86,8 @@ export function generateSteps(inputArr, target) {
         eliminated: [...eliminated],
         foundIdx: -1,
         target,
-        comparisons,
         msg: `arr[${mid}]=${arr[mid]} > ${target} → target is in LEFT half. Eliminate [${mid}..${hi}] (${hi - mid + 1} elements gone).`,
+        activeLine: 10,
         done: false,
       });
       hi = mid - 1;  // Update right boundary
@@ -103,8 +103,8 @@ export function generateSteps(inputArr, target) {
     eliminated: Array.from({ length: n }, (_, i) => i),  // All elements eliminated
     foundIdx: -1,
     target,
-    comparisons,
     msg: `✗ lo(${lo}) > hi(${hi}) — search space exhausted. ${target} is not in the array. Used ${comparisons} comparisons.`,
+    activeLine: 13,
     done: true,  // Search complete
   });
 

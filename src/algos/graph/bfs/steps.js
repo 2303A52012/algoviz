@@ -59,8 +59,8 @@ export function generateSteps(grid) {
     queue:       [...queue],
     path:        [],
     current:     null,
-    distMap:     { ...distMap },
     msg: `BFS starts at (${START.r},${START.c}). Queue initialized with start node. Exploring level by level.`,
+    activeLine: 0,
     done: false,
   });
 
@@ -87,6 +87,7 @@ export function generateSteps(grid) {
         current:     cur,
         distMap:     { ...distMap },
         msg: `✓ Reached destination (${END.r},${END.c})! Shortest path = ${path.length} steps. BFS guarantees this is optimal.`,
+        activeLine: 6,
         done: true,
       });
       return steps;
@@ -115,6 +116,7 @@ export function generateSteps(grid) {
       current:     cur,
       distMap:     { ...distMap },
       msg: `Dequeued (${r},${c}) [dist=${distMap[cur]}]. Added ${newFrontier.size} neighbor${newFrontier.size !== 1 ? 's' : ''} to queue. Queue size: ${queue.length}.`,
+      activeLine: 10,
       done: false,
     });
   }
@@ -128,6 +130,7 @@ export function generateSteps(grid) {
     current:     null,
     distMap:     { ...distMap },
     msg: `✗ No path found — destination is unreachable. Visited ${visitedSet.size} cells.`,
+    activeLine: 14,
     done: true,
   });
 

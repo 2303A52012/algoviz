@@ -12,8 +12,8 @@ export function generateSteps(inputArr) {
     sortedBoundary: 0,
     scanning: -1,
     minIdx: -1,
-    swapping: [],
     msg: `Starting Selection Sort on ${n} elements. Each pass finds the minimum of the unsorted region and places it at the front.`,
+    activeLine: 0,
     done: false,
   });
 
@@ -29,6 +29,7 @@ export function generateSteps(inputArr) {
       swapping: [],
       passNum: i + 1,
       msg: `Pass ${i + 1}: finding the minimum in unsorted region [${i}..${n - 1}]. Starting with arr[${i}] = ${arr[i]} as current minimum.`,
+      activeLine: 1,
       done: false,
     });
 
@@ -41,6 +42,7 @@ export function generateSteps(inputArr) {
         minIdx,
         swapping: [],
         msg: `Scanning index ${j}: arr[${j}] = ${arr[j]} vs current min arr[${minIdx}] = ${arr[minIdx]}`,
+        activeLine: 3,
         done: false,
       });
 
@@ -55,6 +57,7 @@ export function generateSteps(inputArr) {
           minIdx,
           swapping: [],
           msg: `New minimum found! arr[${j}] = ${arr[j]} < arr[${oldMin}] = ${arr[oldMin]}. Minimum pointer moves to index ${j}.`,
+          activeLine: 5,
           done: false,
         });
       }
@@ -70,6 +73,7 @@ export function generateSteps(inputArr) {
         minIdx,
         swapping: [i, minIdx],
         msg: `Scan complete. Minimum is arr[${minIdx}] = ${arr[minIdx]}. Swapping with arr[${i}] = ${arr[i]}.`,
+        activeLine: 8,
         done: false,
       });
 
@@ -83,6 +87,7 @@ export function generateSteps(inputArr) {
         minIdx: i,
         swapping: [i, minIdx],
         msg: `Swapped! ${arr[i]} is now at index ${i}.`,
+        activeLine: 9,
         done: false,
       });
     } else {
@@ -94,6 +99,7 @@ export function generateSteps(inputArr) {
         minIdx: i,
         swapping: [],
         msg: `Minimum arr[${i}] = ${arr[i]} is already in position ${i}. No swap needed.`,
+        activeLine: 8,
         done: false,
       });
     }
@@ -109,6 +115,7 @@ export function generateSteps(inputArr) {
       justPlaced: i,
       passNum: i + 1,
       msg: `Pass ${i + 1} complete. ${arr[i]} is now permanently in position ${i}.`,
+      activeLine: 1,
       done: false,
     });
   }
@@ -122,6 +129,7 @@ export function generateSteps(inputArr) {
     minIdx: -1,
     swapping: [],
     msg: `Selection Sort complete! All ${n} elements sorted. Made exactly ${n - 1} swaps (one per pass).`,
+    activeLine: 12,
     done: true,
   });
 

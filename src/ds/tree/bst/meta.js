@@ -1,0 +1,35 @@
+// Binary Search Tree DS Metadata
+export default {
+  id: 'bst',
+  category: 'ds',
+  label: 'Binary Search Tree',
+  emoji: '🔍🌲',
+  difficulty: 'intermediate',
+  description: 'A Binary Search Tree enforces the ordering property: all values in the left subtree are less than the node, and all values in the right subtree are greater. This enables O(log n) average search, insert, and delete.',
+  keyInsight: 'BST\'s in-order traversal always produces a sorted sequence. Average case O(log n), but degrades to O(n) if unbalanced (e.g., inserting sorted data). Self-balancing variants (AVL, Red-Black) fix this.',
+  complexities: {
+    insertAvg: 'O(log n)',
+    insertWorst: 'O(n)',
+    searchAvg: 'O(log n)',
+    searchWorst: 'O(n)',
+    deleteAvg: 'O(log n)',
+    inorderTraversal: 'O(n)',
+  },
+  operations: [
+    'Insert (BST order)',
+    'Search',
+    'Delete (3 cases)',
+    'Inorder (sorted)',
+    'Min / Max',
+    'Validate BST',
+    'Height',
+  ],
+  useCases: [
+    'Database index structures',
+    'Dictionary / ordered maps',
+    'Auto-complete & spell check',
+    'Range queries',
+    'Symbol tables in compilers',
+    'Priority queues (with augmentation)',
+  ],
+};

@@ -9,7 +9,7 @@ export function generateSteps(input) {
   let swaps = 0;  // Track swap count
 
   // ===== HELPER: Record a step for visualization =====
-  const addStep = (type, i, j, msg) => {
+  const addStep = (type, i, j, msg, activeLine) => {
     steps.push({
       type,  // Type of operation (compare, swap, etc.)
       indices: [i, j],  // Indices involved in this step
@@ -17,6 +17,7 @@ export function generateSteps(input) {
       comparisons,
       swaps,
       msg,
+      activeLine,
     });
   };
 
@@ -33,7 +34,7 @@ export function generateSteps(input) {
     if (left < size) {
       comparisons++;
       // Record comparison for visualization
-      addStep('compare', root, left, `Compare arr[${root}]=${arr[root]} with arr[${left}]=${arr[left]}`);
+      addStep('compare', root, left, `Compare arr[${root}]=${arr[root]} with arr[${left}]=${arr[left]}`, 9);
       // If left child is greater, update largest
       if (arr[left] > arr[largest]) {
         largest = left;
@@ -44,7 +45,7 @@ export function generateSteps(input) {
     if (right < size) {
       comparisons++;
       // Record comparison for visualization
-      addStep('compare', root, right, `Compare arr[${root}]=${arr[root]} with arr[${right}]=${arr[right]}`);
+      addStep('compare', root, right, `Compare arr[${root}]=${arr[root]} with arr[${right}]=${arr[right]}`, 11);
       // If right child is greater than current largest, update largest
       if (arr[right] > arr[largest]) {
         largest = right;
@@ -58,40 +59,40 @@ export function generateSteps(input) {
       // Swap parent with larger child
       [arr[root], arr[largest]] = [arr[largest], arr[root]];
       // Record swap for visualization
-      addStep('swap', root, largest, `Swap arr[${root}] and arr[${largest}]`);
+      addStep('swap', root, largest, `Swap arr[${root}] and arr[${largest}]`, 14);
       // Recursively heapify the subtree affected by swap
       heapify(size, largest);
     }
   };
 
   // ===== PHASE 1: BUILD MAX HEAP =====
-  addStep('message', -1, -1, 'Phase 1: Building max heap from array...');
+  addStep('message', -1, -1, 'Phase 1: Building max heap from array...', 0);
   // Start from last non-leaf node (n/2 - 1) and work backwards to root
   for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
     // Inform user we're heapifying from this index
-    addStep('message', i, -1, `Heapifying from index ${i}`);
+    addStep('message', i, -1, `Heapifying from index ${i}`, 2);
     // Call heapify to maintain heap property
     heapify(n, i);
   }
 
   // ===== PHASE 2: EXTRACT SORTED ELEMENTS =====
-  addStep('message', -1, -1, 'Phase 2: Extracting sorted elements from heap...');
+  addStep('message', -1, -1, 'Phase 2: Extracting sorted elements from heap...', 3);
   // Process each element from last to second position
   for (let i = n - 1; i > 0; i--) {
     // Swap root (max) with current last position
     swaps++;
     [arr[0], arr[i]] = [arr[i], arr[0]];
     // Record swap for visualization
-    addStep('swap', 0, i, `Move max element to position ${i}`);
+    addStep('swap', 0, i, `Move max element to position ${i}`, 4);
 
     // Announce we're heapifying the reduced heap
-    addStep('message', -1, -1, `Heapifying reduced heap (size=${i})`);
+    addStep('message', -1, -1, `Heapifying reduced heap (size=${i})`, 5);
     // Heapify root with reduced heap size
     heapify(i, 0);
   }
 
   // ===== FINAL STEP: DONE =====
-  addStep('done', -1, -1, `✅ Sorted! Comparisons: ${comparisons}, Swaps: ${swaps}`);
+  addStep('done', -1, -1, `✅ Sorted! Comparisons: ${comparisons}, Swaps: ${swaps}`, 6);
 
   return steps;
 }

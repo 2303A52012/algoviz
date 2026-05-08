@@ -1,0 +1,114 @@
+/* ===== TRIE VISUALIZER ===== */
+
+.trie-root {
+  display: flex; flex-direction: column; gap: 24px;
+}
+
+.trie-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 20px;
+}
+.trie-title { font-size: 24px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
+.trie-desc { font-size: 14px; color: var(--text-secondary); max-width: 600px; }
+
+.trie-badges { display: flex; gap: 8px; }
+.trie-badge {
+  background: var(--bg-base); border: 1px solid var(--border-mid);
+  padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--pink-light);
+}
+
+/* Layout */
+.trie-content { display: flex; gap: 24px; align-items: flex-start; }
+@media (max-width: 1000px) { .trie-content { flex-direction: column; } }
+
+.trie-visual { flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.trie-controls { width: 320px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; }
+@media (max-width: 1000px) { .trie-controls { width: 100%; } }
+
+.trie-visual-title {
+  font-size: 14px; font-weight: 600; color: var(--text-secondary);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+/* Tree SVG */
+.trie-svg-scroll {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md); overflow-x: auto; overflow-y: auto;
+  min-height: 400px; max-height: 600px;
+  display: flex; justify-content: center;
+  scrollbar-width: thin; scrollbar-color: var(--border-mid) var(--bg-base);
+}
+.trie-svg-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+.trie-svg-scroll::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 5px; }
+.trie-svg-empty { color: var(--text-muted); font-style: italic; padding: 40px; text-align: center; width: 100%; }
+
+/* Ops Log */
+.trie-log {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md); padding: 12px;
+}
+.trie-log-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: bold; }
+.trie-log-items { display: flex; flex-direction: column; gap: 4px; }
+.trie-log-item { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+.trie-log-item:last-child { color: var(--pink-light); font-weight: bold; }
+
+/* Control Panel */
+.trie-op-panel {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.trie-tabs { display: flex; background: var(--bg-base); border-bottom: 1px solid var(--border-dim); flex-wrap: wrap; }
+.trie-tab {
+  flex: 1; min-width: 70px; padding: 10px 0; background: transparent; border: none;
+  font-size: 12px; font-weight: bold; color: var(--text-muted);
+  cursor: pointer; transition: 0.2s;
+}
+.trie-tab:hover:not(:disabled) { color: var(--text-primary); background: var(--bg-hover); }
+.trie-tab.active { color: var(--pink-light); border-bottom: 2px solid var(--pink-light); background: var(--bg-panel); }
+.trie-tab:disabled { cursor: not-allowed; opacity: 0.5; }
+
+.trie-tab-content { padding: 16px; }
+.trie-tab-form { display: flex; flex-direction: column; gap: 12px; }
+.trie-tab-form input {
+  padding: 10px; background: var(--bg-base); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md); color: var(--text-primary); font-size: 14px; outline: none;
+}
+.trie-tab-form input:focus { border-color: var(--pink-light); }
+
+.trie-btn {
+  padding: 10px; border: none; border-radius: var(--radius-md); font-size: 13px; font-weight: bold;
+  background: #be185d; color: white; cursor: pointer; transition: 0.2s;
+}
+.trie-btn:hover:not(:disabled) { background: #f43f5e; }
+.trie-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.trie-btn-danger { background: var(--red); }
+.trie-btn-danger:hover:not(:disabled) { background: var(--red-light); }
+.trie-btn-reset { background: var(--bg-base); color: var(--text-secondary); border: 1px solid var(--border-dim); }
+.trie-btn-reset:hover:not(:disabled) { background: var(--bg-hover); color: var(--red-light); border-color: var(--red-dim); }
+
+/* State Panel */
+.trie-state-panel {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.trie-state-row { display: flex; justify-content: space-between; align-items: center; }
+.trie-state-label { font-size: 12px; color: var(--text-muted); font-weight: bold; }
+.trie-state-val { font-size: 14px; font-family: var(--font-mono); font-weight: bold; }
+
+/* Legend */
+.trie-legend {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 16px;
+}
+.trie-legend-title { font-size: 13px; font-weight: bold; color: var(--text-primary); margin-bottom: 12px; }
+.trie-legend-row {
+  display: flex; align-items: center; gap: 10px; font-size: 12px;
+  color: var(--text-secondary); padding: 6px 0;
+}
+.trie-legend-node {
+  width: 20px; height: 20px; border-radius: 50%; border: 2px solid;
+  display: inline-block; flex-shrink: 0;
+}

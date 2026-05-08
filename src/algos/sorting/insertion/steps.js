@@ -13,8 +13,8 @@ export function generateSteps(inputArr) {
     pickedVal: null,
     comparingIdx: -1,
     insertAt: -1,
-    shiftingRange: [],
     msg: `Starting Insertion Sort on ${n} elements. Index 0 (${arr[0]}) is trivially sorted. We pick each remaining element and insert it into the sorted left portion.`,
+    activeLine: 0,
     done: false,
   });
 
@@ -32,6 +32,7 @@ export function generateSteps(inputArr) {
       insertAt: -1,
       shiftingRange: [],
       msg: `Picking up arr[${i}] = ${pickedVal}. Will find its correct position in the sorted region [0..${i - 1}].`,
+      activeLine: 2,
       done: false,
     });
 
@@ -50,6 +51,7 @@ export function generateSteps(inputArr) {
         insertAt: -1,
         shiftingRange: [...shifting],
         msg: `Comparing held value ${pickedVal} with arr[${j}] = ${arr[j]}. Since ${arr[j]} > ${pickedVal}, shift arr[${j}] one position right.`,
+        activeLine: 4,
         done: false,
       });
 
@@ -66,6 +68,7 @@ export function generateSteps(inputArr) {
         insertAt: -1,
         shiftingRange: [...shifting],
         msg: `Shifted arr[${j}] = ${arr[j]} → position ${j + 1}. Gap opens at index ${j}.`,
+        activeLine: 5,
         done: false,
       });
 
@@ -86,6 +89,7 @@ export function generateSteps(inputArr) {
       msg: j >= 0
         ? `arr[${j}] = ${arr[j]} ≤ ${pickedVal}. Correct position found: index ${insertAt}.`
         : `Reached start of array. ${pickedVal} goes at index 0.`,
+      activeLine: 8,
       done: false,
     });
 
@@ -102,6 +106,7 @@ export function generateSteps(inputArr) {
       shiftingRange: [],
       justInserted: insertAt,
       msg: `Inserted ${pickedVal} at index ${insertAt}. Sorted region is now [0..${i}] — ${i + 1} elements.`,
+      activeLine: 8,
       done: false,
     });
   }
@@ -116,6 +121,7 @@ export function generateSteps(inputArr) {
     insertAt: -1,
     shiftingRange: [],
     msg: `Insertion Sort complete! All ${n} elements sorted. The left portion grew one element per pass until it consumed the whole array.`,
+    activeLine: 10,
     done: true,
   });
 

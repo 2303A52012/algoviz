@@ -26,6 +26,7 @@ export function generateSteps(inputArr, pivotStrategy = 'middle') {
     settled: [],
     depth: 0,
     msg: `Starting Quick Sort (${pivotStrategy} pivot). Partitioning [0..${n-1}].`,
+    activeLine: 0,
     done: false,
   });
 
@@ -45,6 +46,7 @@ export function generateSteps(inputArr, pivotStrategy = 'middle') {
       settled: [...settledIndices],
       depth,
       msg: `Partition [${lo}..${hi}]: pivot = ${pivotVal} (${pivotStrategy} of [${arr.slice(lo, hi+1).join(', ')}]) → moved to end at index ${hi}.`,
+      activeLine: 8,
       done: false,
     });
 
@@ -63,6 +65,7 @@ export function generateSteps(inputArr, pivotStrategy = 'middle') {
         settled: [...settledIndices],
         depth,
         msg: `Compare arr[${j}] = ${arr[j]} with pivot ${pivotVal}: ${arr[j] <= pivotVal ? `${arr[j]} ≤ ${pivotVal} → goes to LEFT zone` : `${arr[j]} > ${pivotVal} → goes to RIGHT zone`}`,
+        activeLine: 11,
         done: false,
       });
 
@@ -81,6 +84,7 @@ export function generateSteps(inputArr, pivotStrategy = 'middle') {
             settled: [...settledIndices],
             depth,
             msg: `arr[${j}] belongs in left zone → swap arr[${i}] ↔ arr[${j}]`,
+            activeLine: 13,
             done: false,
           });
         }
@@ -102,6 +106,7 @@ export function generateSteps(inputArr, pivotStrategy = 'middle') {
       settled: [...settledIndices],
       depth,
       msg: `Pivot ${pivotVal} placed at final position ${pivotFinal}. Left: [${arr.slice(lo, pivotFinal).join(', ')}] | Pivot: ${pivotVal} | Right: [${arr.slice(pivotFinal+1, hi+1).join(', ')}]`,
+      activeLine: 17,
       done: false,
     });
 
@@ -121,6 +126,7 @@ export function generateSteps(inputArr, pivotStrategy = 'middle') {
           settled: [...settledIndices],
           depth,
           msg: `Base case: single element ${arr[lo]} at index ${lo} — already in place.`,
+          activeLine: 1,
           done: false,
         });
       }
@@ -144,6 +150,7 @@ export function generateSteps(inputArr, pivotStrategy = 'middle') {
     settled: Array.from({ length: n }, (_, i) => i),
     depth: 0,
     msg: `Quick Sort complete! (${pivotStrategy} pivot strategy). Average O(n log n) — pivot choice matters!`,
+    activeLine: 5,
     done: true,
   });
 

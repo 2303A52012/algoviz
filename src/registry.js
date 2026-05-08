@@ -32,9 +32,15 @@ import stackDSMeta      from './ds/stack/meta';
 import queueDSMeta      from './ds/queue/meta';
 import linkedlistDSMeta from './ds/linkedlist/meta';
 import dllDSMeta        from './ds/dll/meta';
+import cllDSMeta        from './ds/cll/meta';
 import dcllDSMeta       from './ds/dcll/meta';
-import treesDSMeta      from './ds/trees/meta';
-import graphsDSMeta     from './ds/graphs/meta';
+import binaryDSMeta     from './ds/tree/binary/meta';
+import bstDSMeta        from './ds/tree/bst/meta';
+import minheapDSMeta    from './ds/tree/minheap/meta';
+import maxheapDSMeta    from './ds/tree/maxheap/meta';
+import trieDSMeta       from './ds/tree/trie/meta';
+import hashmapDSMeta    from './ds/hashmap/meta';
+import avlDSMeta        from './ds/tree/avl/meta';
 
 // ===== ALGO REGISTRY =====
 export const REGISTRY = [
@@ -51,9 +57,15 @@ export const DS_REGISTRY = [
   queueDSMeta,
   linkedlistDSMeta,
   dllDSMeta,
+  cllDSMeta,
   dcllDSMeta,
-  treesDSMeta,
-  graphsDSMeta,
+  binaryDSMeta,
+  bstDSMeta,
+  minheapDSMeta,
+  maxheapDSMeta,
+  trieDSMeta,
+  hashmapDSMeta,
+  avlDSMeta,
   // Add more DS here as you build them
 ];
 

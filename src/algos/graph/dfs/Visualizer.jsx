@@ -3,7 +3,26 @@ import {
   ROWS, COLS, START, END,
   createEmptyGrid, createRandomWallGrid, generateSteps,
 } from './steps';
+import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
+
+const DFS_PSEUDOCODE = [
+  "function DFS(graph, start) {",
+  "  stack = [start]",
+  "  visited = set()",
+  "  while stack.length > 0 {",
+  "    curr = stack.pop()",
+  "    if curr not in visited {",
+  "      visited.add(curr)",
+  "      if curr == target return true",
+  "      for neighbor in getNeighbors(curr) {",
+  "        stack.push(neighbor)",
+  "      }",
+  "    }",
+  "  }",
+  "  return false",
+  "}"
+];
 
 function key(r, c) { return `${r},${c}`; }
 
@@ -132,18 +151,19 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     stackDepth:     0,
     done:           false,
     found:          false,
+    activeLine:     0,
   });
 
   useEffect(() => {
     if (!currentStep) {
       setVizState({
-        visitedSet: new Set(), backtrackedSet: new Set(),
+visitedSet: new Set(), backtrackedSet: new Set(),
         stack: [], pathStack: [], path: [],
-        current: null, stackDepth: 0, done: false, found: false,
+        current: null, stackDepth: 0, done: false, found: false, activeLine: 0,
       });
       return;
     }
-    setVizState({
+    setVizState(prev => ({
       visitedSet:     currentStep.visitedSet     || new Set(),
       backtrackedSet: currentStep.backtrackedSet || new Set(),
       stack:          currentStep.stack          || [],
@@ -153,7 +173,8 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       stackDepth:     currentStep.stackDepth     || 0,
       done:           currentStep.done           || false,
       found:          currentStep.type === 'found',
-    });
+      activeLine:     currentStep.activeLine     ?? prev.activeLine,
+    }));
   }, [currentStep]);
 
   const toggleCell = useCallback((r, c) => {
@@ -173,7 +194,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     setVizState({
       visitedSet: new Set(), backtrackedSet: new Set(),
       stack: [], pathStack: [], path: [],
-      current: null, stackDepth: 0, done: false, found: false,
+      current: null, stackDepth: 0, done: false, found: false, activeLine: 0,
     });
   };
 
@@ -279,6 +300,9 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
           </span>
         ))}
       </div>
+
+      {/* ===== PSEUDOCODE TRACKER ===== */}
+      <Pseudocode code={DFS_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }

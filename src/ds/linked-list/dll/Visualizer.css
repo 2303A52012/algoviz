@@ -1,0 +1,245 @@
+/* ===== DOUBLY LINKED LIST VISUALIZER ===== */
+
+.dll-root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.dll-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.dll-title { margin: 0; font-size: 24px; color: var(--teal-light); }
+.dll-desc  { font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0; }
+
+.dll-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.dll-badge {
+  font-size: 11px; padding: 4px 8px;
+  background: var(--bg-elevated); border: 1px solid var(--border-mid);
+  border-radius: var(--radius-md); color: var(--text-secondary);
+}
+
+/* Main Grid */
+.dll-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  min-height: 360px;
+}
+
+.dll-visual {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dll-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.dll-visual-title {
+  font-size: 13px; font-weight: bold; color: var(--text-primary);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.dll-dir-hint {
+  font-size: 11px; color: var(--teal-light); font-weight: normal;
+  opacity: 0.7;
+}
+
+/* Lane */
+.dll-lane {
+  background: var(--bg-base);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 24px 16px;
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-mid) var(--bg-base);
+}
+
+.dll-lane::-webkit-scrollbar { height: 6px; }
+.dll-lane::-webkit-scrollbar-track { background: var(--bg-base); }
+.dll-lane::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
+
+.dll-empty {
+  width: 100%; text-align: center;
+  font-size: 12px; color: var(--text-muted); font-style: italic;
+}
+
+.dll-node-chain {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Node */
+.dll-node-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.dll-node-labels {
+  display: flex;
+  gap: 4px;
+  min-height: 16px;
+}
+
+.dll-label {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.5px; padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.dll-label-head { color: var(--green-light); background: #0a1f12; border: 1px solid var(--green); }
+.dll-label-tail { color: var(--amber-light); background: #1f1200; border: 1px solid var(--amber); }
+
+.dll-node {
+  width: 70px; height: 52px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px; border: 2px solid currentColor;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.dll-node:hover { transform: scale(1.06); }
+
+.dll-val { font-weight: bold; font-size: 15px; }
+.dll-ptr { font-size: 11px; opacity: 0.6; }
+
+/* Connectors */
+.dll-connector {
+  color: var(--teal);
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 22px;
+  text-align: center;
+  animation: dll-pulse 1.5s infinite;
+  flex-shrink: 0;
+}
+
+.dll-null-term {
+  color: var(--text-muted);
+  font-size: 14px; font-weight: bold;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+/* Log */
+.dll-log {
+  background: var(--bg-base); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md); padding: 12px; max-height: 120px; overflow-y: auto;
+}
+.dll-log-label { font-size: 10px; color: var(--text-muted); font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px; }
+.dll-log-items { display: flex; flex-direction: column; gap: 4px; }
+.dll-log-item {
+  font-size: 11px; color: var(--teal-light);
+  padding: 4px 8px; border-left: 2px solid var(--teal);
+}
+
+/* Op Panel */
+.dll-op-panel {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.dll-tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--border-dim); padding-bottom: 8px; }
+.dll-tab {
+  background: transparent; border: none; color: var(--text-secondary);
+  font-size: 11px; font-weight: bold; padding: 6px 10px;
+  cursor: pointer; border-radius: var(--radius-sm); transition: var(--t-fast);
+}
+.dll-tab:hover:not(:disabled) { background: var(--bg-hover); color: var(--teal); }
+.dll-tab.active { background: var(--teal); color: #000; }
+.dll-tab:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.dll-tab-content { display: flex; flex-direction: column; gap: 8px; }
+.dll-tab-form { display: flex; flex-direction: column; gap: 8px; }
+.dll-tab-form input {
+  background: var(--bg-base); border: 1px solid var(--border-dim);
+  color: var(--text-primary); padding: 6px 10px;
+  border-radius: var(--radius-sm); font-size: 12px; transition: var(--t-mid);
+}
+.dll-tab-form input:focus { outline: none; border-color: var(--teal); }
+
+.dll-btn {
+  background: var(--teal); color: #001a18; border: none;
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  font-size: 11px; font-weight: bold; cursor: pointer; transition: var(--t-fast);
+}
+.dll-btn:hover:not(:disabled) { background: var(--teal-light); transform: translateY(-1px); }
+.dll-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.dll-btn-danger  { background: var(--red); color: white; }
+.dll-btn-danger:hover:not(:disabled) { background: var(--red-light); }
+.dll-btn-warning { background: var(--amber); color: #1a0f00; }
+.dll-btn-warning:hover:not(:disabled) { background: var(--amber-light); }
+.dll-btn-reset   { background: var(--text-muted); color: white; }
+.dll-btn-reset:hover:not(:disabled) { background: var(--text-secondary); }
+
+/* State Panel */
+.dll-state-panel {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 14px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.dll-state-row {
+  display: flex; justify-content: space-between; padding: 8px;
+  background: var(--bg-base); border-radius: var(--radius-sm);
+  border-left: 3px solid var(--teal);
+}
+.dll-state-label { font-size: 11px; color: var(--text-secondary); font-weight: bold; }
+.dll-state-val   { font-weight: bold; font-size: 12px; }
+
+/* Comparison Table */
+.dll-comparison {
+  background: var(--bg-panel); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg); padding: 16px;
+}
+.dll-comparison h3 { margin: 0 0 12px 0; font-size: 14px; color: var(--text-primary); }
+.dll-table { width: 100%; border-collapse: collapse; }
+.dll-table th {
+  font-size: 11px; color: var(--text-secondary); font-weight: bold;
+  padding: 8px; text-align: left; border-bottom: 1px solid var(--border-dim); letter-spacing: 0.5px;
+  background: var(--bg-base);
+}
+.dll-table td { font-size: 11px; color: var(--text-secondary); padding: 8px; border-bottom: 1px solid var(--border-dim); }
+.dll-table tbody tr:hover { background: var(--bg-base); }
+.dll-good { color: var(--green); font-weight: bold; }
+.dll-bad  { color: var(--red-light); font-style: italic; }
+.dll-note { font-size: 10px; color: var(--text-muted); margin-top: 8px; }
+
+/* Animations */
+@keyframes dll-pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .dll-content { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .dll-root { padding: 12px; gap: 12px; }
+  .dll-header { flex-direction: column; }
+  .dll-tabs { flex-wrap: wrap; }
+}

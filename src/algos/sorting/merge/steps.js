@@ -30,8 +30,8 @@ export function generateSteps(inputArr) {
     activeNodeId: 0,
     phase: 'split',
     nodes,
-    nodeStates: {},  // nodeId -> 'active'|'split'|'merging'|'done'
     msg: `Merge Sort on ${n} elements. Phase 1: recursively split into halves. Phase 2: merge sorted halves back.`,
+    activeLine: 0,
     done: false,
   });
 
@@ -58,6 +58,7 @@ export function generateSteps(inputArr) {
       msg: lo === hi
         ? `Base case: [${arr[lo]}] at index ${lo} — single element, already sorted.`
         : `Split [${lo}..${hi}] = [${arr.slice(lo, hi+1).join(', ')}] into [${lo}..${Math.floor((lo+hi)/2)}] and [${Math.floor((lo+hi)/2)+1}..${hi}]`,
+      activeLine: 1,
       done: false,
     });
 
@@ -90,6 +91,7 @@ export function generateSteps(inputArr) {
       left: [...left],
       right: [...right],
       msg: `Merging [${left.join(', ')}] + [${right.join(', ')}]`,
+      activeLine: 5,
       done: false,
     });
 
@@ -108,6 +110,7 @@ export function generateSteps(inputArr) {
         leftPointer: i,
         rightPointer: j,
         msg: `Compare left[${i}]=${left[i]} vs right[${j}]=${right[j]} → take ${left[i] <= right[j] ? left[i] + ' (left)' : right[j] + ' (right)'}`,
+        activeLine: 10,
         done: false,
       });
 
@@ -131,6 +134,7 @@ export function generateSteps(inputArr) {
         rightPointer: j,
         justPlaced: k - 1,
         msg: `Placed ${arr[k - 1]} at position ${k - 1}`,
+        activeLine: left[i-1] <= right[j-1] ? 12 : 14, // Roughly
         done: false,
       });
     }
@@ -149,6 +153,7 @@ export function generateSteps(inputArr) {
         leftPointer: i, rightPointer: j,
         justPlaced: k - 1,
         msg: `Copying remaining left: ${arr[k - 1]} → position ${k - 1}`,
+        activeLine: 17,
         done: false,
       });
     }
@@ -167,6 +172,7 @@ export function generateSteps(inputArr) {
         leftPointer: i, rightPointer: j,
         justPlaced: k - 1,
         msg: `Copying remaining right: ${arr[k - 1]} → position ${k - 1}`,
+        activeLine: 19,
         done: false,
       });
     }
@@ -184,6 +190,7 @@ export function generateSteps(inputArr) {
       lo, hi,
       merged: arr.slice(lo, hi + 1),
       msg: `Merged! [${lo}..${hi}] = [${arr.slice(lo, hi+1).join(', ')}] ✓`,
+      activeLine: 5,
       done: false,
     });
   }
@@ -198,6 +205,7 @@ export function generateSteps(inputArr) {
     nodes,
     nodeStates: Object.fromEntries(Object.keys(nodes).map(id => [id, 'done'])),
     msg: `Merge Sort complete! Array sorted in O(n log n) time with O(n) extra space.`,
+    activeLine: 6,
     done: true,
   });
 

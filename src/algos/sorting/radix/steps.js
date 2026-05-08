@@ -29,6 +29,7 @@ export function generateSteps(input) {
     buckets: null,
     comparisons,
     moves,
+    activeLine: 1,
   });
 
   // ===== PHASE 2: MAIN RADIX SORT LOOP =====
@@ -49,6 +50,7 @@ export function generateSteps(input) {
       buckets: null,
       comparisons,
       moves,
+      activeLine: 4,
     });
 
     // ===== DISTRIBUTION PHASE =====
@@ -74,6 +76,7 @@ export function generateSteps(input) {
         buckets: buckets.map(b => [...b]),  // Show current bucket state
         comparisons,
         moves,
+        activeLine: 8,
       });
     }
 
@@ -101,6 +104,7 @@ export function generateSteps(input) {
           buckets: buckets.map(b => [...b]),  // Show bucket state
           comparisons,
           moves,
+          activeLine: 13,
         });
       }
     }
@@ -116,6 +120,7 @@ export function generateSteps(input) {
       buckets: null,
       comparisons,
       moves,
+      activeLine: 16,
     });
 
     // Move to next digit position
@@ -134,6 +139,7 @@ export function generateSteps(input) {
     buckets: null,
     comparisons,
     moves,
+    activeLine: 18,
   });
 
   return steps;

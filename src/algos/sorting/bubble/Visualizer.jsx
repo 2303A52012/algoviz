@@ -3,7 +3,24 @@
 
 import React, { useState, useEffect } from 'react';
 import { generateSteps, generateDefaultInput, parseCustomInput } from './steps';
+import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
+
+const BUBBLE_SORT_PSEUDOCODE = [
+  "function bubbleSort(arr) {",
+  "  for i = 0 to arr.length - 1 {",
+  "    swappedThisPass = false",
+  "    for j = 0 to arr.length - i - 1 {",
+  "      if arr[j] > arr[j+1] {",
+  "        swap(arr[j], arr[j+1])",
+  "        swappedThisPass = true",
+  "      }",
+  "    }",
+  "    if not swappedThisPass break",
+  "  }",
+  "  return arr",
+  "}"
+];
 
 // ===== COLOR CONFIGURATION: Define visual appearance for each bar state =====
 // Each state includes: bar color, label text color, optional glow effect
@@ -164,6 +181,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     sortedFrom: defaultArr.length, // Index where sorted region begins
     justSorted: -1, // Index of element just placed in final position
     passNum: 0, // Current pass number
+    activeLine: 0, // Line of pseudocode currently executing
   });
 
   // ===== EFFECT: Sync visualization state with current algorithm step =====
@@ -171,7 +189,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
   useEffect(() => {
     // If no current step, reset visualization to initial state
     if (!currentStep) {
-      setVizState(v => ({ ...v, arr, comparing: [], swapping: [], sortedFrom: arr.length, justSorted: -1, passNum: 0 }));
+      setVizState(v => ({ ...v, arr, comparing: [], swapping: [], sortedFrom: arr.length, justSorted: -1, passNum: 0, activeLine: 0 }));
       return;
     }
     
@@ -183,6 +201,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       sortedFrom: currentStep.sortedFrom ?? prev.sortedFrom, // Update sorted region boundary
       justSorted: currentStep.type === 'pass-end' ? currentStep.justSorted : -1, // Highlight if pass ended
       passNum:    currentStep.passNum   || prev.passNum, // Update pass number
+      activeLine: currentStep.activeLine ?? prev.activeLine,
     }));
   }, [currentStep]); // Re-run when current step changes
 
@@ -199,7 +218,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     // Notify parent to reset algorithm state
     onReset();
     // Reset all visualization state
-    setVizState({ arr, comparing: [], swapping: [], sortedFrom: arr.length, justSorted: -1, passNum: 0 });
+    setVizState({ arr, comparing: [], swapping: [], sortedFrom: arr.length, justSorted: -1, passNum: 0, activeLine: 0 });
   };
 
   // ===== HANDLER: Generate random array and reset =====
@@ -211,7 +230,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
     // Update array and reset visualization
     setArr(newArr);
     onReset();
-    setVizState({ arr: newArr, comparing: [], swapping: [], sortedFrom: newArr.length, justSorted: -1, passNum: 0 });
+    setVizState({ arr: newArr, comparing: [], swapping: [], sortedFrom: newArr.length, justSorted: -1, passNum: 0, activeLine: 0 });
   };
 
   // ===== HANDLER: Load and validate user-provided custom array =====
@@ -224,7 +243,7 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
       // Update array and reset visualization
       setArr(parsed);
       onReset();
-      setVizState({ arr: parsed, comparing: [], swapping: [], sortedFrom: parsed.length, justSorted: -1, passNum: 0 });
+      setVizState({ arr: parsed, comparing: [], swapping: [], sortedFrom: parsed.length, justSorted: -1, passNum: 0, activeLine: 0 });
       // Close input panel after successful load
       setInputOpen(false);
       setCustomInput('');
@@ -303,6 +322,9 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
           </span>
         ))}
       </div>
+
+      {/* ===== PSEUDOCODE TRACKER ===== */}
+      <Pseudocode code={BUBBLE_SORT_PSEUDOCODE} activeLine={vizState.activeLine} />
     </div>
   );
 }

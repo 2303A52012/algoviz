@@ -1,0 +1,35 @@
+// Binary Tree DS Metadata
+export default {
+  id: 'binary',
+  category: 'ds',
+  label: 'Binary Tree',
+  emoji: '🌲',
+  difficulty: 'intermediate',
+  description: 'A Binary Tree is a hierarchical data structure where each node has at most two children (left and right). Nodes are inserted level-by-level (BFS order). No ordering constraint — unlike BST.',
+  keyInsight: 'Binary Trees are the foundation for BSTs, heaps, and expression trees. Traversal strategies (Inorder, Preorder, Postorder, Level-order) each reveal different structural information.',
+  complexities: {
+    insert: 'O(n)',
+    search: 'O(n)',
+    delete: 'O(n)',
+    heightCalc: 'O(n)',
+    inorderTraversal: 'O(n)',
+    levelOrderTraversal: 'O(n)',
+  },
+  operations: [
+    'Insert',
+    'Search',
+    'Delete',
+    'Inorder Traversal',
+    'Preorder Traversal',
+    'Postorder Traversal',
+    'Level-order (BFS)',
+  ],
+  useCases: [
+    'Expression tree evaluation',
+    'Huffman encoding (compression)',
+    'Decision trees (ML)',
+    'DOM (HTML document tree)',
+    'File system directory trees',
+    'Game AI (minimax trees)',
+  ],
+};

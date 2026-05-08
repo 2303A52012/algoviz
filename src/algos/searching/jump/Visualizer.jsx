@@ -1,6 +1,28 @@
 import React, { useState, useCallback } from 'react';
 import { generateSteps } from './steps';
+import Pseudocode from '../../../components/Pseudocode';
 import './Visualizer.css';
+
+const JUMP_SEARCH_PSEUDOCODE = [
+  "function jumpSearch(arr, target) {",
+  "  n = arr.length",
+  "  step = floor(sqrt(n))",
+  "  prev = 0",
+  "  while arr[min(step, n) - 1] < target {",
+  "    prev = step",
+  "    step += floor(sqrt(n))",
+  "    if prev >= n return -1",
+  "  }",
+  "  while arr[prev] < target {",
+  "    prev++",
+  "    if prev == min(step, n) return -1",
+  "  }",
+  "  if arr[prev] == target {",
+  "    return prev",
+  "  }",
+  "  return -1",
+  "}"
+];
 
 export default function Visualizer({ isRunning, isPaused, currentStep, onRunSteps, onReset, speed }) {
   // ===== STATE MANAGEMENT =====
@@ -202,6 +224,9 @@ export default function Visualizer({ isRunning, isPaused, currentStep, onRunStep
           ⏱️ <strong>Time Complexity:</strong> O(√n) — optimal balance between jumps and linear search
         </p>
       </div>
+
+      {/* ===== PSEUDOCODE TRACKER ===== */}
+      <Pseudocode code={JUMP_SEARCH_PSEUDOCODE} activeLine={currentStep?.activeLine ?? 0} />
     </div>
   );
 }

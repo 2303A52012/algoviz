@@ -18,6 +18,7 @@ export function generateSteps(input) {
     arr: [...arr],
     comparisons,
     jumps,
+    activeLine: 0,
   });
 
   // PHASE 1: JUMPING - Find the block containing target
@@ -40,6 +41,7 @@ export function generateSteps(input) {
       arr: [...arr],
       comparisons,
       jumps,
+      activeLine: 5,
     });
 
     // Move to next block
@@ -58,6 +60,7 @@ export function generateSteps(input) {
     arr: [...arr],
     comparisons,
     jumps,
+    activeLine: 11,
   });
 
   // Linear search from block start
@@ -76,6 +79,7 @@ export function generateSteps(input) {
         arr: [...arr],
         comparisons,
         jumps,
+        activeLine: 13,
       });
       break;
     }
@@ -90,6 +94,7 @@ export function generateSteps(input) {
         arr: [...arr],
         comparisons,
         jumps,
+        activeLine: 16,
       });
       found = true;
       break;
@@ -104,6 +109,7 @@ export function generateSteps(input) {
         arr: [...arr],
         comparisons,
         jumps,
+        activeLine: 12,
       });
     }
   }
@@ -117,6 +123,7 @@ export function generateSteps(input) {
       arr: [...arr],
       comparisons,
       jumps,
+      activeLine: 17,
     });
   }
 
