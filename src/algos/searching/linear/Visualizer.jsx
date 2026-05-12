@@ -36,9 +36,8 @@ function ArrayScanner({ arr, currentIdx, scannedIdx, foundIdx, target }) {
             {/* Moving lens for current element being scanned */}
             {i === currentIdx && foundIdx < 0 && (
               <div className="ls-cursor">
-                <div className="ls-cursor-glass">
-                   
-                 
+                <div className="ls-cursor-glass" />
+              </div>
             )}
             {/* Star marker showing where target was found */}
             {i === foundIdx && (

@@ -71,8 +71,7 @@ function RangeLine({ arr, lo, hi, mid, eliminated, foundIdx, target }) {
 
       {/* ===== ACTIVE RANGE UNDERLINE: Shows current search boundaries ===== */}
       {lo <= hi && foundIdx < 0 && (
-        <div className="bs-range-underline-wrap" style={{ '--n': n }}>
-           
+        <div className="bs-range-underline-wrap" style={{ '--n': n }} />
       )}
     </div>
   );

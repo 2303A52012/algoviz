@@ -110,8 +110,7 @@ function MinTracker({ minIdx, minVal, scanning, sortedBoundary, passNum, totalPa
       {passNum > 0 && (
         <div className="sl-pass-info">
           Pass <b>{passNum}</b> of <b>{totalPasses}</b>
-          <div className="sl-pass-bar">
-             
+          <div className="sl-pass-bar" />
         </div>
       )}
     </div>

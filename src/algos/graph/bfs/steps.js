@@ -1,138 +1,66 @@
-// ===== BFS STEP GENERATOR =====
-// Grid-based. Each step captures full grid state + queue contents.
+import { GRAPH_PRESETS, buildAdjUnweighted as buildAdj } from '../graphPresets';
 
-export const ROWS = 12;
-export const COLS = 20;
-export const START = { r: 5, c: 1 };
-export const END   = { r: 6, c: 18 };
+export { GRAPH_PRESETS };
+export const DEFAULT_PRESET = GRAPH_PRESETS[0];
 
-export function createEmptyGrid() {
-  const grid = Array.from({ length: ROWS }, () =>
-    Array(COLS).fill('empty')
-  );
-  grid[START.r][START.c] = 'start';
-  grid[END.r][END.c]     = 'end';
-  return grid;
-}
-
-export function createRandomWallGrid() {
-  const grid = createEmptyGrid();
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (grid[r][c] === 'empty' && Math.random() < 0.28)
-        grid[r][c] = 'wall';
-    }
-  }
-  return grid;
-}
-
-function key(r, c)    { return `${r},${c}`; }
-function parseKey(k)  { const [r, c] = k.split(',').map(Number); return { r, c }; }
-
-function getNeighbors(r, c, grid) {
-  return [[-1,0],[1,0],[0,-1],[0,1]]
-    .map(([dr, dc]) => [r + dr, c + dc])
-    .filter(([nr, nc]) =>
-      nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS &&
-      grid[nr][nc] !== 'wall'
-    );
-}
-
-export function generateSteps(grid) {
+export function generateSteps(nodes, edges, startNode, endNode) {
+  const adj = buildAdj(nodes, edges);
   const steps = [];
-  const startKey = key(START.r, START.c);
-  const endKey   = key(END.r,   END.c);
+  const visited = new Set();
+  const queue = [startNode];
+  const parent = {};
+  const visitedSeq = [];
 
-  const visited  = new Set([startKey]);
-  const parent   = {};
-  const queue    = [startKey];
-  const distMap  = { [startKey]: 0 };
-
-  // Cell states: visited set, frontier set, path array
-  const visitedSet  = new Set([startKey]);
-  const frontierSet = new Set();
+  visited.add(startNode);
 
   steps.push({
-    type: 'init',
-    visitedSet:  new Set(visitedSet),
-    frontierSet: new Set(),
-    queue:       [...queue],
-    path:        [],
-    current:     null,
-    msg: `BFS starts at (${START.r},${START.c}). Queue initialized with start node. Exploring level by level.`,
-    activeLine: 0,
-    done: false,
+    type: 'init', current: null, queue: [startNode],
+    visitedSet: new Set([startNode]), visitedSeq: [],
+    activeEdge: null, path: [], done: false,
+    msg: `BFS starts at "${startNode}". Enqueue it. BFS explores all neighbours level by level.`,
   });
 
-  while (queue.length) {
+  while (queue.length > 0) {
     const cur = queue.shift();
-    const { r, c } = parseKey(cur);
-    frontierSet.delete(cur);
 
-    if (cur === endKey) {
-      // Trace path
+    if (cur === endNode) {
       const path = [];
-      let node = endKey;
-      while (node && node !== startKey) {
-        path.unshift(node);
-        node = parent[node];
-      }
-
+      let node = endNode;
+      while (node) { path.unshift(node); node = parent[node]; }
+      visitedSeq.push(cur);
       steps.push({
-        type: 'found',
-        visitedSet:  new Set(visitedSet),
-        frontierSet: new Set(),
-        queue:       [],
-        path,
-        current:     cur,
-        distMap:     { ...distMap },
-        msg: `✓ Reached destination (${END.r},${END.c})! Shortest path = ${path.length} steps. BFS guarantees this is optimal.`,
-        activeLine: 6,
-        done: true,
+        type: 'found', current: cur, queue: [],
+        visitedSet: new Set(visited), visitedSeq: [...visitedSeq],
+        activeEdge: parent[cur] ? [parent[cur], cur] : null, path, done: true,
+        msg: `✓ Reached "${endNode}"! Shortest path: ${path.join(' → ')} (${path.length - 1} edges). BFS guarantees shortest path in unweighted graphs.`,
       });
       return steps;
     }
 
-    const newFrontier = new Set();
-    for (const [nr, nc] of getNeighbors(r, c, grid)) {
-      const nk = key(nr, nc);
-      if (!visited.has(nk)) {
-        visited.add(nk);
-        visitedSet.add(nk);
-        parent[nk] = cur;
-        queue.push(nk);
-        distMap[nk] = (distMap[cur] || 0) + 1;
-        frontierSet.add(nk);
-        newFrontier.add(nk);
+    visitedSeq.push(cur);
+    const newNeighbors = [];
+    for (const nbr of (adj[cur] || [])) {
+      if (!visited.has(nbr)) {
+        visited.add(nbr);
+        parent[nbr] = cur;
+        queue.push(nbr);
+        newNeighbors.push(nbr);
       }
     }
 
     steps.push({
-      type: 'visit',
-      visitedSet:  new Set(visitedSet),
-      frontierSet: new Set(frontierSet),
-      queue:       [...queue],
-      path:        [],
-      current:     cur,
-      distMap:     { ...distMap },
-      msg: `Dequeued (${r},${c}) [dist=${distMap[cur]}]. Added ${newFrontier.size} neighbor${newFrontier.size !== 1 ? 's' : ''} to queue. Queue size: ${queue.length}.`,
-      activeLine: 10,
-      done: false,
+      type: 'visit', current: cur, queue: [...queue],
+      visitedSet: new Set(visited), visitedSeq: [...visitedSeq],
+      activeEdge: parent[cur] ? [parent[cur], cur] : null, path: [], done: false,
+      msg: `Dequeued "${cur}". Enqueued neighbours: [${newNeighbors.join(', ') || '—'}]. Queue: [${queue.join(', ') || 'empty'}].`,
     });
   }
 
   steps.push({
-    type: 'not-found',
-    visitedSet:  new Set(visitedSet),
-    frontierSet: new Set(),
-    queue:       [],
-    path:        [],
-    current:     null,
-    distMap:     { ...distMap },
-    msg: `✗ No path found — destination is unreachable. Visited ${visitedSet.size} cells.`,
-    activeLine: 14,
-    done: true,
+    type: 'not-found', current: null, queue: [],
+    visitedSet: new Set(visited), visitedSeq: [...visitedSeq],
+    activeEdge: null, path: [], done: true,
+    msg: `✗ No path from "${startNode}" to "${endNode}". All reachable nodes visited.`,
   });
-
   return steps;
 }

@@ -1,145 +1,62 @@
-// ===== DFS STEP GENERATOR =====
-// Grid-based, iterative with explicit stack.
-// Each step captures: stack contents, visited, current path, backtracked cells.
+import { GRAPH_PRESETS, buildAdjUnweighted as buildAdj } from '../graphPresets';
 
-export const ROWS = 12;
-export const COLS = 20;
-export const START = { r: 5, c: 1 };
-export const END   = { r: 6, c: 18 };
+export { GRAPH_PRESETS };
+export const DEFAULT_PRESET = GRAPH_PRESETS[0];
 
-export function createEmptyGrid() {
-  const grid = Array.from({ length: ROWS }, () => Array(COLS).fill('empty'));
-  grid[START.r][START.c] = 'start';
-  grid[END.r][END.c]     = 'end';
-  return grid;
-}
-
-export function createRandomWallGrid() {
-  const grid = createEmptyGrid();
-  for (let r = 0; r < ROWS; r++)
-    for (let c = 0; c < COLS; c++)
-      if (grid[r][c] === 'empty' && Math.random() < 0.28)
-        grid[r][c] = 'wall';
-  return grid;
-}
-
-function key(r, c)   { return `${r},${c}`; }
-function parseKey(k) { const [r, c] = k.split(',').map(Number); return { r, c }; }
-
-function getNeighbors(r, c, grid) {
-  // DFS order: down, right, up, left (gives a more interesting snake path)
-  return [[1,0],[0,1],[-1,0],[0,-1]]
-    .map(([dr, dc]) => [r + dr, c + dc])
-    .filter(([nr, nc]) =>
-      nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS &&
-      grid[nr][nc] !== 'wall'
-    );
-}
-
-export function generateSteps(grid) {
+export function generateSteps(nodes, edges, startNode, endNode) {
+  const adj = buildAdj(nodes, edges);
   const steps = [];
-  const startKey = key(START.r, START.c);
-  const endKey   = key(END.r,   END.c);
-
-  const visited      = new Set();
-  const parent       = {};
-  const stack        = [startKey];
-  const visitedSet   = new Set();
-  const backtrackedSet = new Set();
-  // currentPath tracks the actual DFS path (for snake visualization)
-  const pathStack    = [startKey];
+  const visited = new Set();
+  const stack = [startNode];
+  const parent = {};
+  const visitedSeq = [];
 
   steps.push({
-    type: 'init',
-    visitedSet:    new Set(),
-    backtrackedSet: new Set(),
-    stack:         [startKey],
-    pathStack:     [startKey],
-    path:          [],
-    current:       null,
-    msg: `DFS starts at (${START.r},${START.c}). Stack initialized. DFS explores as deep as possible before backtracking.`,
-    activeLine: 0,
-    done: false,
+    type: 'init', current: null, stack: [startNode],
+    visitedSet: new Set(), visitedSeq: [],
+    activeEdge: null, path: [], done: false,
+    msg: `DFS starts at "${startNode}". Push it onto stack. DFS dives deep before backtracking.`,
   });
 
-  while (stack.length) {
+  while (stack.length > 0) {
     const cur = stack.pop();
-    const { r, c } = parseKey(cur);
-
     if (visited.has(cur)) continue;
     visited.add(cur);
-    visitedSet.add(cur);
+    visitedSeq.push(cur);
 
-    // Maintain path stack for visualization
-    // Trim pathStack back to parent
-    if (parent[cur]) {
-      while (pathStack.length > 0 && pathStack[pathStack.length - 1] !== parent[cur]) {
-        const popped = pathStack.pop();
-        if (popped !== startKey) backtrackedSet.add(popped);
-      }
-    }
-    pathStack.push(cur);
-
-    if (cur === endKey) {
+    if (cur === endNode) {
       const path = [];
-      let node = endKey;
-      while (node) { path.unshift(node); node = parent[node]; }
-
+      let node = endNode;
+      while (node !== undefined) { path.unshift(node); node = parent[node]; }
       steps.push({
-        type: 'found',
-        visitedSet:    new Set(visitedSet),
-        backtrackedSet: new Set(backtrackedSet),
-        stack:         [],
-        pathStack:     [...pathStack],
-        path,
-        current:       cur,
-        stackDepth:    0,
-        msg: `✓ Reached (${END.r},${END.c})! DFS found A path in ${visitedSet.size} visits. Note: this may NOT be the shortest path!`,
-        activeLine: 7,
-        done: true,
+        type: 'found', current: cur, stack: [...stack],
+        visitedSet: new Set(visited), visitedSeq: [...visitedSeq],
+        activeEdge: parent[cur] ? [parent[cur], cur] : null, path, done: true,
+        msg: `✓ Reached "${endNode}"! DFS path: ${path.join(' → ')}. Note: DFS does NOT guarantee shortest path!`,
       });
       return steps;
     }
 
-    const neighbors = getNeighbors(r, c, grid);
-    const newNeighbors = neighbors.filter(([nr, nc]) => !visited.has(key(nr, nc)));
-
-    // Push neighbors onto stack (reversed so first neighbor is processed first)
-    for (let i = newNeighbors.length - 1; i >= 0; i--) {
-      const [nr, nc] = newNeighbors[i];
-      const nk = key(nr, nc);
-      if (!parent[nk]) parent[nk] = cur;
-      stack.push(nk);
+    const unvisited = (adj[cur] || []).filter(n => !visited.has(n));
+    for (let i = unvisited.length - 1; i >= 0; i--) {
+      const nbr = unvisited[i];
+      if (!parent[nbr]) parent[nbr] = cur;
+      stack.push(nbr);
     }
 
     steps.push({
-      type: 'visit',
-      visitedSet:    new Set(visitedSet),
-      backtrackedSet: new Set(backtrackedSet),
-      stack:         [...stack],
-      pathStack:     [...pathStack],
-      path:          [],
-      current:       cur,
-      stackDepth:    stack.length,
-      msg: `Popped (${r},${c}) from stack. Pushed ${newNeighbors.length} unvisited neighbor${newNeighbors.length !== 1 ? 's' : ''}. Stack depth: ${stack.length}.`,
-      activeLine: 10,
-      done: false,
+      type: 'visit', current: cur, stack: [...stack],
+      visitedSet: new Set(visited), visitedSeq: [...visitedSeq],
+      activeEdge: parent[cur] ? [parent[cur], cur] : null, path: [], done: false,
+      msg: `Popped "${cur}". Pushed unvisited: [${unvisited.join(', ') || '—'}]. Stack: [${stack.join(', ') || 'empty'}].`,
     });
   }
 
   steps.push({
-    type: 'not-found',
-    visitedSet:    new Set(visitedSet),
-    backtrackedSet: new Set(backtrackedSet),
-    stack:         [],
-    pathStack:     [],
-    path:          [],
-    current:       null,
-    stackDepth:    0,
-    msg: `✗ No path found. DFS visited ${visitedSet.size} cells before exhausting all options.`,
-    activeLine: 14,
-    done: true,
+    type: 'not-found', current: null, stack: [],
+    visitedSet: new Set(visited), visitedSeq: [...visitedSeq],
+    activeEdge: null, path: [], done: true,
+    msg: `✗ No path from "${startNode}" to "${endNode}". DFS exhausted all options.`,
   });
-
   return steps;
 }

@@ -1,177 +1,100 @@
-// ===== A* SEARCH STEP GENERATOR =====
-// Grid-based. Uses a Priority Queue sorting by f = g + h.
-// g = cost from start, h = heuristic (Manhattan distance to end)
+// ===== A* STEP GENERATOR — Weighted Node Graph =====
+import { GRAPH_PRESETS, buildAdj, euclidean } from '../graphPresets';
 
-export const ROWS = 12;
-export const COLS = 20;
-export const START = { r: 5, c: 1 };
-export const END   = { r: 6, c: 18 };
+export { GRAPH_PRESETS };
+export const DEFAULT_PRESET = GRAPH_PRESETS[0];
 
-export function createEmptyGrid() {
-  const grid = Array.from({ length: ROWS }, () => Array(COLS).fill('empty'));
-  grid[START.r][START.c] = 'start';
-  grid[END.r][END.c]     = 'end';
-  return grid;
-}
+export function generateSteps(nodes, edges, startNode, endNode) {
+  const adj = buildAdj(nodes, edges);
+  const nodeMap = {};
+  nodes.forEach(n => { nodeMap[n.id] = n; });
 
-export function createRandomGrid() {
-  const grid = createEmptyGrid();
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      if (grid[r][c] === 'empty') {
-        if (Math.random() < 0.28) grid[r][c] = 'wall';
-      }
-    }
-  }
-  return grid;
-}
+  const endNode_ = nodeMap[endNode];
 
-function key(r, c)    { return `${r},${c}`; }
-function parseKey(k)  { const [r, c] = k.split(',').map(Number); return { r, c }; }
+  // Heuristic: euclidean distance scaled by 50 (same unit as edge weights)
+  const h = (id) => {
+    const n = nodeMap[id];
+    if (!n || !endNode_) return 0;
+    return Math.round(Math.sqrt((n.x - endNode_.x) ** 2 + (n.y - endNode_.y) ** 2) / 50);
+  };
 
-function getNeighbors(r, c, grid) {
-  return [[-1,0],[1,0],[0,-1],[0,1]]
-    .map(([dr, dc]) => [r + dr, c + dc])
-    .filter(([nr, nc]) => 
-      nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && 
-      grid[nr][nc] !== 'wall'
-    );
-}
-
-// Manhattan distance
-function heuristic(r, c) {
-  return Math.abs(r - END.r) + Math.abs(c - END.c);
-}
-
-export function generateSteps(grid) {
   const steps = [];
-  const startKey = key(START.r, START.c);
-  const endKey   = key(END.r,   END.c);
+  const gScore = {}; // cost from start
+  const fScore = {}; // g + h
+  const parent = {};
+  const closed = new Set();  // settled nodes
 
-  const gMap = { [startKey]: 0 }; // Cost from start
-  const hMap = { [startKey]: heuristic(START.r, START.c) }; // Estimated cost to end
-  const fMap = { [startKey]: gMap[startKey] + hMap[startKey] }; // f = g + h
+  nodes.forEach(n => { gScore[n.id] = Infinity; fScore[n.id] = Infinity; });
+  gScore[startNode] = 0;
+  fScore[startNode] = h(startNode);
 
-  const parent  = {};
-  
-  // Priority Queue entries: { k: "r,c", f: estimated total, g, h }
-  const pq = [{ k: startKey, f: fMap[startKey], g: gMap[startKey], h: hMap[startKey] }];
-  
-  // Sets for visualization state
-  const visitedSet  = new Set(); // nodes permanently finalized
-  const frontierSet = new Set([startKey]);
+  let openSet = [{ id: startNode, f: fScore[startNode], g: 0, hv: h(startNode) }];
+  const inOpen = new Set([startNode]);
 
   steps.push({
-    type: 'init',
-    visitedSet:  new Set(visitedSet),
-    frontierSet: new Set(frontierSet),
-    queue:       [...pq],
-    path:        [],
-    current:     null,
-    gMap:        { ...gMap },
-    fMap:        { ...fMap },
-    hMap:        { ...hMap },
-    msg: `A* Search starts at (${START.r},${START.c}). Heuristic distance to target: ${hMap[startKey]}.`,
-    activeLine: 0,
-    done: false,
+    type: 'init', current: null, openSet: [...openSet],
+    closedSet: new Set(), inOpen: new Set(inOpen),
+    gScore: { ...gScore }, fScore: { ...fScore },
+    hScore: Object.fromEntries(nodes.map(n => [n.id, h(n.id)])),
+    path: [], activeEdge: null, done: false,
+    msg: `A* starts at "${startNode}". h(${startNode})=${h(startNode)}. f=g+h prioritizes nodes closest to goal.`,
   });
 
-  while (pq.length > 0) {
-    // Pop min f
-    const curObj = pq.shift();
-    const cur = curObj.k;
-    const curG = curObj.g;
-    
-    // Skip if already permanently finalized (shorter path already found)
-    if (visitedSet.has(cur)) continue;
+  while (openSet.length > 0) {
+    openSet.sort((a, b) => a.f !== b.f ? a.f - b.f : a.hv - b.hv);
+    const best = openSet.shift();
+    const cur = best.id;
+    inOpen.delete(cur);
 
-    const { r, c } = parseKey(cur);
-    visitedSet.add(cur);
-    frontierSet.delete(cur);
+    if (closed.has(cur)) continue;
+    closed.add(cur);
 
-    if (cur === endKey) {
-      // Trace path
+    if (cur === endNode) {
       const path = [];
-      let node = endKey;
-      while (node && node !== startKey) {
-        path.unshift(node);
-        node = parent[node];
-      }
+      let node = endNode;
+      while (node) { path.unshift(node); node = parent[node]; }
       steps.push({
-        type: 'found',
-        visitedSet:  new Set(visitedSet),
-        frontierSet: new Set(frontierSet),
-        queue:       [],
-        path,
-        current:     cur,
-        gMap:        { ...gMap },
-        fMap:        { ...fMap },
-        hMap:        { ...hMap },
-        msg: `✓ Target reached! Optimal path cost = ${gMap[endKey]} steps.`,
-        activeLine: 6,
-        done: true,
+        type: 'found', current: cur, openSet: [],
+        closedSet: new Set(closed), inOpen: new Set(inOpen),
+        gScore: { ...gScore }, fScore: { ...fScore },
+        hScore: Object.fromEntries(nodes.map(n => [n.id, h(n.id)])),
+        path, activeEdge: null, done: true,
+        msg: `✓ Reached "${endNode}"! Path: ${path.join(' → ')} | g=${gScore[endNode]} (actual cost). A* is optimal with an admissible heuristic.`,
       });
       return steps;
     }
 
-    let addedCount = 0;
-    for (const [nr, nc] of getNeighbors(r, c, grid)) {
-      const nk = key(nr, nc);
-      if (visitedSet.has(nk)) continue; // Already finalized
-
-      const newG = curG + 1; // Assuming cost between all adjacent cells is 1
-
-      if (gMap[nk] === undefined || newG < gMap[nk]) {
-        const newH = heuristic(nr, nc);
-        const newF = newG + newH;
-        
-        gMap[nk] = newG;
-        hMap[nk] = newH;
-        fMap[nk] = newF;
-        parent[nk] = cur;
-        
-        pq.push({ k: nk, f: newF, g: newG, h: newH });
-        frontierSet.add(nk);
-        addedCount++;
+    const relaxed = [];
+    for (const { to, weight } of (adj[cur] || [])) {
+      if (closed.has(to)) continue;
+      const tentativeG = gScore[cur] + weight;
+      if (tentativeG < gScore[to]) {
+        gScore[to] = tentativeG;
+        fScore[to] = tentativeG + h(to);
+        parent[to] = cur;
+        openSet.push({ id: to, f: fScore[to], g: tentativeG, hv: h(to) });
+        inOpen.add(to);
+        relaxed.push(`${to}(g=${tentativeG},h=${h(to)},f=${fScore[to]})`);
       }
     }
 
-    // Sort PQ by f, tie break by h (prefer closer to target if f is tied)
-    pq.sort((a, b) => {
-      if (a.f !== b.f) return a.f - b.f;
-      return a.h - b.h; 
-    });
-
     steps.push({
-      type: 'visit',
-      visitedSet:  new Set(visitedSet),
-      frontierSet: new Set(frontierSet),
-      queue:       [...pq],
-      path:        [],
-      current:     cur,
-      gMap:        { ...gMap },
-      fMap:        { ...fMap },
-      hMap:        { ...hMap },
-      msg: `Finalized (${r},${c}) with f=${curObj.f} (g=${curG}, h=${curObj.h}). Relaxed ${addedCount} neighbors.`,
-      activeLine: 9,
-      done: false,
+      type: 'visit', current: cur, openSet: [...openSet],
+      closedSet: new Set(closed), inOpen: new Set(inOpen),
+      gScore: { ...gScore }, fScore: { ...fScore },
+      hScore: Object.fromEntries(nodes.map(n => [n.id, h(n.id)])),
+      path: [], activeEdge: parent[cur] ? [parent[cur], cur] : null, done: false,
+      msg: `Settled "${cur}" (g=${gScore[cur]}, h=${h(cur)}, f=${fScore[cur]}). Updated: [${relaxed.join(' | ') || '—'}].`,
     });
   }
 
   steps.push({
-    type: 'not-found',
-    visitedSet:  new Set(visitedSet),
-    frontierSet: new Set(frontierSet),
-    queue:       [],
-    path:        [],
-    current:     null,
-    gMap:        { ...gMap },
-    fMap:        { ...fMap },
-    hMap:        { ...hMap },
-    msg: `✗ No path found. The destination is blocked.`,
-    activeLine: 18,
-    done: true,
+    type: 'not-found', current: null, openSet: [],
+    closedSet: new Set(closed), inOpen: new Set(inOpen),
+    gScore: { ...gScore }, fScore: { ...fScore },
+    hScore: Object.fromEntries(nodes.map(n => [n.id, h(n.id)])),
+    path: [], activeEdge: null, done: true,
+    msg: `✗ No path from "${startNode}" to "${endNode}".`,
   });
-
   return steps;
 }

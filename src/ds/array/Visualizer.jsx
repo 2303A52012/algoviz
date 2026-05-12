@@ -39,8 +39,7 @@ function CapacityGauge({ size, capacity }) {
   return (
     <div className="ar-gauge">
       <span className="ar-gauge-label">Size / Capacity</span>
-      <div className="ar-gauge-bar">
-         
+      <div className="ar-gauge-bar" />
       <span className="ar-gauge-text" style={{ color }}>{size} / {capacity}</span>
     </div>
   );

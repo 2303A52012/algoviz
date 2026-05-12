@@ -63,8 +63,7 @@ function RangeLine({ arr, lo, hi, mid1, mid2, eliminated, foundIdx, target }) {
       </div>
 
       {lo <= hi && foundIdx < 0 && (
-        <div className="ts-range-underline-wrap" style={{ '--n': n }}>
-           
+        <div className="ts-range-underline-wrap" style={{ '--n': n }} />
       )}
     </div>
   );
