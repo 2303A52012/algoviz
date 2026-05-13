@@ -40,10 +40,10 @@ export default function App() {
               {c.icon} {c.label}
             </button>
           ))}
-          <button className="nav-item nav-item-ds" style={{ '--c': DS_CATEGORY.color }}
+          {/* <button className="nav-item nav-item-ds" style={{ '--c': DS_CATEGORY.color }}
             onClick={goHome}>
             {DS_CATEGORY.icon} {DS_CATEGORY.label}
-          </button>
+          </button> */}
         </nav>
       </header>
 
