@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { CATEGORIES, REGISTRY, DS_REGISTRY, DS_CATEGORY, getByCategory } from '../registry';
 import './HomePage.css';
 
@@ -14,7 +14,6 @@ const DIFFICULTY_LABEL = {
   advanced:     'Advanced',
 };
 
-// Mini preview thumbnails — static SVG sketches per visualStyle
 function PreviewThumb({ visualStyle, color }) {
   const c = color;
   const dim = '#1a2540';
@@ -215,6 +214,39 @@ function PreviewThumb({ visualStyle, color }) {
         }))}
       </svg>
     ),
+    'cpu-sched': (
+      <svg viewBox="0 0 60 36" xmlns="http://www.w3.org/2000/svg">
+        {/* Mini Gantt bars */}
+        {[[2,14,10],[14,8,22],[24,18,10],[44,12,10]].map(([x,w,h],i) => (
+          <rect key={i} x={x} y={36-h} width={w} height={h} rx="1"
+            fill={i===1?c:c+'66'} opacity={i===1?1:.7}/>
+        ))}
+        {/* CPU box */}
+        <rect x="2" y="2" width="16" height="12" rx="2" fill={c+'22'} stroke={c} strokeWidth="1"/>
+        <text x="10" y="11" textAnchor="middle" fill={c} fontSize="6" fontWeight="bold">CPU</text>
+        {/* Queue */}
+        {[0,1,2].map(i => <rect key={i} x={22+i*10} y="4" width="8" height="8" rx="1" fill={c+'44'} stroke={c+'66'} strokeWidth="1"/>)}
+        <text x="55" y="10" textAnchor="middle" fill={c+'88'} fontSize="5">Q</text>
+      </svg>
+    ),
+    'disk-sched': (
+      <svg viewBox="0 0 60 36" xmlns="http://www.w3.org/2000/svg">
+        {/* Track line */}
+        <line x1="4" y1="28" x2="56" y2="28" stroke={dim} strokeWidth="2"/>
+        {/* Head movement path */}
+        <polyline points="8,28 28,12 16,20 48,8 38,16 52,28"
+          fill="none" stroke={c} strokeWidth="1.2" strokeDasharray="2,1.5"/>
+        {/* Dots */}
+        {[8,28,16,48,38,52].map((x,i) => (
+          <circle key={i} cx={x} cy={i%2===0?28:[12,20,8,16][Math.floor(i/2)]} r="1.5"
+            fill={i===0?c:c+'88'}/>
+        ))}
+        {/* Moving head */}
+        <circle cx="28" cy="12" r="3" fill={c} opacity=".9">
+          <animate attributeName="cx" values="8;28;16;48;38;52" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    ),
   };
 
   return (
@@ -302,7 +334,7 @@ function ItemCard({ item, categoryColor, onSelect }) {
   );
 }
 
-export default function HomePage({ onSelectAlgo, onSelectDS }) {
+export default function HomePage({ onSelectAlgo, onSelectDS, onSelectOS }) {
   const [activeCategory, setActiveCategory] = useState(null);
   const [search, setSearch] = useState('');
 

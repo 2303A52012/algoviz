@@ -26,6 +26,24 @@ import dfsMeta      from './algos/graph/dfs/meta';
 import dijkstraMeta from './algos/graph/dijkstra/meta';
 import astarMeta    from './algos/graph/astar/meta';
 
+// ---- OS — CPU SCHEDULING ----
+import osFcfsMeta      from './algos/os/fcfs/meta';
+import osSjfMeta       from './algos/os/sjf/meta';
+import osSrtfMeta      from './algos/os/srtf/meta';
+import osRrMeta        from './algos/os/rr/meta';
+import osPriorityMeta  from './algos/os/priority/meta';
+import osPriorityPMeta from './algos/os/priorityp/meta';
+import osMlqMeta       from './algos/os/mlq/meta';
+import osMlfqMeta      from './algos/os/mlfq/meta';
+
+// ---- OS — DISK SCHEDULING ----
+import diskFcfsMeta  from './algos/os/disk-fcfs/meta';
+import diskSstfMeta  from './algos/os/sstf/meta';
+import diskScanMeta  from './algos/os/scan/meta';
+import diskCscanMeta from './algos/os/cscan/meta';
+import diskLookMeta  from './algos/os/look/meta';
+import diskClookMeta from './algos/os/clook/meta';
+
 // ---- DATA STRUCTURES ----
 import arrayDSMeta      from './ds/array/meta';
 import stackDSMeta      from './ds/stack/meta';
@@ -48,6 +66,8 @@ export const REGISTRY = [
   heapMeta, shellMeta, countingMeta, radixMeta,
   linearMeta, binaryMeta, jumpMeta, interpolationMeta, ternaryMeta,
   bfsMeta, dfsMeta, dijkstraMeta, astarMeta,
+  osFcfsMeta, osSjfMeta, osSrtfMeta, osRrMeta, osPriorityMeta, osPriorityPMeta, osMlqMeta, osMlfqMeta,
+  diskFcfsMeta, diskSstfMeta, diskScanMeta, diskCscanMeta, diskLookMeta, diskClookMeta,
 ];
 
 // ===== DS REGISTRY =====
@@ -71,10 +91,12 @@ export const DS_REGISTRY = [
 
 // ===== ALGO CATEGORIES =====
 export const CATEGORIES = [
-  { id: 'sorting',   label: 'Sorting',   icon: '▦', color: 'var(--cat-sort)',   desc: 'Arrange elements in order' },
-  { id: 'searching', label: 'Searching', icon: '◎', color: 'var(--cat-search)', desc: 'Locate elements in data'   },
-  { id: 'graph',     label: 'Graph',     icon: '⬡', color: 'var(--cat-graph)',  desc: 'Traverse nodes and edges'  },
-  { id: 'ds',        label: 'Data Structures', icon: '⬛', color: 'var(--cat-tree)', desc: 'Interactive — add, delete, search, traverse' },
+  { id: 'sorting',   label: 'Sorting',              icon: '▦', color: 'var(--cat-sort)',   desc: 'Arrange elements in order' },
+  { id: 'searching', label: 'Searching',             icon: '◎', color: 'var(--cat-search)', desc: 'Locate elements in data'   },
+  { id: 'graph',     label: 'Graph',                 icon: '⬡', color: 'var(--cat-graph)',  desc: 'Traverse nodes and edges'  },
+  { id: 'ds',        label: 'Data Structures',       icon: '⬛', color: 'var(--cat-tree)',   desc: 'Interactive — add, delete, search, traverse' },
+  { id: 'os',        label: 'CPU Scheduling',        icon: '🖥️', color: 'var(--cat-os)',    desc: 'Process scheduling & CPU management' },
+  { id: 'os-disk',   label: 'Disk Scheduling',       icon: '💽', color: 'var(--cat-disk)',  desc: 'Disk head movement optimization' },
 ];
 
 // ===== DS CATEGORY =====

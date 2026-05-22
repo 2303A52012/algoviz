@@ -139,9 +139,10 @@ export default function AlgoPage({ algoId, onBack }) {
 
   const cat = CATEGORIES.find(c => c.id === meta.category);
 
-  const VisualizerModule = React.lazy(() =>
-    import(`../algos/${meta.category}/${meta.id}/Visualizer.jsx`)
-  );
+  const VisualizerModule = React.lazy(() => {
+    const folder = meta.category === 'os-disk' ? 'os' : meta.category;
+    return import(`../algos/${folder}/${meta.id}/Visualizer.jsx`);
+  });
 
   return (
     <div className="algo-page">

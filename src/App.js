@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import HomePage from './components/HomePage';
 import AlgoPage from './components/AlgoPage';
 import DSPage   from './components/DSPage';
+import OSPage   from './os/OSPage';
 import { getById, getDSById, CATEGORIES, DS_CATEGORY } from './registry';
 import './styles/global.css';
 import './styles/App.css';
@@ -13,6 +14,7 @@ export default function App() {
   const goHome    = () => setRoute(null);
   const goToAlgo  = (id) => setRoute({ type: 'algo', id });
   const goToDS    = (id) => setRoute({ type: 'ds',   id });
+  const goToOS    = ()   => setRoute({ type: 'os' });
 
   const meta = route?.type === 'algo' ? getById(route.id)
              : route?.type === 'ds'   ? getDSById(route.id)
@@ -65,13 +67,16 @@ export default function App() {
       {/* MAIN */}
       <main className="app-main">
         {!route && (
-          <HomePage onSelectAlgo={goToAlgo} onSelectDS={goToDS} />
+          <HomePage onSelectAlgo={goToAlgo} onSelectDS={goToDS} onSelectOS={goToOS} />
         )}
         {route?.type === 'algo' && (
           <AlgoPage algoId={route.id} onBack={goHome} />
         )}
         {route?.type === 'ds' && (
           <DSPage dsId={route.id} onBack={goHome} />
+        )}
+        {route?.type === 'os' && (
+          <OSPage onBack={goHome} />
         )}
       </main>
 

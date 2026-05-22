@@ -45,6 +45,8 @@
   --cat-graph:  #a855f7;
   --cat-tree:   #f59e0b;
   --cat-dp:     #14b8a6;
+  --cat-os:     #ef4444;
+  --cat-disk:   #06b6d4;
 
   /* Typography */
   --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
