@@ -81,7 +81,7 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        <span>AlgoViz v2 &mdash; Palakurthi Lalith Prakash</span>
+        <span>AlgoViz v2 &mdash; <a href="https://lalithprakash.in" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Palakurthi Lalith Prakash</a></span>
         <span>Each algorithm, its own visualization</span>
       </footer>
     </div>
